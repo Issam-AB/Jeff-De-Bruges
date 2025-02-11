@@ -5,7 +5,7 @@ export const metadata = {
   title: "SKETCH VENTE FLASH",
   description: "Les meilleures offres de meubles au Maroc - Ventes flash exclusives sur des meubles de qualité à prix imbattables",
   keywords: "meubles maroc, vente flash meubles, mobilier maroc, promotions meubles, meubles pas cher, sketch vente flash",
-  authors: [{ name: 'Sketch' }],
+  authors: [{ name: 'Sketch design' }],
   openGraph: {
     title: 'SKETCH VENTE FLASH',
     description: 'Les meilleures offres de meubles au Maroc - Ventes flash exclusives sur des meubles de qualité à prix imbattables',
