@@ -45,7 +45,7 @@ export function EditProductForm({ product, onClose, onProductUpdated }: EditProd
         body: JSON.stringify({
           ...formData,
           initialPrice: Number(formData.initialPrice),
-          topDealsPrice: Number(formData.topDealsPrice)
+          VenteflashPrice: Number(formData.VenteflashPrice)
         })
       })
 
@@ -202,8 +202,8 @@ export function EditProductForm({ product, onClose, onProductUpdated }: EditProd
                   <label className="block text-sm font-medium mb-1.5 text-gray-700">TopDeals Price (DH)</label>
                   <Input
                     type="number"
-                    value={formData.topDealsPrice}
-                    onChange={(e) => setFormData({ ...formData, topDealsPrice: parseFloat(e.target.value) })}
+                    value={formData.VenteflashPrice}
+                    onChange={(e) => setFormData({ ...formData, VenteflashPrice: parseFloat(e.target.value) })}
                     className="bg-white"
                     required
                   />
