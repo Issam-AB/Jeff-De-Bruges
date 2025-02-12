@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma'
 import ProductGrid from '@/components/ProductGrid'
 import PageLayout from '@/components/PageLayout'
 import { Product } from '@prisma/client'
+import { ValidCategory } from '@/components/ProductGrid'
 
 async function getProducts(category: string) {
   try {
@@ -68,24 +69,50 @@ async function getProducts(category: string) {
   }
 }
 
+// Helper function to validate category
+function isValidCategory(category: string | undefined): category is ValidCategory {
+  if (!category) return false;
+  
+  const validCategories = [
+    "Salon en L",
+    "Salon en U",
+    "Canapé 2 Places",
+    "Canapé 3 Places",
+    "Fauteuils",
+    "Lits",
+    "Matelas",
+    "Table de Chevet",
+    "Armoires",
+    "Bibliothèques",
+    "Buffets",
+    "SALONS",
+    "CHAMBRES",
+    "RANGEMENTS",
+    "TOUS"
+  ] as const;
+  
+  return validCategories.includes(category as any);
+}
+
 export default async function CategoryPage({
   params
 }: {
   params: { category: string }
 }) {
-  // Use the same normalization for the category prop
-  const category = decodeURIComponent(params.category)
+  const normalizedCategory = decodeURIComponent(params.category)
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toUpperCase()
   
   const products = await getProducts(params.category)
 
+  const validatedCategory = isValidCategory(normalizedCategory) ? normalizedCategory : undefined;
+
   return (
     <PageLayout>
       <ProductGrid 
         products={products} 
-        category={category === 'TOUS' ? undefined : category} 
+        category={validatedCategory === 'TOUS' ? undefined : validatedCategory} 
       />
     </PageLayout>
   )

@@ -6,9 +6,28 @@ import ProductCard from './ProductCard'
 import { Product, MainCategory, SubCategoryType } from '@/lib/types'
 import { motion } from 'framer-motion'
 
+// Export the ValidCategory type
+export type ValidCategory = 
+  | "Salon en L" 
+  | "Salon en U" 
+  | "Canapé 2 Places" 
+  | "Canapé 3 Places" 
+  | "Fauteuils" 
+  | "Lits" 
+  | "Matelas" 
+  | "Table de Chevet" 
+  | "Armoires" 
+  | "Bibliothèques" 
+  | "Buffets" 
+  | "SALONS"
+  | "CHAMBRES"
+  | "RANGEMENTS"
+  | "TOUS"
+  | undefined;
+
 interface ProductGridProps {
   products: Product[]
-  category?: MainCategory | SubCategoryType
+  category?: ValidCategory
 }
 
 export default function ProductGrid({ products: initialProducts, category }: ProductGridProps) {
