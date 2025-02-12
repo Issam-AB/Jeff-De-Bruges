@@ -108,8 +108,8 @@ export default function ProductsPage() {
       }
       if (sortBy === 'price') {
         return sortOrder === 'asc' ? 
-          a.topDealsPrice - b.topDealsPrice : 
-          b.topDealsPrice - a.topDealsPrice
+          a.VenteflashPrice - b.VenteflashPrice : 
+          b.VenteflashPrice - a.VenteflashPrice
       }
       // date sorting
       return sortOrder === 'asc' ? 

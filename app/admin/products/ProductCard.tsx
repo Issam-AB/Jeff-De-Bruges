@@ -94,7 +94,7 @@ export function ProductCard({
           <div className="flex justify-between items-center mt-4">
             <div>
               <p className="text-gray-500 line-through">{product.initialPrice} DH</p>
-              <p className="text-blue-600 font-bold">{product.topDealsPrice} DH</p>
+              <p className="text-blue-600 font-bold">{product.VenteflashPrice} DH</p>
             </div>
             <div className="flex gap-2">
               <Button
@@ -120,13 +120,19 @@ export function ProductCard({
       <Dialog open={isEditing} onOpenChange={setIsEditing}>
         <DialogContent className="max-w-[90vw] xl:max-w-[80vw] 2xl:max-w-[1400px]">
           <ProductForm
-            initialData={product}
+            initialData={{
+              ...product,
+              topDealsPrice: product.VenteflashPrice
+            }}
             onSubmit={async (data) => {
               try {
                 const response = await fetch(`/api/products/${product.id}`, {
                   method: 'PUT',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(data),
+                  body: JSON.stringify({
+                    ...data,
+                    VenteflashPrice: data.topDealsPrice
+                  }),
                 });
                 
                 if (!response.ok) throw new Error('Failed to update product');

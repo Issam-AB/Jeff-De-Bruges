@@ -171,18 +171,18 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
     track('whatsapp_order_click', {
       productId: product.id,
       productName: product.name,
-      productPrice: product.topDealsPrice,
+      productPrice: product.VenteflashPrice,
       category: product.mainCategory
     });
 
-    const message = encodeURIComponent(`Bonjour, je suis intéressé par l'achat de ${product.name} (${product.id}) pour ${product.topDealsPrice.toLocaleString('fr-FR').replace(',', ' ')} DH.`)
+    const message = encodeURIComponent(`Bonjour, je suis intéressé par l'achat de ${product.name} (${product.id}) pour ${product.VenteflashPrice.toLocaleString('fr-FR').replace(',', ' ')} DH.`)
     const apiUrl = `https://api.whatsapp.com/send?phone=212666013108&text=${message}`
     window.open(apiUrl, '_blank')
   }
 
   const storeOrder = ['Casa', 'Rabat', 'Marrakech', 'Tanger']
 
-  const discountPercentage = Math.round((1 - product.topDealsPrice / product.initialPrice) * 100)
+  const discountPercentage = Math.round((1 - product.VenteflashPrice / product.initialPrice) * 100)
 
   const handlePrevClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -333,7 +333,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                     <div className="relative">
                       <div className="absolute -inset-1.5 sm:-inset-2 -left-0 bg-gradient-to-r from-yellow-400 to-amber-300 -skew-x-12 rounded-lg shadow-lg" />
                       <span className="relative text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 px-2 sm:px-3 py-0.5 sm:py-1">
-                        {product.topDealsPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
+                        {product.VenteflashPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
                       </span>
                     </div>
                     <span className="text-sm sm:text-base text-gray-400 line-through ml-2">
@@ -616,7 +616,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                   <div className="relative">
                     <div className="absolute -inset-1.5 sm:-inset-2 -left-0 bg-gradient-to-r from-yellow-400 to-amber-300 -skew-x-12 rounded-lg shadow-lg" />
                     <span className="relative text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 px-2 sm:px-3 py-0.5 sm:py-1">
-                      {product.topDealsPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
+                      {product.VenteflashPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
                     </span>
                   </div>
                   <span className="text-sm sm:text-base text-gray-400 line-through ml-2">

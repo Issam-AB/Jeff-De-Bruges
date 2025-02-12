@@ -20,12 +20,12 @@ export interface Product {
   mainCategory: string;
   subCategory: string;
   initialPrice: number;
-  topDealsPrice: number;
+  VenteflashPrice: number;
   mainImage: string;
   gallery: string[];
   isActive: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface StoreAvailability {

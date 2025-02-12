@@ -194,7 +194,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                                   className="object-cover"
                                 />
                                 <div className="absolute top-1.5 right-1.5 bg-[#e40524] text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
-                                  -{Math.round((1 - product.topDealsPrice / product.initialPrice) * 100)}%
+                                  -{Math.round((1 - product.VenteflashPrice / product.initialPrice) * 100)}%
                                 </div>
                               </div>
                               
@@ -216,7 +216,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-baseline gap-2">
                                     <span className="text-base font-bold text-white">
-                                      {product.topDealsPrice.toLocaleString('fr-FR')} DH
+                                      {product.VenteflashPrice.toLocaleString('fr-FR')} DH
                                     </span>
                                     <span className="text-sm text-white/40 line-through">
                                       {product.initialPrice.toLocaleString('fr-FR')} DH

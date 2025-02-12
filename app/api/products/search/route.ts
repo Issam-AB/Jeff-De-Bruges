@@ -14,31 +14,33 @@ export async function GET(request: NextRequest) {
 
     const products = await prisma.product.findMany({
       where: {
-        OR: [
-          { name: { contains: query, mode: 'insensitive' } },
-          { ref: { contains: query, mode: 'insensitive' } },
-          { mainCategory: { contains: query, mode: 'insensitive' } },
-          { subCategory: { contains: query, mode: 'insensitive' } },
-          { slug: { contains: query, mode: 'insensitive' } }
-        ],
-        isActive: true,
+        AND: [
+          {
+            OR: [
+              { name: { contains: query, mode: 'insensitive' } },
+              { ref: { contains: query, mode: 'insensitive' } },
+              { mainCategory: { contains: query, mode: 'insensitive' } },
+              { subCategory: { contains: query, mode: 'insensitive' } }
+            ]
+          },
+          { isActive: true }
+        ]
       },
       select: {
         id: true,
-        ref: true,
+        slug: true,
         name: true,
+        ref: true,
         dimensions: true,
         mainCategory: true,
         subCategory: true,
         initialPrice: true,
-        topDealsPrice: true,
+        VenteflashPrice: true,
         mainImage: true,
         gallery: true,
         isActive: true,
-        slug: true,
-        createdAt: true,
-        updatedAt: true
-      }
+      },
+      take: 10
     })
 
     console.log('Search query:', query)

@@ -63,7 +63,7 @@ export async function PUT(
         mainCategory: body.mainCategory,
         subCategory: body.subCategory,
         initialPrice: Number(body.initialPrice),
-        topDealsPrice: Number(body.topDealsPrice),
+        VenteflashPrice: Number(body.VenteflashPrice),
         mainImage: body.mainImage,
         gallery: body.gallery,
         isActive: body.isActive,

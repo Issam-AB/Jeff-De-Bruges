@@ -37,7 +37,7 @@ export default function ProductModal({ product, onClose, onSave }: ProductModalP
     mainCategory: 'SALONS',
     subCategory: '',
     initialPrice: 0,
-    topDealsPrice: 0,
+    VenteflashPrice: 0,
   })
   const [mainImage, setMainImage] = useState<File | null>(null)
   const [mainImagePreview, setMainImagePreview] = useState<string>('')
@@ -420,12 +420,12 @@ export default function ProductModal({ product, onClose, onSave }: ProductModalP
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Prix Top Deals
+                        Prix Vente Flash
                       </label>
                       <input
                         type="number"
-                        value={formData.topDealsPrice}
-                        onChange={(e) => setFormData({ ...formData, topDealsPrice: parseFloat(e.target.value) })}
+                        value={formData.VenteflashPrice}
+                        onChange={(e) => setFormData({ ...formData, VenteflashPrice: parseFloat(e.target.value) })}
                         className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         required
                       />

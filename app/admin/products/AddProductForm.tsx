@@ -163,7 +163,7 @@ export function AddProductForm({ onClose, onProductAdded }: AddProductFormProps)
     mainCategory: Object.keys(PREDEFINED_CATEGORIES)[0],
     subCategory: '',
     initialPrice: '',
-    topDealsPrice: '',
+    VenteflashPrice: '',
     mainImage: '',
     gallery: [] as string[],
     isActive: true
@@ -227,7 +227,7 @@ export function AddProductForm({ onClose, onProductAdded }: AddProductFormProps)
         body: JSON.stringify({
           ...formData,
           initialPrice: Number(formData.initialPrice),
-          topDealsPrice: Number(formData.topDealsPrice),
+          VenteflashPrice: Number(formData.VenteflashPrice),
           gallery: formData.gallery || []
         })
       });
@@ -427,11 +427,11 @@ export function AddProductForm({ onClose, onProductAdded }: AddProductFormProps)
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1.5 text-gray-700">TopDeals Price (DH)</label>
+                  <label className="block text-sm font-medium mb-1.5 text-gray-700">Vente Flash Price (DH)</label>
                   <Input
                     type="number"
-                    value={formData.topDealsPrice}
-                    onChange={(e) => setFormData({ ...formData, topDealsPrice: e.target.value })}
+                    value={formData.VenteflashPrice}
+                    onChange={(e) => setFormData({ ...formData, VenteflashPrice: e.target.value })}
                     placeholder="0.00"
                     className="bg-white"
                     required

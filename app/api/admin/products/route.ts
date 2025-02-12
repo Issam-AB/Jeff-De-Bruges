@@ -48,7 +48,7 @@ export async function POST(request: Request) {
         mainCategory: data.mainCategory,
         subCategory: data.subCategory,
         initialPrice: Number(data.initialPrice),
-        topDealsPrice: Number(data.topDealsPrice),
+        VenteflashPrice: Number(data.VenteflashPrice),
         mainImage: data.mainImage,
         gallery: data.gallery,
         isActive: data.isActive,
