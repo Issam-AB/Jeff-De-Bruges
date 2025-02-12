@@ -26,14 +26,33 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const activeOnly = searchParams.get('active') === 'true'
+    const category = searchParams.get('category')
+    const skip = parseInt(searchParams.get('skip') || '0')
+    const take = parseInt(searchParams.get('take') || '12')
 
     const products = await prisma.product.findMany({
       where: {
-        ...(activeOnly ? { isActive: true } : {})
+        ...(activeOnly ? { isActive: true } : {}),
+        ...(category ? {
+          OR: [
+            { mainCategory: category },
+            { subCategory: category }
+          ]
+        } : {})
       },
       orderBy: {
         createdAt: 'desc',
       },
+      skip,
+      take,
+    })
+
+    console.log('API: Fetched products:', {
+      category,
+      count: products.length,
+      activeOnly,
+      skip,
+      take
     })
 
     return NextResponse.json(products)

@@ -17,6 +17,13 @@ interface ProductCardProps {
   onQuickView?: () => void
 }
 
+interface TimeLeft {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
+
 const getCategoryColor = (category: string) => {
   const stringToColor = (str: string, lightness: number) => {
     let hash = 0;
@@ -124,39 +131,12 @@ export default function ProductCard({ product, className, onQuickView }: Product
               priority={false}
             />
             
-            <div className="absolute left-2 top-2 z-20">
-              <div className="absolute inset-0 blur-md bg-orange-400/30 rounded-none" />
-              <Image
-                src="https://sketch-design.ma/wp-content/uploads/2024/12/topdeal.svg"
-                alt="Top Deal"
-                width={160}
-                height={48}
-                className="w-auto h-12 relative z-20"
-                priority
-              />
-            </div>
-
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent backdrop-blur-sm p-2">
-              <div className="flex items-center justify-between px-3">
-                <div className="flex items-center gap-2">
-                  <div className="bg-white/20 p-1.5 rounded-none">
-                    <Truck className="h-3.5 w-3.5 text-white" />
-                  </div>
-                  <div className="flex flex-col leading-none">
-                    <span className="text-white text-xs font-medium">
-                      Livraison Gratuite
-                    </span>
-                    <span className="text-white/80 text-[9px]">
-                      En ligne uniquement
-                    </span>
-                  </div>
-                </div>
-                <div className="bg-gradient-to-r from-[#e95123] to-[#641910] px-2.5 py-1 rounded-none">
-                  <span className="text-[10px] font-bold text-white flex items-center gap-1">
-                    <span>✨</span>
-                    <span>OFFERT</span>
-                  </span>
-                </div>
+            <div className="absolute left-2 top-2">
+              <div className="bg-gradient-to-r from-orange-500 to-red-600 px-3 py-1.5 rounded-sm shadow-lg">
+                <span className="text-white text-xs font-bold flex items-center gap-1.5">
+                  <span>⚡</span>
+                  <span>OFFRE LIMITÉE</span>
+                </span>
               </div>
             </div>
 
@@ -222,4 +202,4 @@ export default function ProductCard({ product, className, onQuickView }: Product
     </Link>
   )
 }
-
+ 

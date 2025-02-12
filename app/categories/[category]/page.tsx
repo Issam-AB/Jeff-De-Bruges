@@ -6,35 +6,60 @@ import { Product } from '@prisma/client'
 
 async function getProducts(category: string) {
   try {
-    // Decode and normalize the category
-    const decodedCategory = decodeURIComponent(category).toLowerCase()
+    // Normalize the category: decode, remove accents, and convert to uppercase
+    const decodedCategory = decodeURIComponent(category)
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toUpperCase()
+    
     console.log('Processing category:', decodedCategory)
 
-    // For 'tous' category, use EXACTLY the same logic as homepage
-    if (decodedCategory === 'tous') {
+    // For 'TOUS' category, return all products
+    if (decodedCategory === 'TOUS') {
       const products = await prisma.product.findMany({
+        where: {
+          isActive: true
+        },
         orderBy: {
           createdAt: 'desc'
         }
       })
+      console.log(`Found ${products.length} products for TOUS`)
       return products
     }
 
-    // For other categories - use raw SQL for better accent handling
-    const products = await prisma.$queryRaw<Product[]>`
-      SELECT * FROM "Product"
-      WHERE LOWER(unaccent("mainCategory")) LIKE LOWER(unaccent(${`%${decodedCategory}%`}))
-      OR LOWER(unaccent("subCategory")) LIKE LOWER(unaccent(${`%${decodedCategory}%`}))
-      ORDER BY "createdAt" DESC
-    `
+    // For other categories, use case-insensitive search
+    const products = await prisma.product.findMany({
+      where: {
+        isActive: true,
+        OR: [
+          {
+            mainCategory: {
+              contains: decodedCategory,
+              mode: 'insensitive'
+            }
+          },
+          {
+            subCategory: {
+              contains: decodedCategory,
+              mode: 'insensitive'
+            }
+          }
+        ]
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
 
-    if (!products.length && decodedCategory !== 'tous') {
-      // Log the query parameters for debugging
+    console.log(`Found ${products.length} products for category:`, decodedCategory)
+    
+    // Only return notFound if we're sure there are no products
+    if (!products.length && decodedCategory !== 'TOUS') {
       console.log('No products found for category:', decodedCategory)
       return notFound()
     }
 
-    console.log(`Found ${products.length} products for category:`, decodedCategory)
     return products
   } catch (error: any) {
     console.error('Error fetching products:', error)
@@ -48,11 +73,20 @@ export default async function CategoryPage({
 }: {
   params: { category: string }
 }) {
+  // Use the same normalization for the category prop
+  const category = decodeURIComponent(params.category)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+  
   const products = await getProducts(params.category)
 
   return (
     <PageLayout>
-      <ProductGrid products={products} />
+      <ProductGrid 
+        products={products} 
+        category={category === 'TOUS' ? undefined : category} 
+      />
     </PageLayout>
   )
 } 

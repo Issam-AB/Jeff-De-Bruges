@@ -2,34 +2,374 @@
 <svg id="Calque_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 45 19.74">
   <!-- Generator: Adobe Illustrator 29.2.1, SVG Export Plug-In . SVG Version: 2.1.0 Build 116)  -->
   <defs>
+    <!-- Glowing edge effect -->
+    <filter id="edgeGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="0.5" result="blur"/>
+      <feOffset in="blur" dx="0" dy="0" result="offsetBlur"/>
+      <feMerge>
+        <feMergeNode in="offsetBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Strong glow for flash -->
+    <filter id="flashGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+      <feFlood flood-color="#FBCF38" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glowColor"/>
+      <feMerge>
+        <feMergeNode in="glowColor"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Traveling glow gradient -->
+    <linearGradient id="travelGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff00">
+        <animate attributeName="offset" values="0;1" dur="2s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" stop-color="#ffffff">
+        <animate attributeName="offset" values="0;1" dur="2s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#ffffff00">
+        <animate attributeName="offset" values="0;1" dur="2s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+
+    <mask id="letterMask">
+      <g fill="white">
+        <!-- VENTE paths -->
+        <path d="M11.71,3.82l-3.44,5.48h-1.53l-1.24-5.48h1.59l.78,3.56,2.24-3.56h1.6Z"/>
+        <path d="M13.32,5.02l-.18.92h2.43l-.23,1.16h-2.44l-.2,1h2.87l-.25,1.2h-4.39l1.1-5.48h4.29l-.24,1.2h-2.76Z"/>
+        <path d="M22.49,3.82l-1.1,5.48h-1.28l-1.81-3.01-.6,3.01h-1.52l1.1-5.48h1.28l1.82,3,.59-3h1.52Z"/>
+        <path d="M24.51,5.05h-1.68l.25-1.23h4.91l-.25,1.23h-1.68l-.85,4.25h-1.55l.85-4.25Z"/>
+        <path d="M29.84,5.02l-.18.92h2.43l-.23,1.16h-2.44l-.2,1h2.87l-.25,1.2h-4.39l1.1-5.48h4.29l-.24,1.2h-2.76Z"/>
+        <!-- FLASH paths -->
+        <path d="M7.31,11.65l-.24,1.21h2.42l-.24,1.2h-2.41l-.38,1.88h-1.55l1.1-5.48h4.29l-.24,1.2h-2.74Z"/>
+        <path d="M11.02,10.45h1.55l-.85,4.25h2.61l-.25,1.23h-4.16l1.1-5.48Z"/>
+        <path d="M18.71,14.86h-2.33l-.63,1.06h-1.64l3.51-5.48h1.53l1.32,5.48h-1.54l-.22-1.06ZM18.47,13.72l-.37-1.78-1.05,1.78h1.42Z"/>
+        <path d="M20.67,15.45l.61-1.16c.56.35,1.2.54,1.82.54s.94-.19.94-.49c0-.74-2.66-.33-2.66-2.05,0-1.18,1.01-1.96,2.63-1.96.77,0,1.48.16,1.97.47l-.56,1.15c-.43-.27-.96-.41-1.5-.41-.64,0-.99.23-.99.53,0,.75,2.66.32,2.66,2.01,0,1.17-1.03,1.95-2.64,1.95-.94,0-1.79-.25-2.29-.59Z"/>
+        <path d="M32.27,10.45l-1.1,5.48h-1.55l.42-2.13h-2.11l-.42,2.13h-1.55l1.1-5.48h1.55l-.41,2.05h2.11l.41-2.05h1.55Z"/>
+      </g>
+    </mask>
+
+    <!-- Add radial gradient for impact -->
+    <radialGradient id="impactGradient" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#FBCF38" stop-opacity="1">
+        <animate attributeName="stop-opacity" values="1;0.2;1" dur="1s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#FBCF38" stop-opacity="0"/>
+    </radialGradient>
+
     <style>
-      .st0 {
-        fill: #e40524;
-      }
-
-      .st1 {
+      .letter-vente {
         fill: #fff;
+        filter: url(#edgeGlow);
+      }
+      
+      .letter-flash {
+        fill: #e40524;
+        filter: url(#edgeGlow);
       }
 
-      .st2 {
-        fill: #9b9a9a;
+      .letter-outline-vente {
+        fill: none;
+        stroke: white;
+        stroke-width: 0.5;
+        stroke-dasharray: 50;
+        stroke-dashoffset: 50;
+        animation: dashAnim 3s linear infinite;
+        opacity: 0.5;
+      }
+
+      .letter-outline-flash {
+        fill: none;
+        stroke: #e40524;
+        stroke-width: 0.5;
+        stroke-dasharray: 50;
+        stroke-dashoffset: 50;
+        animation: dashAnim 3s linear infinite;
+        opacity: 0.5;
+      }
+
+      .glow-line {
+        fill: none;
+        stroke: url(#travelGlow);
+        stroke-width: 0.5;
+        stroke-dasharray: 0.5 3;
+        opacity: 0.5;
+      }
+
+      .flash-symbol {
+        fill: #FBCF38;
+        filter: url(#flashGlow);
+        animation: flashPulse 2s ease-in-out infinite;
+      }
+
+      .flash-outline {
+        fill: none;
+        stroke: #FBCF38;
+        stroke-width: 0.5;
+        stroke-dasharray: 30;
+        stroke-dashoffset: 30;
+        animation: drawFlash 2s ease-in-out infinite;
+      }
+
+      .letter-path {
+        stroke: white;
+        stroke-width: 0.5;
+        stroke-dasharray: 50;
+        stroke-dashoffset: 50;
+        animation: dashAnim 3s linear infinite;
+      }
+
+      .letter-path-flash {
+        stroke: #e40524;
+        stroke-width: 0.5;
+        stroke-dasharray: 50;
+        stroke-dashoffset: 50;
+        animation: dashAnim 3s linear infinite;
+      }
+
+      .impact-point {
+        fill: #FBCF38;
+        filter: url(#flashGlow);
+        transform-origin: center;
+        animation: impactAnim 0.7s ease-out infinite;
+      }
+
+      .impact-line {
+        stroke: #FBCF38;
+        stroke-width: 0.3;
+        stroke-linecap: round;
+        animation: lineAnim 0.7s ease-out infinite;
+      }
+
+      @keyframes dashAnim {
+        to {
+          stroke-dashoffset: -50;
+        }
+      }
+
+      @keyframes flashPulse {
+        0%, 100% { opacity: 1; filter: url(#flashGlow); }
+        50% { opacity: 0.7; filter: url(#edgeGlow); }
+      }
+
+      @keyframes drawFlash {
+        0% { stroke-dashoffset: 30; }
+        50%, 100% { stroke-dashoffset: 0; }
+      }
+
+      .impact-effect {
+        animation: impactPulse 1s ease-out infinite;
+      }
+
+      @keyframes impactPulse {
+        0%, 100% { transform: scaleY(0.27); }
+        50% { transform: scaleY(0.22); }
+      }
+
+      .impact-mark {
+        fill: #FBCF38;
+        filter: url(#impactGlow);
+      }
+
+      .impact-center {
+        fill: #FBCF38;
+        filter: url(#impactGlow);
+        transform-origin: center;
+        animation: impactCenter 1s ease-out infinite;
+      }
+
+      .impact-left {
+        fill: #FBCF38;
+        filter: url(#impactGlow);
+        transform-origin: right center;
+        animation: impactSide 1s ease-out infinite;
+      }
+
+      .impact-right {
+        fill: #FBCF38;
+        filter: url(#impactGlow);
+        transform-origin: left center;
+        animation: impactSide 1s ease-out infinite;
+      }
+
+      .impact-spark {
+        fill: #FBCF38;
+        filter: url(#impactGlow);
+        animation: sparkFade 1s ease-out infinite;
+      }
+
+      @keyframes impactCenter {
+        0%, 100% { 
+          transform: scaleX(1) scaleY(0.2);
+          opacity: 1;
+        }
+        50% { 
+          transform: scaleX(0.8) scaleY(0.3);
+          opacity: 0.7;
+        }
+      }
+
+      @keyframes impactSide {
+        0%, 100% { 
+          transform: scaleX(1) rotate(0);
+          opacity: 0.7;
+        }
+        50% { 
+          transform: scaleX(0.6) rotate(0);
+          opacity: 0.4;
+        }
+      }
+
+      @keyframes sparkFade {
+        0% { 
+          transform: scale(1);
+          opacity: 1;
+        }
+        100% { 
+          transform: scale(1.5);
+          opacity: 0;
+        }
+      }
+
+      .thunder-impact {
+        fill: #FBCF38;
+        filter: url(#impactGlow);
+        transform-origin: center;
+        animation: thunderImpact 1s ease-out infinite;
+      }
+
+      .impact-wave {
+        fill: none;
+        stroke: #FBCF38;
+        stroke-width: 0.2;
+        stroke-dasharray: 0.5 0.5;
+        transform-origin: center;
+        animation: impactWave 1s ease-out infinite;
+      }
+
+      .thunder-line {
+        stroke: #FBCF38;
+        stroke-width: 0.3;
+        stroke-linecap: round;
+        fill: none;
+        stroke-dasharray: 3;
+        stroke-dashoffset: 6;
+        animation: thunderLine 1s ease-out infinite;
+      }
+
+      @keyframes thunderImpact {
+        0% { 
+          transform: scaleX(0.1) scaleY(0.1);
+          opacity: 1;
+        }
+        50% { 
+          transform: scaleX(1.2) scaleY(0.2);
+          opacity: 0.8;
+        }
+        100% { 
+          transform: scaleX(1) scaleY(0.15);
+          opacity: 0.6;
+        }
+      }
+
+      @keyframes impactWave {
+        0% {
+          transform: scale(0.1);
+          opacity: 1;
+          stroke-width: 0.4;
+        }
+        100% {
+          transform: scale(2);
+          opacity: 0;
+          stroke-width: 0.1;
+        }
+      }
+
+      @keyframes thunderLine {
+        0% {
+          stroke-dashoffset: 6;
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          stroke-dashoffset: 0;
+          opacity: 0;
+        }
+      }
+
+      @keyframes impactAnim {
+        0% { transform: scaleY(0.1) scaleX(0.5); opacity: 1; }
+        50% { transform: scaleY(0.3) scaleX(1.2); opacity: 0.8; }
+        100% { transform: scaleY(0.2) scaleX(1); opacity: 0.6; }
+      }
+
+      @keyframes lineAnim {
+        0% { opacity: 1; transform: scaleX(0.8); }
+        100% { opacity: 0; transform: scaleX(1.2); }
       }
     </style>
   </defs>
+
+  <!-- Traveling glow effect -->
+  <rect width="100%" height="100%" fill="url(#travelGlow)" mask="url(#letterMask)" opacity="0.3"/>
+
+  <!-- VENTE letters with solid fill and traveling outline -->
   <g>
-    <path class="st1" d="M11.71,3.82l-3.44,5.48h-1.53l-1.24-5.48h1.59l.78,3.56,2.24-3.56h1.6Z"/>
-    <path class="st1" d="M13.32,5.02l-.18.92h2.43l-.23,1.16h-2.44l-.2,1h2.87l-.25,1.2h-4.39l1.1-5.48h4.29l-.24,1.2h-2.76Z"/>
-    <path class="st1" d="M22.49,3.82l-1.1,5.48h-1.28l-1.81-3.01-.6,3.01h-1.52l1.1-5.48h1.28l1.82,3,.59-3h1.52Z"/>
-    <path class="st1" d="M24.51,5.05h-1.68l.25-1.23h4.91l-.25,1.23h-1.68l-.85,4.25h-1.55l.85-4.25Z"/>
-    <path class="st1" d="M29.84,5.02l-.18.92h2.43l-.23,1.16h-2.44l-.2,1h2.87l-.25,1.2h-4.39l1.1-5.48h4.29l-.24,1.2h-2.76Z"/>
+    <!-- Solid fills -->
+    <path class="letter-vente" d="M11.71,3.82l-3.44,5.48h-1.53l-1.24-5.48h1.59l.78,3.56,2.24-3.56h1.6Z"/>
+    <path class="letter-vente" d="M13.32,5.02l-.18.92h2.43l-.23,1.16h-2.44l-.2,1h2.87l-.25,1.2h-4.39l1.1-5.48h4.29l-.24,1.2h-2.76Z"/>
+    <path class="letter-vente" d="M22.49,3.82l-1.1,5.48h-1.28l-1.81-3.01-.6,3.01h-1.52l1.1-5.48h1.28l1.82,3,.59-3h1.52Z"/>
+    <path class="letter-vente" d="M24.51,5.05h-1.68l.25-1.23h4.91l-.25,1.23h-1.68l-.85,4.25h-1.55l.85-4.25Z"/>
+    <path class="letter-vente" d="M29.84,5.02l-.18.92h2.43l-.23,1.16h-2.44l-.2,1h2.87l-.25,1.2h-4.39l1.1-5.48h4.29l-.24,1.2h-2.76Z"/>
+    
+    <!-- Traveling outlines -->
+    <path class="letter-outline-vente" d="M11.71,3.82l-3.44,5.48h-1.53l-1.24-5.48h1.59l.78,3.56,2.24-3.56h1.6Z"/>
+    <path class="letter-outline-vente" d="M13.32,5.02l-.18.92h2.43l-.23,1.16h-2.44l-.2,1h2.87l-.25,1.2h-4.39l1.1-5.48h4.29l-.24,1.2h-2.76Z"/>
+    <path class="letter-outline-vente" d="M22.49,3.82l-1.1,5.48h-1.28l-1.81-3.01-.6,3.01h-1.52l1.1-5.48h1.28l1.82,3,.59-3h1.52Z"/>
+    <path class="letter-outline-vente" d="M24.51,5.05h-1.68l.25-1.23h4.91l-.25,1.23h-1.68l-.85,4.25h-1.55l.85-4.25Z"/>
+    <path class="letter-outline-vente" d="M29.84,5.02l-.18.92h2.43l-.23,1.16h-2.44l-.2,1h2.87l-.25,1.2h-4.39l1.1-5.48h4.29l-.24,1.2h-2.76Z"/>
   </g>
+
+  <!-- FLASH letters with solid fill and traveling outline -->
   <g>
-    <path class="st0" d="M7.31,11.65l-.24,1.21h2.42l-.24,1.2h-2.41l-.38,1.88h-1.55l1.1-5.48h4.29l-.24,1.2h-2.74Z"/>
-    <path class="st0" d="M11.02,10.45h1.55l-.85,4.25h2.61l-.25,1.23h-4.16l1.1-5.48Z"/>
-    <path class="st0" d="M18.71,14.86h-2.33l-.63,1.06h-1.64l3.51-5.48h1.53l1.32,5.48h-1.54l-.22-1.06ZM18.47,13.72l-.37-1.78-1.05,1.78h1.42Z"/>
-    <path class="st0" d="M20.67,15.45l.61-1.16c.56.35,1.2.54,1.82.54s.94-.19.94-.49c0-.74-2.66-.33-2.66-2.05,0-1.18,1.01-1.96,2.63-1.96.77,0,1.48.16,1.97.47l-.56,1.15c-.43-.27-.96-.41-1.5-.41-.64,0-.99.23-.99.53,0,.75,2.66.32,2.66,2.01,0,1.17-1.03,1.95-2.64,1.95-.94,0-1.79-.25-2.29-.59Z"/>
-    <path class="st0" d="M32.27,10.45l-1.1,5.48h-1.55l.42-2.13h-2.11l-.42,2.13h-1.55l1.1-5.48h1.55l-.41,2.05h2.11l.41-2.05h1.55Z"/>
+    <!-- Solid fills -->
+    <path class="letter-flash" d="M7.31,11.65l-.24,1.21h2.42l-.24,1.2h-2.41l-.38,1.88h-1.55l1.1-5.48h4.29l-.24,1.2h-2.74Z"/>
+    <path class="letter-flash" d="M11.02,10.45h1.55l-.85,4.25h2.61l-.25,1.23h-4.16l1.1-5.48Z"/>
+    <path class="letter-flash" d="M18.71,14.86h-2.33l-.63,1.06h-1.64l3.51-5.48h1.53l1.32,5.48h-1.54l-.22-1.06ZM18.47,13.72l-.37-1.78-1.05,1.78h1.42Z"/>
+    <path class="letter-flash" d="M20.67,15.45l.61-1.16c.56.35,1.2.54,1.82.54s.94-.19.94-.49c0-.74-2.66-.33-2.66-2.05,0-1.18,1.01-1.96,2.63-1.96.77,0,1.48.16,1.97.47l-.56,1.15c-.43-.27-.96-.41-1.5-.41-.64,0-.99.23-.99.53,0,.75,2.66.32,2.66,2.01,0,1.17-1.03,1.95-2.64,1.95-.94,0-1.79-.25-2.29-.59Z"/>
+    <path class="letter-flash" d="M32.27,10.45l-1.1,5.48h-1.55l.42-2.13h-2.11l-.42,2.13h-1.55l1.1-5.48h1.55l-.41,2.05h2.11l.41-2.05h1.55Z"/>
+    
+    <!-- Traveling outlines -->
+    <path class="letter-outline-flash" d="M7.31,11.65l-.24,1.21h2.42l-.24,1.2h-2.41l-.38,1.88h-1.55l1.1-5.48h4.29l-.24,1.2h-2.74Z"/>
+    <path class="letter-outline-flash" d="M11.02,10.45h1.55l-.85,4.25h2.61l-.25,1.23h-4.16l1.1-5.48Z"/>
+    <path class="letter-outline-flash" d="M18.71,14.86h-2.33l-.63,1.06h-1.64l3.51-5.48h1.53l1.32,5.48h-1.54l-.22-1.06ZM18.47,13.72l-.37-1.78-1.05,1.78h1.42Z"/>
+    <path class="letter-outline-flash" d="M20.67,15.45l.61-1.16c.56.35,1.2.54,1.82.54s.94-.19.94-.49c0-.74-2.66-.33-2.66-2.05,0-1.18,1.01-1.96,2.63-1.96.77,0,1.48.16,1.97.47l-.56,1.15c-.43-.27-.96-.41-1.5-.41-.64,0-.99.23-.99.53,0,.75,2.66.32,2.66,2.01,0,1.17-1.03,1.95-2.64,1.95-.94,0-1.79-.25-2.29-.59Z"/>
+    <path class="letter-outline-flash" d="M32.27,10.45l-1.1,5.48h-1.55l.42-2.13h-2.11l-.42,2.13h-1.55l1.1-5.48h1.55l-.41,2.05h2.11l.41-2.05h1.55Z"/>
   </g>
-  <path class="st2" d="M40.09,7.5h-2.61l2.42-3.81h-3.04l-2.85,5.71h2.25l-2.25,5.33,6.09-7.23Z"/>
-  <ellipse class="st1" cx="34.08" cy="15.65" rx="1.6" ry=".27"/>
+
+  <!-- Flash symbol with animated outline -->
+  <g>
+    <path class="flash-symbol" d="M40.09,7.5h-2.61l2.42-3.81h-3.04l-2.85,5.71h2.25l-2.25,5.33,6.09-7.23Z"/>
+    <path class="flash-outline" d="M40.09,7.5h-2.61l2.42-3.81h-3.04l-2.85,5.71h2.25l-2.25,5.33,6.09-7.23Z"/>
+  </g>
+
+  <!-- Impact point -->
+  <g transform="translate(34.08, 15.65)">
+    <!-- Central impact -->
+    <path class="impact-point" d="M-2,0 C-1,0.2 -0.5,-0.2 0,0 C0.5,-0.2 1,0.2 2,0 C1,-0.1 0.5,0.1 0,0 C-0.5,0.1 -1,-0.1 -2,0Z"/>
+    
+    <!-- Radiating lines -->
+    <line class="impact-line" x1="-2.5" y1="0" x2="-1.5" y2="0"/>
+    <line class="impact-line" x1="1.5" y1="0" x2="2.5" y2="0"/>
+    <line class="impact-line" x1="-2.2" y1="0.2" x2="-1.2" y2="0.2" style="animation-delay: 0.1s"/>
+    <line class="impact-line" x1="1.2" y1="0.2" x2="2.2" y2="0.2" style="animation-delay: 0.1s"/>
+    <line class="impact-line" x1="-2.2" y1="-0.2" x2="-1.2" y2="-0.2" style="animation-delay: 0.2s"/>
+    <line class="impact-line" x1="1.2" y1="-0.2" x2="2.2" y2="-0.2" style="animation-delay: 0.2s"/>
+  </g>
 </svg>
