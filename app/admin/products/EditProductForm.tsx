@@ -11,7 +11,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select'
-import { PREDEFINED_CATEGORIES, MainCategory } from '@/lib/categories'
+import { PREDEFINED_CATEGORIES } from '@/lib/categories'
 import { Switch } from '@/components/ui/switch'
 import ImageUpload from './ImageUpload'
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -23,12 +23,57 @@ interface EditProductFormProps {
   onProductUpdated: () => void
 }
 
+// Create a type for the category structure
+type CategoryStructure = {
+  [key: string]: string[]
+}
+
+// Create a flattened category structure for the form
+const CATEGORY_STRUCTURE: CategoryStructure = {
+  "SALONS": [
+    "Salon en L",
+    "Salon en U"
+  ],
+  "CANAPÉS": [
+    "Canapé 2 Places",
+    "Canapé 3 Places",
+    "Fauteuils"
+  ],
+  "CHAMBRE": [
+    "Lits",
+    "Matelas",
+    "Table de Chevet"
+  ],
+  "TABLES": [
+    "Table Basse",
+    "Table de Salle à Manger",
+    "Table D'appoint"
+  ],
+  "CHAISES": [
+    "Chaises"
+  ],
+  "JARDIN": [
+    "Ensemble D'extérieur",
+    "Salle à Manger + Chaises"
+  ],
+  "MEUBLES": [
+    "Consoles",
+    "Armoires",
+    "Bibliothèques",
+    "Buffets",
+    "Meubles TV"
+  ],
+  "DECO": [
+    "Mirroirs"
+  ]
+}
+
 export function EditProductForm({ product, onClose, onProductUpdated }: EditProductFormProps) {
-  const defaultMainCategory = Object.keys(PREDEFINED_CATEGORIES)[0] as MainCategory
+  const defaultMainCategory = Object.keys(PREDEFINED_CATEGORIES)[0] as string
   
   const [formData, setFormData] = useState({
     ...product,
-    mainCategory: (product.mainCategory || defaultMainCategory) as MainCategory
+    mainCategory: (product.mainCategory || defaultMainCategory) as string
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -61,7 +106,7 @@ export function EditProductForm({ product, onClose, onProductUpdated }: EditProd
     }
   }
 
-  const availableSubcategories = PREDEFINED_CATEGORIES[formData.mainCategory] || []
+  const availableSubcategories = CATEGORY_STRUCTURE[formData.mainCategory] || []
 
   return (
     <form onSubmit={handleSubmit} className="relative">
@@ -141,7 +186,7 @@ export function EditProductForm({ product, onClose, onProductUpdated }: EditProd
                   <label className="block text-sm font-medium mb-1.5 text-gray-700">Main Category</label>
                   <Select
                     value={formData.mainCategory}
-                    onValueChange={(value: MainCategory) => setFormData({ 
+                    onValueChange={(value: string) => setFormData({ 
                       ...formData, 
                       mainCategory: value,
                       subCategory: ''
@@ -151,7 +196,7 @@ export function EditProductForm({ product, onClose, onProductUpdated }: EditProd
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent className="bg-white">
-                      {Object.keys(PREDEFINED_CATEGORIES).map((category) => (
+                      {Object.keys(CATEGORY_STRUCTURE).map((category) => (
                         <SelectItem key={category} value={category}>
                           {category}
                         </SelectItem>

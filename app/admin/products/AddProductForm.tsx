@@ -155,6 +155,51 @@ function ImageUploadBox({
   );
 }
 
+// Create a type for the category structure
+type CategoryStructure = {
+  [key: string]: string[]
+}
+
+// Create a flattened category structure for the form
+const CATEGORY_STRUCTURE: CategoryStructure = {
+  "SALONS": [
+    "Salon en L",
+    "Salon en U"
+  ],
+  "CANAPÉS": [
+    "Canapé 2 Places",
+    "Canapé 3 Places",
+    "Fauteuils"
+  ],
+  "CHAMBRE": [
+    "Lits",
+    "Matelas",
+    "Table de Chevet"
+  ],
+  "TABLES": [
+    "Table Basse",
+    "Table de Salle à Manger",
+    "Table D'appoint"
+  ],
+  "CHAISES": [
+    "Chaises"
+  ],
+  "JARDIN": [
+    "Ensemble D'extérieur",
+    "Salle à Manger + Chaises"
+  ],
+  "MEUBLES": [
+    "Consoles",
+    "Armoires",
+    "Bibliothèques",
+    "Buffets",
+    "Meubles TV"
+  ],
+  "DECO": [
+    "Mirroirs"
+  ]
+}
+
 export function AddProductForm({ onClose, onProductAdded }: AddProductFormProps) {
   const [formData, setFormData] = useState({
     name: '',
@@ -367,16 +412,13 @@ export function AddProductForm({ onClose, onProductAdded }: AddProductFormProps)
                   <label className="block text-sm font-medium mb-1.5 text-gray-700">Main Category</label>
                   <Select
                     value={selectedMainCategory}
-                    onValueChange={(value) => {
-                      setSelectedMainCategory(value);
-                      setFormData(prev => ({ ...prev, mainCategory: value, subCategory: '' }));
-                    }}
+                    onValueChange={setSelectedMainCategory}
                   >
-                    <SelectTrigger className="bg-white">
-                      <SelectValue placeholder="Select category" />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner une catégorie" />
                     </SelectTrigger>
-                    <SelectContent className="bg-white">
-                      {Object.keys(PREDEFINED_CATEGORIES).map((category) => (
+                    <SelectContent>
+                      {Object.keys(CATEGORY_STRUCTURE).map((category) => (
                         <SelectItem key={category} value={category}>
                           {category}
                         </SelectItem>
@@ -396,7 +438,7 @@ export function AddProductForm({ onClose, onProductAdded }: AddProductFormProps)
                         <SelectValue placeholder="Select subcategory" />
                       </SelectTrigger>
                       <SelectContent className="bg-white">
-                        {PREDEFINED_CATEGORIES[selectedMainCategory as keyof typeof PREDEFINED_CATEGORIES].map((subCategory) => (
+                        {CATEGORY_STRUCTURE[selectedMainCategory]?.map((subCategory) => (
                           <SelectItem key={subCategory} value={subCategory}>
                             {subCategory}
                           </SelectItem>

@@ -120,6 +120,25 @@ export default function ProductsPage() {
 
   const filteredAndSortedProducts = sortProducts(filteredProducts)
 
+  const handleSaveCategories = (updatedCategories: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    icon: string;
+    order: number;
+    featured: boolean;
+    children?: Array<{
+      id: string;
+      name: string;
+      slug: string;
+      icon: string;
+      order: number;
+    }>;
+  }>) => {
+    // Handle the updated categories
+    // ...
+  }
+
   return (
     <div className="space-y-6">
       {/* Header with Stats */}
@@ -291,10 +310,7 @@ export default function ProductsPage() {
         <DialogContent className="max-w-3xl">
           <CategoryManager
             onClose={() => setShowCategoryManager(false)}
-            onSave={() => {
-              setShowCategoryManager(false)
-              showToastMessage('Categories updated successfully')
-            }}
+            onSave={handleSaveCategories}
           />
         </DialogContent>
       </Dialog>

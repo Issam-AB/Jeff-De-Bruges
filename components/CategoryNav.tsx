@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { Category, getAllCategories } from '@/lib/categories'
+import { LucideIcon } from 'lucide-react'
 import * as Icons from 'lucide-react'
 
 export default function CategoryNav() {
@@ -43,7 +44,7 @@ function CategoryButton({
   category: Category
   isActive: boolean
 }) {
-  const Icon = Icons[category.icon as keyof typeof Icons]
+  const Icon: LucideIcon | undefined = Icons[category.icon as keyof typeof Icons] as LucideIcon | undefined
 
   return (
     <Link

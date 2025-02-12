@@ -60,7 +60,7 @@ export default function ProductGrid({ products: initialProducts, category }: Pro
           url.searchParams.set('skip', skip.toString())
           url.searchParams.set('take', take.toString())
           if (category) {
-            url.searchParams.set('category', category)
+            url.searchParams.set('category', category.slug)
           }
           
           const response = await fetch(url.toString())
@@ -101,7 +101,7 @@ export default function ProductGrid({ products: initialProducts, category }: Pro
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        key={category} // This will trigger animation on category change
+        key={category?.slug || 'all'}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}

@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import prisma from '@/lib/prisma'
 import ProductGrid from '@/components/ProductGrid'
 import PageLayout from '@/components/PageLayout'
-import { getCategoryBySlug, PREDEFINED_CATEGORIES } from '@/lib/categories'
+import { getCategoryBySlug, PREDEFINED_CATEGORIES, Category } from '@/lib/categories'
 
 function normalizeString(str: string): string {
   return str
@@ -30,13 +30,20 @@ async function getProducts(category: string) {
     // Find the category in our predefined list
     const categoryConfig = PREDEFINED_CATEGORIES.find(c => 
       normalizeString(c.slug) === normalizeString(category)
-    )
+    ) as Category | undefined
 
     if (!categoryConfig) return []
 
     // Get all possible subcategories
-    const subcategories = categoryConfig.children?.map(child => child.name) || []
+    let subcategories: string[] = []
+    
+    // Add the main category name
     subcategories.push(categoryConfig.name)
+    
+    // Add child category names if they exist
+    if ('children' in categoryConfig && Array.isArray(categoryConfig.children)) {
+      subcategories = [...subcategories, ...categoryConfig.children.map(child => child.name)]
+    }
 
     // For specific categories
     return await prisma.product.findMany({

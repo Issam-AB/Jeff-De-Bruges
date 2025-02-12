@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react'
+'use client'
+
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Plus, Trash2, X, Edit, Check } from 'lucide-react'
@@ -14,20 +16,70 @@ import { PREDEFINED_CATEGORIES } from '@/lib/categories'
 
 interface CategoryManagerProps {
   onClose: () => void
-  onSave: () => void
+  onSave: (categories: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    icon: string;
+    order: number;
+    featured: boolean;
+    children?: Array<{
+      id: string;
+      name: string;
+      slug: string;
+      icon: string;
+      order: number;
+    }>;
+  }>) => void
 }
 
-// Simplified category structure
-type Categories = Record<string, string[]>;
+// Create a type for our category structure
+type CategoryStructure = {
+  [key: string]: string[]
+}
 
-// Convert readonly categories to mutable
-const mutableCategories: Categories = Object.fromEntries(
-  Object.entries(PREDEFINED_CATEGORIES).map(([key, value]) => [key, [...value]])
-);
+// Convert our predefined categories to the structure we need
+const CATEGORY_STRUCTURE: CategoryStructure = {
+  "SALONS": [
+    "Salon en L",
+    "Salon en U"
+  ],
+  "CANAPÉS": [
+    "Canapé 2 Places",
+    "Canapé 3 Places",
+    "Fauteuils"
+  ],
+  "CHAMBRE": [
+    "Lits",
+    "Matelas",
+    "Table de Chevet"
+  ],
+  "TABLES": [
+    "Table Basse",
+    "Table de Salle à Manger",
+    "Table D'appoint"
+  ],
+  "CHAISES": [
+    "Chaises"
+  ],
+  "JARDIN": [
+    "Ensemble D'extérieur",
+    "Salle à Manger + Chaises"
+  ],
+  "MEUBLES": [
+    "Consoles",
+    "Armoires",
+    "Bibliothèques",
+    "Buffets",
+    "Meubles TV"
+  ],
+  "DECO": [
+    "Mirroirs"
+  ]
+}
 
 export function CategoryManager({ onClose, onSave }: CategoryManagerProps) {
-  // Initialize with mutable categories
-  const [categories, setCategories] = useState<Categories>(mutableCategories)
+  const [categories, setCategories] = useState<CategoryStructure>(CATEGORY_STRUCTURE)
   const [newCategory, setNewCategory] = useState('')
   const [newSubCategory, setNewSubCategory] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
@@ -38,13 +90,44 @@ export function CategoryManager({ onClose, onSave }: CategoryManagerProps) {
     value: string 
   } | null>(null)
 
-  // Fetch categories on mount
-  useEffect(() => {
-    fetch('/api/categories')
-      .then(res => res.json())
-      .then(data => setCategories(data))
-      .catch(err => console.error('Failed to fetch categories:', err))
-  }, [])
+  const handleSave = () => {
+    // Convert the category structure back to the predefined format
+    const updatedCategories = Object.entries(categories).map(([mainCategory, subCategories]) => ({
+      id: mainCategory.toLowerCase().replace(/\s+/g, '-'),
+      name: mainCategory,
+      slug: mainCategory.toLowerCase().replace(/\s+/g, '-'),
+      icon: getIconForCategory(mainCategory),
+      order: getOrderForCategory(mainCategory),
+      featured: true,
+      children: subCategories.map((subCategory, index) => ({
+        id: subCategory.toLowerCase().replace(/\s+/g, '-'),
+        name: subCategory,
+        slug: subCategory.toLowerCase().replace(/\s+/g, '-'),
+        icon: getIconForCategory(subCategory),
+        order: index + 1
+      }))
+    }))
+
+    onSave(updatedCategories)
+  }
+
+  function getIconForCategory(category: string): string {
+    const categoryLower = category.toLowerCase()
+    if (categoryLower.includes('salon')) return 'Sofa'
+    if (categoryLower.includes('canapé')) return 'Armchair'
+    if (categoryLower.includes('chambre')) return 'Bed'
+    if (categoryLower.includes('table')) return 'Table2'
+    if (categoryLower.includes('chaise')) return 'Chair'
+    if (categoryLower.includes('jardin')) return 'Palmtree'
+    if (categoryLower.includes('meuble')) return 'Package'
+    if (categoryLower.includes('deco')) return 'Sparkles'
+    return 'Package'
+  }
+
+  function getOrderForCategory(category: string): number {
+    const categoryOrder = Object.keys(CATEGORY_STRUCTURE).indexOf(category)
+    return categoryOrder === -1 ? 99 : categoryOrder + 1
+  }
 
   const handleAddCategory = async () => {
     if (!newCategory.trim()) return
@@ -386,7 +469,7 @@ export function CategoryManager({ onClose, onSave }: CategoryManagerProps) {
         <Button variant="outline" onClick={onClose}>
           Cancel
         </Button>
-        <Button onClick={onSave}>
+        <Button onClick={handleSave}>
           Save Changes
         </Button>
       </div>

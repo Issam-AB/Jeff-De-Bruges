@@ -12,8 +12,19 @@ export interface Category {
   children?: Category[];
 }
 
-// Predefined categories list
-export const PREDEFINED_CATEGORIES = [
+// Create a type for the predefined categories
+type PredefinedCategory = {
+  id: string;
+  name: string;
+  slug: string;
+  icon: string;
+  order: number;
+  featured: boolean;
+  children?: Category[];
+};
+
+// Remove the 'as const' assertion and explicitly type the array
+export const PREDEFINED_CATEGORIES: PredefinedCategory[] = [
   {
     id: 'tous',
     name: 'TOUS',
@@ -242,16 +253,20 @@ export const PREDEFINED_CATEGORIES = [
       }
     ]
   }
-] as const;
+];
 
-// Flatten categories for easier access
-const FLATTENED_CATEGORIES = PREDEFINED_CATEGORIES.reduce((acc, category) => {
-  acc.push(category)
-  if (category.children) {
-    acc.push(...category.children)
+// Update the flattening logic with proper typing
+const FLATTENED_CATEGORIES: Category[] = PREDEFINED_CATEGORIES.reduce<Category[]>((acc, category) => {
+  // Add the current category
+  acc.push(category as Category);
+  
+  // Add children if they exist
+  if ('children' in category && Array.isArray(category.children)) {
+    acc.push(...category.children);
   }
-  return acc
-}, [] as any[])
+  
+  return acc;
+}, []);
 
 function normalizeString(str: string): string {
   return str
@@ -327,18 +342,18 @@ export async function getCategoryBySlug(slug: string) {
 }
 
 export async function getParentCategories(): Promise<Category[]> {
-  return PREDEFINED_CATEGORIES.filter(cat => !cat.parent)
+  return PREDEFINED_CATEGORIES.filter(cat => !('parent' in cat)) as Category[];
 }
 
 export async function getChildCategories(parentId: string): Promise<Category[]> {
-  const parent = PREDEFINED_CATEGORIES.find(cat => cat.id === parentId)
-  return parent?.children || []
+  const parent = PREDEFINED_CATEGORIES.find(cat => cat.id === parentId);
+  return (parent && 'children' in parent) ? parent.children || [] : [];
 }
 
 export async function getAllCategories(): Promise<Category[]> {
-  return FLATTENED_CATEGORIES
+  return FLATTENED_CATEGORIES;
 }
 
 export async function getFeaturedCategories(): Promise<Category[]> {
-  return FLATTENED_CATEGORIES.filter(cat => cat.featured)
+  return FLATTENED_CATEGORIES.filter(cat => cat.featured);
 }
