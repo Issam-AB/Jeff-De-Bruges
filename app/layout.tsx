@@ -1,5 +1,7 @@
 import { Analytics } from '@vercel/analytics/react'
 import "./globals.css"
+import { Suspense } from 'react'
+import LoadingScreen from '@/components/LoadingScreen'
 
 export const metadata = {
   title: "SKETCH VENTE FLASH",
@@ -57,7 +59,9 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body>
-        {children}
+        <Suspense fallback={<LoadingScreen />}>
+          {children}
+        </Suspense>
         <Analytics />
       </body>
     </html>

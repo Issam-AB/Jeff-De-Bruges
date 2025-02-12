@@ -5,39 +5,46 @@ import Image from 'next/image'
 
 export default function LoadingScreen() {
   return (
-    <div className="min-h-[60vh] flex flex-col items-center justify-center">
-      <motion.div
-        animate={{ 
-          scale: [1, 1.1, 1],
-          opacity: [0.7, 1, 0.7]
-        }}
-        transition={{ 
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-        className="relative w-64 h-32"
-      >
-        <Image
-          src="/topdeal.svg"
-          alt="Top Deal"
-          fill
-          className="object-contain"
-          priority
-        />
-      </motion.div>
-      <motion.div 
-        className="mt-8 h-1 w-48 bg-gradient-to-r from-transparent via-purple-600 to-transparent rounded-full"
-        animate={{
-          opacity: [0.3, 1, 0.3],
-          scaleX: [0.8, 1.2, 0.8],
-        }}
-        transition={{
-          duration: 1.5,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
-    </div>
+    <motion.div
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 bg-black flex items-center justify-center"
+    >
+      <div className="relative flex flex-col items-center">
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Image
+            src="/vf.svg"
+            alt="VF"
+            width={200}
+            height={100}
+            priority
+            className="relative z-10"
+          />
+        </motion.div>
+        
+        {/* Loading bar */}
+        <motion.div 
+          className="w-48 h-1 mt-8 bg-gray-800 rounded-full overflow-hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <motion.div
+            className="h-full bg-[#e40524]"
+            initial={{ x: '-100%' }}
+            animate={{ x: '100%' }}
+            transition={{
+              repeat: Infinity,
+              duration: 1,
+              ease: 'linear'
+            }}
+          />
+        </motion.div>
+      </div>
+    </motion.div>
   )
 } 

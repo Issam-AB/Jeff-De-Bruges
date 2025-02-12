@@ -2,22 +2,22 @@ import { notFound } from 'next/navigation'
 import prisma from '@/lib/prisma'
 import ProductGrid from '@/components/ProductGrid'
 import PageLayout from '@/components/PageLayout'
-import { Product } from '@prisma/client'
-import { ValidCategory } from '@/components/ProductGrid'
+import { getCategoryBySlug, PREDEFINED_CATEGORIES } from '@/lib/categories'
+
+function normalizeString(str: string): string {
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
 
 async function getProducts(category: string) {
   try {
-    // Normalize the category: decode, remove accents, and convert to uppercase
-    const decodedCategory = decodeURIComponent(category)
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toUpperCase()
-    
-    console.log('Processing category:', decodedCategory)
-
-    // For 'TOUS' category, return all products
-    if (decodedCategory === 'TOUS') {
-      const products = await prisma.product.findMany({
+    // For 'tous' category, return all products - make case insensitive
+    if (category.toLowerCase() === 'tous' || category.toUpperCase() === 'TOUS') {
+      return await prisma.product.findMany({
         where: {
           isActive: true
         },
@@ -25,24 +25,33 @@ async function getProducts(category: string) {
           createdAt: 'desc'
         }
       })
-      console.log(`Found ${products.length} products for TOUS`)
-      return products
     }
 
-    // For other categories, use case-insensitive search
-    const products = await prisma.product.findMany({
+    // Find the category in our predefined list
+    const categoryConfig = PREDEFINED_CATEGORIES.find(c => 
+      normalizeString(c.slug) === normalizeString(category)
+    )
+
+    if (!categoryConfig) return []
+
+    // Get all possible subcategories
+    const subcategories = categoryConfig.children?.map(child => child.name) || []
+    subcategories.push(categoryConfig.name)
+
+    // For specific categories
+    return await prisma.product.findMany({
       where: {
         isActive: true,
         OR: [
           {
             mainCategory: {
-              contains: decodedCategory,
+              in: subcategories,
               mode: 'insensitive'
             }
           },
           {
             subCategory: {
-              contains: decodedCategory,
+              in: subcategories,
               mode: 'insensitive'
             }
           }
@@ -52,46 +61,10 @@ async function getProducts(category: string) {
         createdAt: 'desc'
       }
     })
-
-    console.log(`Found ${products.length} products for category:`, decodedCategory)
-    
-    // Only return notFound if we're sure there are no products
-    if (!products.length && decodedCategory !== 'TOUS') {
-      console.log('No products found for category:', decodedCategory)
-      return notFound()
-    }
-
-    return products
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching products:', error)
-    console.error('Error details:', error?.message || 'Unknown error')
     return []
   }
-}
-
-// Helper function to validate category
-function isValidCategory(category: string | undefined): category is ValidCategory {
-  if (!category) return false;
-  
-  const validCategories = [
-    "Salon en L",
-    "Salon en U",
-    "Canapé 2 Places",
-    "Canapé 3 Places",
-    "Fauteuils",
-    "Lits",
-    "Matelas",
-    "Table de Chevet",
-    "Armoires",
-    "Bibliothèques",
-    "Buffets",
-    "SALONS",
-    "CHAMBRES",
-    "RANGEMENTS",
-    "TOUS"
-  ] as const;
-  
-  return validCategories.includes(category as any);
 }
 
 export default async function CategoryPage({
@@ -99,20 +72,21 @@ export default async function CategoryPage({
 }: {
   params: { category: string }
 }) {
-  const normalizedCategory = decodeURIComponent(params.category)
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toUpperCase()
+  // Decode and normalize the category slug
+  const decodedCategory = decodeURIComponent(params.category)
+  const normalizedSlug = normalizeString(decodedCategory)
   
-  const products = await getProducts(params.category)
+  // Find the category in our predefined list
+  const category = await getCategoryBySlug(normalizedSlug)
+  if (!category) return notFound()
 
-  const validatedCategory = isValidCategory(normalizedCategory) ? normalizedCategory : undefined;
+  const products = await getProducts(normalizedSlug)
 
   return (
     <PageLayout>
       <ProductGrid 
         products={products} 
-        category={validatedCategory === 'TOUS' ? undefined : validatedCategory} 
+        category={category}
       />
     </PageLayout>
   )
