@@ -238,24 +238,24 @@ export default function Header() {
                 className="relative h-[40px] px-4 group"
               >
                 {/* Sharp skewed background */}
-                <div className="absolute inset-0 transform -skew-x-[30deg] bg-[#e40524]/10 
-                  group-hover:bg-[#e40524]/20 transition-all duration-300
+                <div className="absolute inset-0 transform -skew-x-[30deg] bg-[#e40524] 
+                  group-hover:bg-[#ff1f3d] transition-all duration-300
                   before:absolute before:inset-0 
                   before:transform before:translate-x-[6px] before:translate-y-[6px]
-                  before:bg-[#e40524]/20 before:blur-[8px]
-                  before:opacity-0 group-hover:before:opacity-100
+                  before:bg-[#e40524] before:blur-[8px]
+                  before:opacity-50 group-hover:before:opacity-100
                   before:transition-opacity before:duration-300" />
                 
                 {/* Sharp edges glow */}
                 <div className="absolute inset-0 transform -skew-x-[30deg]
                   before:absolute before:inset-y-0 before:-left-[2px] before:w-[3px]
-                  before:bg-gradient-to-b before:from-transparent before:via-[#e40524] before:to-transparent
+                  before:bg-gradient-to-b before:from-transparent before:via-white before:to-transparent
                   after:absolute after:inset-y-0 after:-right-[2px] after:w-[3px]
-                  after:bg-gradient-to-b after:from-transparent after:via-[#e40524] after:to-transparent
-                  opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  after:bg-gradient-to-b after:from-transparent after:via-white after:to-transparent
+                  opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
 
                 {/* Content */}
-                <div className="relative z-10 h-full flex items-center gap-2 text-gray-400 group-hover:text-white transition-colors">
+                <div className="relative z-10 h-full flex items-center gap-2 text-white transition-colors">
                   <Menu size={18} className="relative z-10" />
                   <span className="font-bold tracking-wider text-sm uppercase">{activeCategory}</span>
                   <ChevronDown 
@@ -270,7 +270,7 @@ export default function Header() {
                 {/* Bottom accent */}
                 <div className={`
                   absolute -bottom-[3px] left-[6px] right-[6px] h-[2px] transform -skew-x-[30deg]
-                  bg-transparent group-hover:bg-[#e40524]/50
+                  bg-white/50 group-hover:bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]
                   transition-all duration-300
                 `} />
               </button>

@@ -30,6 +30,7 @@ import {
 import { track } from '@vercel/analytics'
 import useEmblaCarousel from 'embla-carousel-react'
 import useSWR from 'swr'
+import { useRouter } from 'next/navigation'
 
 interface QuickViewProps {
   product: Product
@@ -42,6 +43,8 @@ interface SheetProduct {
   ref: string;
   description: string;
 }
+
+const WATERMARK_URL = 'https://zruplcd5sfldkzdm.public.blob.vercel-storage.com/SketchDesign.svg'
 
 const cityIcons: { [key: string]: JSX.Element } = {
   Casa: <MapPin size={14} />,
@@ -93,6 +96,8 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
     const match = sheetProducts.find(p => p.ref === product.ref)
     return match?.description || 'Description non disponible'
   }, [sheetProducts, product.ref])
+
+  const router = useRouter()
 
   useEffect(() => {
     // Mark component as hydrated
@@ -225,6 +230,19 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
     mainEmbla?.scrollNext();
   };
 
+  const handleCategoryClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const categorySlug = product.mainCategory
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-zà-ÿ0-9-]/g, '')
+    
+    router.push(`/categories/${categorySlug}`)
+    if (onClose) onClose()
+  }
+
   const DesktopImageGallery = (
     <div className="embla h-full overflow-hidden" ref={mainViewRef}>
       <div className="embla__container h-full flex">
@@ -247,6 +265,25 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
               draggable={false}
               quality={100}
             />
+            {/* Watermark */}
+            <div className="absolute bottom-[52px] left-1/2 -translate-x-1/2 w-20 h-20 opacity-75 mix-blend-overlay">
+              <Image
+                src={WATERMARK_URL}
+                alt="Sketch Design"
+                fill
+                className="object-contain brightness-0 invert"
+                sizes="80px"
+              />
+            </div>
+
+            {/* Image Counter */}
+            {images.length > 1 && (
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-none">
+                <span className="text-white text-sm font-medium">
+                  {currentImageIndex + 1} / {images.length}
+                </span>
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -266,15 +303,6 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
           >
             <ChevronRight className="w-6 h-6 text-gray-800 group-hover:text-gray-600" />
           </button>
-        </div>
-      )}
-
-      {/* Image Counter */}
-      {images.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-none">
-          <span className="text-white text-sm font-medium">
-            {currentImageIndex + 1} / {images.length}
-          </span>
         </div>
       )}
     </div>
@@ -302,18 +330,28 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
               draggable={false}
               quality={100}
             />
+            {/* Watermark */}
+            <div className="absolute bottom-[52px] left-1/2 -translate-x-1/2 w-20 h-20 opacity-75 mix-blend-overlay">
+              <Image
+                src={WATERMARK_URL}
+                alt="Sketch Design"
+                fill
+                className="object-contain brightness-0 invert"
+                sizes="80px"
+              />
+            </div>
+
+            {/* Image Counter */}
+            {images.length > 1 && (
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-none">
+                <span className="text-white text-sm font-medium">
+                  {currentImageIndex + 1} / {images.length}
+                </span>
+              </div>
+            )}
           </div>
         ))}
       </div>
-
-      {/* Image Counter for Mobile */}
-      {images.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-none">
-          <span className="text-white text-sm font-medium">
-            {currentImageIndex + 1} / {images.length}
-          </span>
-        </div>
-      )}
     </div>
   );
 
@@ -345,7 +383,10 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
 
                   {/* Category, Dimensions & Reference - Smaller on mobile */}
                   <div className="flex flex-wrap gap-1.5">
-                    <div className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded-full">
+                    <div 
+                      onClick={handleCategoryClick}
+                      className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded-full cursor-pointer hover:bg-blue-100 transition-colors duration-200"
+                    >
                       <Tag size={12} />
                       <span className="text-xs font-medium">{product.subCategory}</span>
                     </div>
@@ -620,7 +661,10 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
 
               {/* Category, Dimensions & Reference - Smaller on mobile */}
               <div className="flex flex-wrap gap-1.5">
-                <div className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded-full">
+                <div 
+                  onClick={handleCategoryClick}
+                  className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded-full cursor-pointer hover:bg-blue-100 transition-colors duration-200"
+                >
                   <Tag size={12} />
                   <span className="text-xs font-medium">{product.subCategory}</span>
                 </div>

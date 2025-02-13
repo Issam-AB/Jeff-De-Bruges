@@ -24,6 +24,9 @@ interface TimeLeft {
   seconds: number;
 }
 
+// Add the watermark image URL
+const WATERMARK_URL = 'https://zruplcd5sfldkzdm.public.blob.vercel-storage.com/SketchDesign.svg'
+
 const getCategoryColor = (category: string) => {
   const stringToColor = (str: string, lightness: number) => {
     let hash = 0;
@@ -120,17 +123,29 @@ export default function ProductCard({ product, className, onQuickView }: Product
       prefetch={true}
     >
       <Card className="overflow-hidden h-full flex flex-col bg-white rounded-none border">
-        <CardContent className="p-0 relative">
+        <CardContent className="relative p-0">
+          {/* Product Image */}
           <div className="relative aspect-square">
             <Image
               src={product.mainImage}
               alt={product.name}
               fill
               sizes="(min-width: 1536px) 20vw, (min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-              className="object-cover"
+              className="object-cover rounded-t-lg"
               priority={false}
             />
             
+            {/* Watermark */}
+            <div className="absolute bottom-1 right-1 w-8 h-8 opacity-75 mix-blend-overlay">
+              <Image
+                src={WATERMARK_URL}
+                alt="Sketch Design"
+                fill
+                className="object-contain brightness-0 invert"
+                sizes="32px"
+              />
+            </div>
+
             <div className="absolute left-2 top-2">
               <div className="bg-gradient-to-r from-orange-500 to-red-600 px-3 py-1.5 rounded-sm shadow-lg">
                 <span className="text-white text-xs font-bold flex items-center gap-1.5">
