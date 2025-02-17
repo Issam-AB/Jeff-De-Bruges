@@ -27,7 +27,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
   }
 
   return (
-    <main className="flex-1 relative mt-[80px] min-h-screen">
+    <main className="flex-1 relative min-h-[100dvh]">
       {/* Base background - brighter and consistent */}
       <div className="fixed inset-0 min-h-[100vh]">
         <div className="absolute inset-0 bg-gradient-to-br from-[#333333] via-[#383838] to-[#333333]" />

@@ -9,13 +9,15 @@ export default function MainLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen flex flex-col relative">
+    <>
       <Header />
-      <PageLayout>
-        <Suspense fallback={<LoadingScreen />}>
-          {children}
-        </Suspense>
-      </PageLayout>
-    </div>
+      <div className="min-h-[100dvh] flex flex-col relative pt-[80px]">
+        <PageLayout>
+          <Suspense fallback={<LoadingScreen />}>
+            {children}
+          </Suspense>
+        </PageLayout>
+      </div>
+    </>
   )
 } 
