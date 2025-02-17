@@ -19,7 +19,14 @@ export default function ProductGrid({ products: initialProducts, category }: Pro
 
   // Find Article Rouge products
   const articleRougeProducts = initialProducts.filter(p => p.isArticleRouge && p.isActive)
-  const regularProducts = initialProducts.filter(p => !p.isArticleRouge)
+  
+  // Filter regular products:
+  // 1. Must be active
+  // 2. Must NOT have letters in ref (regardless of Article Rouge status)
+  const regularProducts = initialProducts.filter(p => {
+    const hasLettersInRef = /[a-zA-Z]/.test(p.ref)
+    return p.isActive && !hasLettersInRef
+  })
 
   if (initialProducts.length === 0) {
     return <EmptyState category={category} />
