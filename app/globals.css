@@ -52,6 +52,8 @@
 /* Custom styles */
 body {
   font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
 }
 
 /* Utility classes */
@@ -120,3 +122,5 @@ body {
     display: none;  /* Chrome, Safari and Opera */
   }
 }
+
+/* Add any other global styles here */

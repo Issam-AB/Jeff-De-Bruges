@@ -9,6 +9,7 @@ const nextConfig = {
       'sketch-design.ma',
       'res.cloudinary.com',
       '4psy1ow4nybtm8zm.public.blob.vercel-storage.com',
+      'zruplcd5sfldkzdm.public.blob.vercel-storage.com',
     ],
     remotePatterns: [
       {
