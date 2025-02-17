@@ -52,7 +52,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
       
       {/* Large Sketch logo */}
       <div className="fixed top-[100px] left-0 right-0 w-full flex justify-center pointer-events-none">
-        <div className="w-full px-8">
+        <div className="w-full px-2 md:px-8">
           <Image
             src="https://zruplcd5sfldkzdm.public.blob.vercel-storage.com/SketchDesign.svg"
             alt="Sketch Design"
@@ -65,7 +65,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
       </div>
       
       {/* Content area */}
-      <div className="relative w-full px-8 pb-8 min-h-screen">
+      <div className="relative w-full px-2 md:px-8 pb-8 min-h-screen">
         {isMounted ? (
           <div style={generateRandomStyle()}>
             {children}
