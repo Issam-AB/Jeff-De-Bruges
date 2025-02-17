@@ -27,9 +27,9 @@ export default function PageLayout({ children }: PageLayoutProps) {
   }
 
   return (
-    <main className="flex-1 relative mt-[80px]">
+    <main className="flex-1 relative mt-[80px] min-h-screen">
       {/* Base background - brighter and consistent */}
-      <div className="fixed inset-0">
+      <div className="fixed inset-0 min-h-[100vh]">
         <div className="absolute inset-0 bg-gradient-to-br from-[#333333] via-[#383838] to-[#333333]" />
         
         {/* Subtle radial overlays for depth */}
@@ -65,7 +65,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
       </div>
       
       {/* Content area */}
-      <div className="relative w-full px-8 pb-8">
+      <div className="relative w-full px-8 pb-8 min-h-screen">
         {isMounted ? (
           <div style={generateRandomStyle()}>
             {children}
