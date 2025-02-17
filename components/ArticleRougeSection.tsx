@@ -47,7 +47,7 @@ export default function ArticleRougeSection({ products }: ArticleRougeSectionPro
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative overflow-hidden rounded-xl md:rounded-lg -mx-4 md:mx-0 mt-2 md:mt-8"
+      className="relative overflow-hidden md:rounded-lg -mx-8 md:mx-0 mt-2 md:mt-8 shadow-lg"
     >
       {/* Simplified Background */}
       <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-500" />
@@ -80,7 +80,7 @@ export default function ArticleRougeSection({ products }: ArticleRougeSectionPro
               transition={{ type: "spring", stiffness: 300 }}
             >
               <div 
-                className="relative bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer"
+                className="relative bg-white overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.2)] transition-shadow duration-300 cursor-pointer"
                 onClick={() => handleWhatsAppClick(product)}
               >
                 {/* Main Image Container */}

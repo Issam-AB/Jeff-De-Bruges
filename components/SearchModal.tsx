@@ -1,103 +1,31 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { Search, X, ArrowRight, Tag, Ruler } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
-import { Product } from '@/lib/types'
-import { fetchStoreAvailability } from '@/lib/api'
-import type { StoreAvailability } from '@/lib/api'
+import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Product } from "@/lib/types"
+import { Search, Tag, Ruler, Timer, ArrowRight, X } from "lucide-react"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { useEffect, useState, useRef } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 
 interface SearchModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen: boolean
+  onClose: () => void
 }
 
 export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState("")
   const [results, setResults] = useState<Product[]>([])
-  const [isLoading, setIsLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
-  const [availabilities, setAvailabilities] = useState<{ [key: string]: StoreAvailability | null }>({})
   const modalRef = useRef<HTMLDivElement>(null)
 
-  // Focus input when modal opens
+  // Handle click outside
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 100)
-    } else {
-      setQuery('')
-      setResults([])
-    }
-  }, [isOpen])
-
-  // Search functionality
-  useEffect(() => {
-    if (!query.trim()) {
-      setResults([])
-      return
-    }
-
-    const searchProducts = async () => {
-      setIsLoading(true)
-      try {
-        const response = await fetch(`/api/products/search?q=${encodeURIComponent(query)}`)
-        const data = await response.json()
-        
-        // Ensure image URLs are correct
-        const processedData = data.map((product: Product) => ({
-          ...product,
-          mainImage: product.mainImage.startsWith('http') 
-            ? product.mainImage 
-            : `${process.env.NEXT_PUBLIC_BLOB_PATH_PREFIX}/${product.mainImage}`,
-          gallery: product.gallery.map((img: string) => 
-            img.startsWith('http') 
-              ? img 
-              : `${process.env.NEXT_PUBLIC_BLOB_PATH_PREFIX}/${img}`
-          )
-        }))
-        
-        setResults(processedData.slice(0, 6))
-      } catch (error) {
-        console.error('Search error:', error)
-        setResults([])
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    const debounce = setTimeout(searchProducts, 300)
-    return () => clearTimeout(debounce)
-  }, [query])
-
-  // Fetch availabilities
-  useEffect(() => {
-    const fetchAvailabilities = async () => {
-      const promises = results.map(async (product) => {
-        try {
-          const data = await fetchStoreAvailability(product.ref)
-          return [product.id, data]
-        } catch (err) {
-          console.error(err)
-          return [product.id, null]
-        }
-      })
-      
-      const availabilityData = await Promise.all(promises)
-      setAvailabilities(Object.fromEntries(availabilityData))
-    }
-
-    if (results.length > 0) {
-      fetchAvailabilities()
-    }
-  }, [results])
-
-  // Add click outside handler
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
         onClose()
       }
     }
@@ -111,10 +39,47 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     }
   }, [isOpen, onClose])
 
+  useEffect(() => {
+    const searchProducts = async () => {
+      if (query.length < 2) {
+        setResults([])
+        return
+      }
+
+      setLoading(true)
+      try {
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
+        const data = await response.json()
+        
+        // Create duplicate entries for products with Article Rouge prices
+        const expandedResults = data.flatMap((product: Product) => {
+          if (product.isArticleRouge && product.articleRougePrice) {
+            return [
+              product,
+              {
+                ...product,
+                isArticleRouge: false
+              }
+            ]
+          }
+          return [product]
+        })
+
+        setResults(expandedResults)
+      } catch (error) {
+        console.error('Search error:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    const debounce = setTimeout(searchProducts, 300)
+    return () => clearTimeout(debounce)
+  }, [query])
+
   const handleProductClick = (product: Product) => {
     router.push(`/products/${product.slug}`)
     onClose()
-    setQuery('')
   }
 
   return (
@@ -165,22 +130,22 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
               </div>
 
               {/* Results */}
-              {(isLoading || results.length > 0 || query.trim()) && (
+              {(loading || results.length > 0 || query.trim()) && (
                 <motion.div
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="bg-white/10 backdrop-blur-md rounded-xl overflow-hidden"
                 >
                   <div className="max-h-[60vh] overflow-y-auto">
-                    {isLoading ? (
+                    {loading ? (
                       <div className="flex items-center justify-center p-8">
                         <div className="w-6 h-6 border-2 border-[#e40524] border-t-transparent rounded-full animate-spin" />
                       </div>
                     ) : results.length > 0 ? (
                       <div>
-                        {results.map((product) => (
+                        {results.map((product, index) => (
                           <div
-                            key={product.id}
+                            key={`${product.id}-${product.isArticleRouge ? 'rouge' : 'regular'}-${index}`}
                             onClick={() => handleProductClick(product)}
                             className="group hover:bg-[#e40524]/10 transition-colors cursor-pointer"
                           >
@@ -193,9 +158,16 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                                   fill
                                   className="object-cover"
                                 />
-                                <div className="absolute top-1.5 right-1.5 bg-[#e40524] text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
-                                  -{Math.round((1 - product.VenteflashPrice / product.initialPrice) * 100)}%
-                                </div>
+                                {product.isArticleRouge ? (
+                                  <div className="absolute top-1.5 right-1.5 bg-[#e40524] text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
+                                    <Timer className="w-3 h-3" />
+                                    <span>DERNIÈRE PIÈCE</span>
+                                  </div>
+                                ) : (
+                                  <div className="absolute top-1.5 right-1.5 bg-[#e40524] text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
+                                    -{Math.round((1 - (product.VenteflashPrice) / product.initialPrice) * 100)}%
+                                  </div>
+                                )}
                               </div>
                               
                               {/* Product Info */}
@@ -216,7 +188,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-baseline gap-2">
                                     <span className="text-base font-bold text-white">
-                                      {product.VenteflashPrice.toLocaleString('fr-FR')} DH
+                                      {(product.isArticleRouge ? product.articleRougePrice : product.VenteflashPrice)?.toLocaleString('fr-FR')} DH
                                     </span>
                                     <span className="text-sm text-white/40 line-through">
                                       {product.initialPrice.toLocaleString('fr-FR')} DH

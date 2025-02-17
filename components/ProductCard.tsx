@@ -10,6 +10,7 @@ import { fetchStoreAvailability } from '@/lib/api'
 import type { StoreAvailability } from '@/lib/api'
 import Link from 'next/link'
 import { formatPrice } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 
 interface ProductCardProps {
   product: Product
@@ -120,12 +121,14 @@ export default function ProductCard({ product, className, onQuickView }: Product
   }, [availability])
 
   return (
-    <Link 
-      href={`/products/${product.slug}`}
-      className={`block h-full ${className}`}
-      prefetch={true}
-    >
-      <Card className="overflow-hidden h-full flex flex-col bg-white rounded-none border">
+    <Link href={`/products/${product.slug}`}>
+      <Card className={cn(
+        "group relative overflow-hidden transition-all duration-300",
+        "hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)]",
+        "active:shadow-[0_4px_15px_rgba(0,0,0,0.1)]",
+        "shadow-[0_4px_15px_rgba(0,0,0,0.08)]",
+        className
+      )}>
         <CardContent className="relative p-0">
           {/* Product Image */}
           <div className="relative aspect-square">
@@ -134,7 +137,7 @@ export default function ProductCard({ product, className, onQuickView }: Product
               alt={product.name}
               fill
               sizes="(min-width: 1536px) 20vw, (min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-              className="object-cover rounded-t-lg"
+              className="object-cover"
               priority={false}
             />
             

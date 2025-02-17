@@ -1,7 +1,8 @@
 import { Analytics } from '@vercel/analytics/react'
+import { Inter } from 'next/font/google'
 import "./globals.css"
-import { Suspense } from 'react'
-import LoadingScreen from '@/components/LoadingScreen'
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: "SKETCH VENTE FLASH",
@@ -58,10 +59,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body>
-        <Suspense fallback={<LoadingScreen />}>
-          {children}
-        </Suspense>
+      <body className={inter.className}>
+        {children}
         <Analytics />
       </body>
     </html>
