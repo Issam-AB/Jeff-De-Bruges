@@ -84,7 +84,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed w-full top-0 z-50">
+      <header className="fixed w-full top-0 z-[100]">
         {/* Animated background layers */}
         <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" />
         <div className="absolute inset-0">
@@ -103,7 +103,7 @@ export default function Header() {
           <div className="absolute top-0 right-1/4 w-24 h-24 bg-[#e40524] rounded-full blur-[80px] animate-pulse delay-700" />
         </div>
 
-        <div className="relative w-full px-8">
+        <div className="relative w-full px-4">
           <div className="flex items-center justify-between h-[80px] gap-4">
             {/* Logo - Updated size to be smaller */}
             <Link 
@@ -335,7 +335,7 @@ export default function Header() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/80 backdrop-blur-md z-40"
+              className="fixed inset-0 bg-black/80 backdrop-blur-md z-[90]"
               onClick={() => setIsMobileMenuOpen(false)}
             />
             
@@ -345,7 +345,7 @@ export default function Header() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="fixed left-0 right-0 top-[80px] bg-black/90 z-50 overflow-hidden"
+              className="fixed left-0 right-0 top-[80px] bg-black/90 z-[95] overflow-hidden"
             >
               {/* Background effects */}
               <div className="absolute inset-0">
