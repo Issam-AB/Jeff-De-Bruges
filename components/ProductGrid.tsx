@@ -112,9 +112,9 @@ export default function ProductGrid({ products: initialProducts, category }: Pro
 
   return (
     <div>
-      {/* Article Rouge Section - Always at the top */}
+      {/* Article Rouge Section - Adjusted spacing */}
       {articleRougeProducts.length > 0 && (
-        <div className="mb-12">
+        <div className="mb-6 md:mb-12">
           <ArticleRougeSection products={articleRougeProducts} />
         </div>
       )}

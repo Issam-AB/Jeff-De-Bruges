@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { PREDEFINED_CATEGORIES } from '@/lib/categories';
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { DollarSign, Info } from 'lucide-react';
+import { DollarSign, Info, Flame } from 'lucide-react';
 import Image from 'next/image';
 import { Switch } from '@/components/ui/switch';
 import ImageUpload from './ImageUpload';
@@ -200,6 +200,8 @@ const CATEGORY_STRUCTURE: CategoryStructure = {
   ]
 }
 
+const STORES = ['Casablanca', 'Rabat', 'Marrakech', 'Tanger'] as const
+
 export function AddProductForm({ onClose, onProductAdded }: AddProductFormProps) {
   const [formData, setFormData] = useState({
     name: '',
@@ -211,7 +213,10 @@ export function AddProductForm({ onClose, onProductAdded }: AddProductFormProps)
     VenteflashPrice: '',
     mainImage: '',
     gallery: [] as string[],
-    isActive: true
+    isActive: true,
+    isArticleRouge: false,
+    articleRougePrice: null as number | null,
+    store: null as string | null,
   });
 
   const [selectedMainCategory, setSelectedMainCategory] = useState<string>('');
@@ -292,7 +297,7 @@ export function AddProductForm({ onClose, onProductAdded }: AddProductFormProps)
   };
 
   return (
-    <form onSubmit={handleSubmit} className="relative">
+    <form onSubmit={handleSubmit} className="space-y-8">
       <DialogHeader>
         <DialogTitle>Add New Product</DialogTitle>
       </DialogHeader>
@@ -479,6 +484,69 @@ export function AddProductForm({ onClose, onProductAdded }: AddProductFormProps)
                     required
                   />
                 </div>
+              </div>
+            </div>
+
+            {/* Article Rouge Section */}
+            <div className="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-xl border border-red-200">
+              <div className="flex items-center gap-2 mb-4">
+                <Flame className="w-5 h-5 text-red-500" />
+                <h3 className="font-medium text-lg text-gray-900">Article Rouge</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={formData.isArticleRouge}
+                    onCheckedChange={(checked) => setFormData({ ...formData, isArticleRouge: checked })}
+                    className="data-[state=checked]:bg-red-600"
+                  />
+                  <label className="text-sm font-medium text-gray-700">
+                    Marquer comme Article Rouge
+                  </label>
+                </div>
+
+                {formData.isArticleRouge && (
+                  <div className="grid gap-4 pt-4 border-t border-red-200">
+                    <div>
+                      <label className="block text-sm font-medium mb-1.5 text-red-700">
+                        Prix Article Rouge (DH)
+                      </label>
+                      <Input
+                        type="number"
+                        value={formData.articleRougePrice || ''}
+                        onChange={(e) => setFormData({ 
+                          ...formData, 
+                          articleRougePrice: parseFloat(e.target.value)
+                        })}
+                        className="bg-white border-red-200 focus:border-red-400 focus:ring-red-400"
+                        required={formData.isArticleRouge}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-1.5 text-red-700">
+                        Magasin
+                      </label>
+                      <Select
+                        value={formData.store || ''}
+                        onValueChange={(value) => setFormData({ ...formData, store: value })}
+                        required={formData.isArticleRouge}
+                      >
+                        <SelectTrigger className="bg-white border-red-200 focus:border-red-400 focus:ring-red-400">
+                          <SelectValue placeholder="Sélectionner un magasin" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {STORES.map((store) => (
+                            <SelectItem key={store} value={store}>
+                              {store}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -47,31 +47,10 @@ export default function ArticleRougeSection({ products }: ArticleRougeSectionPro
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative overflow-hidden rounded-xl"
+      className="relative overflow-hidden rounded-xl md:rounded-lg -mx-4 md:mx-0 mt-2 md:mt-8"
     >
-      {/* Animated Background with Sketch Logo Pattern */}
-      <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-red-500 to-red-600 animate-gradient-x">
-        {/* Sketch Logo Pattern */}
-        <div className="absolute inset-0 opacity-[0.03] pattern-grid [mask-image:linear-gradient(to_bottom,white,transparent)]">
-          {[...Array(6)].map((_, rowIndex) => (
-            <div key={rowIndex} className="flex justify-around">
-              {[...Array(6)].map((_, colIndex) => (
-                <Image
-                  key={`${rowIndex}-${colIndex}`}
-                  src={SKETCH_LOGO}
-                  alt=""
-                  width={100}
-                  height={40}
-                  className="w-24 h-auto object-contain opacity-50 invert rotate-12 transform hover:scale-110 transition-transform duration-500"
-                />
-              ))}
-            </div>
-          ))}
-        </div>
-        
-        {/* Additional gradient overlay for better contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-red-600/50 to-red-600/80" />
-      </div>
+      {/* Simplified Background */}
+      <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-500" />
 
       <div className="relative p-4">
         {/* Header */}
@@ -83,7 +62,7 @@ export default function ArticleRougeSection({ products }: ArticleRougeSectionPro
             <Flame className="w-6 h-6 text-white" />
           </motion.div>
           <div>
-            <h2 className="text-xl font-bold text-white">Articles Rouges</h2>
+            <h2 className="text-xl font-bold text-white">Articles presque épuisés</h2>
             <p className="text-sm text-white/80">Offres exceptionnelles à ne pas manquer</p>
           </div>
         </div>
