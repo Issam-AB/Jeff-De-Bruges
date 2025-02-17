@@ -47,6 +47,9 @@ export default function ProductCard({ product, className, onQuickView }: Product
   const { baseColor, lighterColor } = getCategoryColor(product.mainCategory);
   const discountPercentage = Math.round((1 - product.VenteflashPrice / product.initialPrice) * 100)
 
+  // Use VenteflashPrice instead of price
+  const price = product.VenteflashPrice;
+
   useEffect(() => {
     let mounted = true;
     
@@ -195,7 +198,7 @@ export default function ProductCard({ product, className, onQuickView }: Product
                 <div className="relative">
                   <span className="px-3 py-1.5 inline-block bg-[#FBCF38] -skew-x-12 rounded-none text-lg font-bold text-gray-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1),4px_4px_12px_-2px_rgba(251,207,56,0.3)]">
                     <span className="inline-block skew-x-12">
-                      {product.VenteflashPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
+                      {price.toLocaleString('fr-FR').replace(',', ' ')} DH
                     </span>
                   </span>
                 </div>

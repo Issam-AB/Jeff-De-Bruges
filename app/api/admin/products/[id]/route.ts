@@ -6,29 +6,41 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params
     const data = await request.json()
+    
+    // Debug log
+    console.log('Received update data:', data)
 
     const product = await prisma.product.update({
-      where: { id },
+      where: {
+        id: params.id,
+      },
       data: {
-        name: data.name,
         ref: data.ref,
+        name: data.name,
+        slug: data.slug,
         dimensions: data.dimensions,
         mainCategory: data.mainCategory,
         subCategory: data.subCategory,
-        initialPrice: Number(data.initialPrice),
-        VenteflashPrice: Number(data.VenteflashPrice),
+        initialPrice: data.initialPrice,
+        VenteflashPrice: data.VenteflashPrice,
         mainImage: data.mainImage,
         gallery: data.gallery,
-        isActive: data.isActive
-      }
+        isActive: data.isActive,
+        // Add Article Rouge fields
+        isArticleRouge: data.isArticleRouge,
+        articleRougePrice: data.articleRougePrice,
+        store: data.store,
+      },
     })
 
     return NextResponse.json(product)
   } catch (error) {
-    console.error('Error updating product:', error)
-    return NextResponse.json({ error: 'Failed to update product' }, { status: 500 })
+    console.error('Update error:', error)
+    return NextResponse.json(
+      { message: 'Error updating product', error },
+      { status: 500 }
+    )
   }
 }
 

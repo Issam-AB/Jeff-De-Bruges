@@ -243,6 +243,130 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
     if (onClose) onClose()
   }
 
+  interface StockStatus {
+    color: string;
+    text: string;
+    icon: JSX.Element;
+    bg: string;
+    border: string;
+    iconBg: string;
+    badge: string;
+  }
+
+  const getStockStatus = (stock: number): StockStatus => {
+    if (stock > 2) return { 
+      color: 'green',
+      text: 'En stock',
+      icon: <Check size={15} />,
+      bg: 'bg-green-50',
+      border: 'border-green-100',
+      iconBg: 'bg-green-100',
+      badge: 'bg-green-100 text-green-700'
+    }
+    if (stock === 0) return { 
+      color: 'gray',
+      text: 'Épuisé',
+      icon: <X size={15} />,
+      bg: 'bg-gray-50',
+      border: 'border-gray-200',
+      iconBg: 'bg-gray-100',
+      badge: 'bg-gray-100 text-gray-600'
+    }
+    return { 
+      color: 'amber',
+      text: `${stock} restant${stock > 1 ? 's' : ''}`,
+      icon: <Timer size={15} />,
+      bg: 'bg-amber-50',
+      border: 'border-amber-100',
+      iconBg: 'bg-amber-100',
+      badge: 'bg-amber-100 text-amber-700'
+    }
+  }
+
+  const renderStoreAvailability = (store: string) => {
+    const stockKey = `Stock ${store}` as keyof typeof availability;
+    const stock = availability?.[stockKey] ?? 0;
+    const status = getStockStatus(stock);
+
+    return (
+      <motion.div 
+        key={store}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: storeOrder.indexOf(store) * 0.1 }}
+        className={`
+          relative group ${status.bg} rounded-xl p-4 border ${status.border}
+          hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300
+        `}
+      >
+        <div className="flex items-start gap-3">
+          <div className={`
+            relative p-2.5 rounded-lg bg-white shadow-sm
+            ${stock > 0 ? 'ring-2 ring-gray-100' : ''}
+          `}>
+            <motion.div
+              animate={stock > 0 ? {
+                scale: [1, 1.1, 1],
+              } : {}}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              {cityIcons[store]}
+            </motion.div>
+            {stock > 0 && (
+              <motion.div
+                className="absolute -right-1 -top-1 w-2.5 h-2.5 rounded-full bg-green-500 ring-2 ring-white"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+            )}
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <p className="text-sm font-semibold text-gray-900">
+                {store}
+              </p>
+              <motion.div 
+                className={`px-2 py-1 rounded-md text-xs font-medium ${status.badge}`}
+                initial={false}
+                animate={stock > 0 ? { 
+                  y: [0, -2, 0],
+                  scale: [1, 1.02, 1]
+                } : {}}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                {status.text}
+              </motion.div>
+            </div>
+
+            <div className={`flex items-center gap-1.5 text-${status.color}-600`}>
+              <div className={`p-1 rounded-md ${status.iconBg}`}>
+                {status.icon}
+              </div>
+              <p className="text-xs">
+                {stock > 2 
+                  ? 'Disponible maintenant'
+                  : stock === 0
+                    ? 'Temporairement indisponible'
+                    : 'Quantité limitée'
+                }
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <motion.div 
+          initial={false}
+          animate={stock > 0 ? { opacity: 1 } : { opacity: 0 }}
+          className={`
+            absolute inset-0 border-2 border-${status.color}-200/50 rounded-xl
+            opacity-0 group-hover:opacity-100 transition-all duration-300
+          `}
+        />
+      </motion.div>
+    );
+  };
+
   const DesktopImageGallery = (
     <div className="embla h-full overflow-hidden" ref={mainViewRef}>
       <div className="embla__container h-full flex">
@@ -356,7 +480,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
   );
 
   const content = (
-    <>
+    <div className="relative">
       {/* Mobile Layout */}
       <div className="lg:hidden flex flex-col">
         <div className="w-full relative aspect-[4/3] bg-[#E8E8E6]">
@@ -374,14 +498,12 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                 <div className="pt-1">
                   <h1 
                     className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 bg-clip-text text-transparent uppercase leading-tight sm:leading-tight lg:leading-tight mb-3"
-                    style={{ 
-                      wordBreak: 'break-word',
-                    }}
+                    style={{ wordBreak: 'break-word' }}
                   >
                     {product.name}
                   </h1>
 
-                  {/* Category, Dimensions & Reference - Smaller on mobile */}
+                  {/* Category and Dimensions */}
                   <div className="flex flex-wrap gap-1.5">
                     <div 
                       onClick={handleCategoryClick}
@@ -397,10 +519,9 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                   </div>
                 </div>
 
-                {/* Price Section - Bigger price */}
+                {/* Price Section */}
                 <div className="bg-gray-50/80 rounded-xl p-4">
                   <div className="flex items-center justify-between gap-2">
-                    {/* Price */}
                     <div className="flex items-baseline gap-2">
                       <div className="relative">
                         <div className="absolute -inset-1.5 sm:-inset-2 -left-0 bg-gradient-to-r from-yellow-400 to-amber-300 -skew-x-12 rounded-lg shadow-lg" />
@@ -412,38 +533,41 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                         {product.initialPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
                       </span>
                     </div>
-
-                    {/* Discount and Offer badges */}
-                    <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-                      <motion.div
-                        animate={{ scale: [1, 1.05, 1] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                      >
-                        <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap">
-                          -{discountPercentage}%
-                        </span>
-                      </motion.div>
-                      <motion.div 
-                        className="flex items-center px-1.5 sm:px-2 py-0.5 bg-orange-100 text-orange-700 rounded-lg"
-                        animate={{ scale: [1, 1.05, 1] }}
-                        transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
-                      >
-                        <Clock size={10} className="mr-0.5 sm:mr-1" />
-                        <span className="text-[10px] sm:text-xs font-medium whitespace-nowrap">Offre limitée</span>
-                      </motion.div>
-                    </div>
                   </div>
                 </div>
 
-                {/* Redesigned Product Description */}
+                {/* Store Availability */}
+                <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg border border-gray-200 overflow-hidden">
+                  <div className="px-5 py-4 border-b border-gray-200">
+                    <div className="flex items-center gap-3">
+                      <ShoppingBag size={16} className="text-gray-900" />
+                        <h3 className="text-base font-semibold text-gray-900">
+                          Disponibilité en magasin
+                        </h3>
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    {availability ? (
+                      <div className="grid grid-cols-1 xs:grid-cols-2 gap-4">
+                        {storeOrder.map(renderStoreAvailability)}
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center py-8">
+                            <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Product Description */}
                 <div className="bg-gradient-to-br from-gray-50 via-white to-gray-50 rounded-lg border border-gray-100 overflow-hidden">
-                  <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
+                  <div className="px-5 py-3 bg-gray-50 border-b border-gray-100">
                     <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
                       <Tag size={14} className="text-gray-600" />
                       Description du produit
                     </h3>
                   </div>
-                  <div className="p-4">
+                  <div className="p-5">
                     {productDescription ? (
                       <div className="space-y-4">
                         {productDescription.split('\n')
@@ -481,11 +605,6 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                               <p 
                                 key={index}
                                 className="text-sm text-gray-600 leading-relaxed"
-                                style={{
-                                  wordBreak: 'normal',
-                                  overflowWrap: 'normal',
-                                  whiteSpace: 'pre-line'
-                                }}
                               >
                                 {paragraph.trim()}
                               </p>
@@ -497,66 +616,6 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                         <div className="animate-pulse flex items-center gap-2 text-gray-400">
                           <Loader2 className="h-4 w-4 animate-spin" />
                           <span>Chargement de la description...</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Store Availability with matching style */}
-                <div className="bg-gradient-to-br from-gray-50 via-white to-gray-50 rounded-lg border border-gray-100 overflow-hidden">
-                  <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
-                    <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
-                      <ShoppingBag size={14} className="text-gray-600" />
-                      Disponibilité en magasin
-                    </h3>
-                  </div>
-                  <div className="p-4">
-                    {availability ? (
-                      <div className="grid grid-cols-2 gap-3">
-                        {storeOrder.map((store) => {
-                          const stockKey = `Stock ${store}` as keyof typeof availability
-                          const stock = availability[stockKey]
-                          const getStockStatus = () => {
-                            if (stock > 2) return { color: 'emerald', text: 'En stock', bg: 'bg-emerald-50' }
-                            if (stock === 0) return { color: 'red', text: 'Épuisé', bg: 'bg-red-50' }
-                            return { color: 'amber', text: `${stock} restant${stock > 1 ? 's' : ''}`, bg: 'bg-amber-50' }
-                          }
-                          const status = getStockStatus()
-
-                          return (
-                            <motion.div 
-                              key={store}
-                              whileHover={{ scale: 1.02 }}
-                              className={`${status.bg} rounded-lg border border-${status.color}-200 overflow-hidden`}
-                            >
-                              <div className="flex items-center justify-between p-3">
-                                <div className="flex items-center gap-2">
-                                  <div className={`p-1.5 rounded-lg bg-${status.color}-100`}>
-                                    {cityIcons[store]}
-                                  </div>
-                                  <div>
-                                    <p className="text-sm font-medium text-gray-900">{store}</p>
-                                    <p className={`text-xs font-medium text-${status.color}-600`}>
-                                      {status.text}
-                                    </p>
-                                  </div>
-                                </div>
-                                <div className={`px-2 py-1 rounded-lg text-xs font-medium bg-${status.color}-100 text-${status.color}-700`}>
-                                  {stock > 2 ? 'Disponible' : 
-                                   stock === 0 ? 'Indisponible' : 
-                                   'Stock limité'}
-                                </div>
-                              </div>
-                            </motion.div>
-                          )
-                        })}
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center py-4">
-                        <div className="animate-pulse flex items-center gap-2 text-gray-400">
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          <span>Vérification du stock...</span>
                         </div>
                       </div>
                     )}
@@ -590,11 +649,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                     <motion.div 
                       className="flex items-center px-2 py-1 bg-red-100 text-red-600 rounded-full"
                       animate={{ scale: [1, 1.05, 1] }}
-                      transition={{ 
-                        duration: 1.5,
-                        repeat: Infinity,
-                        repeatType: "reverse"
-                      }}
+                      transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
                     >
                       <Fire size={12} className="mr-1" />
                       <span className="text-xs font-medium">Forte demande</span>
@@ -605,342 +660,243 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Floating WhatsApp button for mobile */}
-        <div className="lg:hidden fixed bottom-4 left-4 right-4 z-50">
-          <button
-            onClick={handleWhatsAppOrder}
-            className="group relative w-full bg-[#23D366] hover:bg-[#1fb855] text-white rounded-lg py-3 px-4 flex items-center justify-center gap-2 transition-all duration-300 overflow-hidden shadow-lg shadow-[#23D366]/20"
-          >
-            {/* Pulsing icon */}
-            <div className="relative">
-              <div className="absolute inset-0 bg-white/20 rounded-full animate-ping opacity-75" />
-              <WhatsappIcon 
-                size={24} 
-                className="relative z-10" 
-                round={false}
-                bgStyle={{ fill: "transparent" }}
-                iconFillColor="white"
-              />
-            </div>
+      {/* Floating WhatsApp button for mobile */}
+      <div className="lg:hidden fixed bottom-4 left-4 right-4 z-50">
+        <button
+          onClick={handleWhatsAppOrder}
+          className="group relative w-full bg-[#23D366] hover:bg-[#1fb855] text-white rounded-lg py-3 px-4 flex items-center justify-center gap-2 transition-all duration-300 overflow-hidden shadow-lg shadow-[#23D366]/20"
+        >
+          {/* Pulsing icon */}
+          <div className="relative">
+            <div className="absolute inset-0 bg-white/20 rounded-full animate-ping opacity-75" />
+            <WhatsappIcon 
+              size={24} 
+              className="relative z-10" 
+              round={false}
+              bgStyle={{ fill: "transparent" }}
+              iconFillColor="white"
+            />
+          </div>
 
-            {/* Text */}
-            <span className="text-base font-semibold relative z-10 flex items-center gap-1">
-              Commander maintenant
-              <span className="inline-block transform group-hover:translate-x-1 transition-transform duration-200">
-                →
-              </span>
+          {/* Text */}
+          <span className="text-base font-semibold relative z-10 flex items-center gap-1">
+            Commander maintenant
+            <span className="inline-block transform group-hover:translate-x-1 transition-transform duration-200">
+              →
             </span>
-          </button>
-        </div>
+          </span>
+        </button>
       </div>
 
       {/* Desktop Layout */}
       <div className="hidden lg:flex h-[calc(100vh-80px)]">
-        {/* Image Section - Full height on desktop */}
         <div className="w-1/2 bg-[#E8E8E6] relative">
           {DesktopImageGallery}
         </div>
-
-        {/* Content Section for Desktop */}
-        <div className="w-1/2 bg-white">
-          <div className="h-full overflow-y-auto hide-scrollbar">
+        <div className="w-1/2 bg-white overflow-y-auto">
             <div className="p-8">
-          {/* Product Info */}
-          <div className="space-y-4">
-            {/* Product Name and Labels group */}
-            <div className="pt-1">
-              <h1 
-                className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 bg-clip-text text-transparent uppercase leading-tight sm:leading-tight lg:leading-tight mb-3"
-                style={{ 
-                  wordBreak: 'break-word',
-                }}
-              >
-                {product.name}
-              </h1>
-
-              {/* Category, Dimensions & Reference - Smaller on mobile */}
-              <div className="flex flex-wrap gap-1.5">
-                <div 
-                  onClick={handleCategoryClick}
-                  className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded-full cursor-pointer hover:bg-blue-100 transition-colors duration-200"
+            {/* Product Info */}
+            <div className="space-y-6">
+              {/* Product Name and Labels group */}
+              <div className="pt-1">
+                <h1 
+                  className="text-4xl font-bold bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 bg-clip-text text-transparent uppercase leading-tight mb-4"
+                  style={{ wordBreak: 'break-word' }}
                 >
-                  <Tag size={12} />
-                  <span className="text-xs font-medium">{product.subCategory}</span>
-                </div>
-                <div className="flex items-center gap-1 px-2 py-1 bg-gray-50 text-gray-700 rounded-full">
-                  <Ruler size={12} />
-                  <span className="text-xs font-medium">{product.dimensions}</span>
-                </div>
-              </div>
-            </div>
+                  {product.name}
+                </h1>
 
-            {/* Price Section - Bigger price */}
-            <div className="bg-gray-50/80 rounded-xl p-4">
-              <div className="flex items-center justify-between gap-2">
-                {/* Price */}
-                <div className="flex items-baseline gap-2">
-                  <div className="relative">
-                    <div className="absolute -inset-1.5 sm:-inset-2 -left-0 bg-gradient-to-r from-yellow-400 to-amber-300 -skew-x-12 rounded-lg shadow-lg" />
-                    <span className="relative text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 px-2 sm:px-3 py-0.5 sm:py-1">
-                      {product.VenteflashPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
-                    </span>
-                  </div>
-                  <span className="text-sm sm:text-base text-gray-400 line-through ml-2">
-                    {product.initialPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
-                  </span>
-                </div>
-
-                {/* Discount and Offer badges */}
-                <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-                  <motion.div
-                    animate={{ scale: [1, 1.05, 1] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
+                {/* Category and Dimensions */}
+                <div className="flex flex-wrap gap-2">
+                  <div 
+                    onClick={handleCategoryClick}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full cursor-pointer hover:bg-blue-100 transition-colors duration-200"
                   >
-                    <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap">
-                      -{discountPercentage}%
-                    </span>
-                  </motion.div>
-                  <motion.div 
-                    className="flex items-center px-1.5 sm:px-2 py-0.5 bg-orange-100 text-orange-700 rounded-lg"
-                    animate={{ scale: [1, 1.05, 1] }}
-                    transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
-                  >
-                    <Clock size={10} className="mr-0.5 sm:mr-1" />
-                    <span className="text-[10px] sm:text-xs font-medium whitespace-nowrap">Offre limitée</span>
-                  </motion.div>
+                    <Tag size={14} />
+                    <span className="text-sm font-medium">{product.subCategory}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 text-gray-700 rounded-full">
+                    <Ruler size={14} />
+                    <span className="text-sm font-medium">{product.dimensions}</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Redesigned Product Description */}
-            <div className="bg-gradient-to-br from-gray-50 via-white to-gray-50 rounded-lg border border-gray-100 overflow-hidden">
-              <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
-                <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
-                  <Tag size={14} className="text-gray-600" />
-                  Description du produit
-                </h3>
-              </div>
-              <div className="p-4">
-                {productDescription ? (
-                  <div className="space-y-4">
-                    {productDescription.split('\n')
-                      .filter(paragraph => paragraph.trim())
-                      .map((paragraph, index) => {
-                        const isBulletPoint = paragraph.trim().startsWith('-') || 
-                                           paragraph.trim().startsWith('•');
-                        
-                        const isHeading = paragraph.trim().toUpperCase() === paragraph.trim() || 
-                                        paragraph.trim().endsWith(':');
-                        
-                        if (isHeading) {
-                          return (
-                            <h4 
-                              key={index}
-                              className="text-sm font-semibold text-gray-800 mt-4 first:mt-0"
-                            >
-                              {paragraph.trim()}
-                            </h4>
-                          );
-                        }
-                        
-                        if (isBulletPoint) {
-                          return (
-                            <div key={index} className="flex items-start gap-2">
-                              <span className="text-gray-400 mt-1">•</span>
-                              <p className="text-sm text-gray-600 leading-relaxed flex-1">
-                                {paragraph.trim().replace(/^[-•]/, '').trim()}
-                              </p>
-                            </div>
-                          );
-                        }
-                        
-                        return (
-                          <p 
-                            key={index}
-                            className="text-sm text-gray-600 leading-relaxed"
-                            style={{
-                              wordBreak: 'normal',
-                              overflowWrap: 'normal',
-                              whiteSpace: 'pre-line'
-                            }}
-                          >
-                            {paragraph.trim()}
-                          </p>
-                        );
-                    })}
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center py-4">
-                    <div className="animate-pulse flex items-center gap-2 text-gray-400">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>Chargement de la description...</span>
+              {/* Price Section */}
+              <div className="bg-gray-50/80 rounded-xl p-6">
+                <div className="flex items-center justify-between gap-4">
+                  {/* Price */}
+                  <div className="flex items-baseline gap-3">
+                    <div className="relative">
+                      <div className="absolute -inset-2 -left-0 bg-gradient-to-r from-yellow-400 to-amber-300 -skew-x-12 rounded-lg shadow-lg" />
+                      <span className="relative text-4xl font-bold text-gray-900 px-3 py-1">
+                        {product.VenteflashPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
+                      </span>
                     </div>
+                    <span className="text-lg text-gray-400 line-through">
+                      {product.initialPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
+                    </span>
                   </div>
-                )}
-              </div>
-            </div>
 
-            {/* Store Availability with matching style */}
-            <div className="bg-gradient-to-br from-gray-50 via-white to-gray-50 rounded-lg border border-gray-100 overflow-hidden">
-              <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
-                <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
-                  <ShoppingBag size={14} className="text-gray-600" />
-                  Disponibilité en magasin
-                </h3>
+                  {/* Discount and Offer badges */}
+                  <div className="flex items-center gap-2">
+                    <motion.div
+                      animate={{ scale: [1, 1.05, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <span className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg text-sm font-bold">
+                        -{discountPercentage}%
+                      </span>
+                    </motion.div>
+                    <motion.div 
+                      className="flex items-center px-3 py-1 bg-orange-100 text-orange-700 rounded-lg"
+                      animate={{ scale: [1, 1.05, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
+                    >
+                      <Clock size={14} className="mr-1.5" />
+                      <span className="text-sm font-medium">Offre limitée</span>
+                    </motion.div>
+                  </div>
+                </div>
               </div>
-              <div className="p-4">
-                {availability ? (
-                  <div className="grid grid-cols-2 gap-3">
-                    {storeOrder.map((store) => {
-                      const stockKey = `Stock ${store}` as keyof typeof availability
-                      const stock = availability[stockKey]
-                      const getStockStatus = () => {
-                        if (stock > 2) return { color: 'emerald', text: 'En stock', bg: 'bg-emerald-50' }
-                        if (stock === 0) return { color: 'red', text: 'Épuisé', bg: 'bg-red-50' }
-                        return { color: 'amber', text: `${stock} restant${stock > 1 ? 's' : ''}`, bg: 'bg-amber-50' }
-                      }
-                      const status = getStockStatus()
 
-                      return (
-                        <motion.div 
-                          key={store}
-                          whileHover={{ scale: 1.02 }}
-                          className={`${status.bg} rounded-lg border border-${status.color}-200 overflow-hidden`}
-                        >
-                          <div className="flex items-center justify-between p-3">
-                            <div className="flex items-center gap-2">
-                              <div className={`p-1.5 rounded-lg bg-${status.color}-100`}>
-                                {cityIcons[store]}
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium text-gray-900">{store}</p>
-                                <p className={`text-xs font-medium text-${status.color}-600`}>
-                                  {status.text}
+              {/* Product Description */}
+              <div className="bg-gradient-to-br from-gray-50 via-white to-gray-50 rounded-lg border border-gray-100 overflow-hidden">
+                <div className="px-5 py-3 bg-gray-50 border-b border-gray-100">
+                  <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                    <Tag size={14} className="text-gray-600" />
+                    Description du produit
+                  </h3>
+                </div>
+                <div className="p-5">
+                  {productDescription ? (
+                    <div className="space-y-4">
+                      {productDescription.split('\n')
+                        .filter(paragraph => paragraph.trim())
+                        .map((paragraph, index) => {
+                          const isBulletPoint = paragraph.trim().startsWith('-') || 
+                                             paragraph.trim().startsWith('•');
+                          
+                          const isHeading = paragraph.trim().toUpperCase() === paragraph.trim() || 
+                                          paragraph.trim().endsWith(':');
+                          
+                          if (isHeading) {
+                            return (
+                              <h4 
+                                key={index}
+                                className="text-sm font-semibold text-gray-800 mt-4 first:mt-0"
+                              >
+                                {paragraph.trim()}
+                              </h4>
+                            );
+                          }
+                          
+                          if (isBulletPoint) {
+                            return (
+                              <div key={index} className="flex items-start gap-2">
+                                <span className="text-gray-400 mt-1">•</span>
+                                <p className="text-sm text-gray-600 leading-relaxed flex-1">
+                                  {paragraph.trim().replace(/^[-•]/, '').trim()}
                                 </p>
                               </div>
-                            </div>
-                            <div className={`px-2 py-1 rounded-lg text-xs font-medium bg-${status.color}-100 text-${status.color}-700`}>
-                              {stock > 2 ? 'Disponible' : 
-                               stock === 0 ? 'Indisponible' : 
-                               'Stock limité'}
-                            </div>
-                          </div>
-                        </motion.div>
-                      )
-                    })}
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center py-4">
-                    <div className="animate-pulse flex items-center gap-2 text-gray-400">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>Vérification du stock...</span>
+                            );
+                          }
+                          
+                          return (
+                            <p 
+                              key={index}
+                              className="text-sm text-gray-600 leading-relaxed"
+                            >
+                              {paragraph.trim()}
+                            </p>
+                          );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center py-4">
+                      <div className="animate-pulse flex items-center gap-2 text-gray-400">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Chargement de la description...</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Store Availability */}
+              <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg border border-gray-200 overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-gray-900 rounded-lg">
+                      <ShoppingBag size={16} className="text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-semibold text-gray-900">
+                        Disponibilité en magasin
+                      </h3>
+                      {availability && (
+                        <p className="text-sm text-gray-500 mt-0.5">
+                          {Object.values(availability).filter(stock => stock > 0).length} magasins disponibles
+                        </p>
+                      )}
                     </div>
                   </div>
-                )}
-              </div>
-            </div>
-
-            {/* Social Proof */}
-            <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
-              <div className="flex items-center justify-between bg-white/50 rounded-lg p-2">
-                <div className="flex items-center gap-2">
-                  <motion.div
-                    animate={{ opacity: [1, 0.5, 1] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                    className="p-1 bg-blue-100 rounded-full"
-                  >
-                    <Eye size={16} className="text-blue-600" />
-                  </motion.div>
-                  <div className="flex items-center gap-1">
-                    {isClient && (
-                      <motion.span 
-                        className="text-base font-bold text-blue-700"
-                        animate={{ scale: [1, 1.1, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      >
-                        {viewersCount}
-                      </motion.span>
-                    )}
-                    <span className="text-sm text-blue-600">personnes regardent</span>
-                  </div>
+                  {availability && (
+                    <span className={`
+                      px-3 py-1 rounded-full text-xs font-medium
+                      ${Object.values(availability).some(stock => stock > 0)
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-amber-100 text-amber-700'
+                      }
+                    `}>
+                      {Object.values(availability).some(stock => stock > 0) ? 'Stock disponible' : 'Stock limité'}
+                    </span>
+                  )}
                 </div>
-                <motion.div 
-                  className="flex items-center px-2 py-1 bg-red-100 text-red-600 rounded-full"
-                  animate={{ scale: [1, 1.05, 1] }}
-                  transition={{ 
-                    duration: 1.5,
-                    repeat: Infinity,
-                    repeatType: "reverse"
-                  }}
-                >
-                  <Fire size={12} className="mr-1" />
-                  <span className="text-xs font-medium">Forte demande</span>
-                </motion.div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-            {/* WhatsApp button for desktop - removed sticky positioning */}
-            <div className="bg-white border-t">
-              <div className="p-6">
-            <button
-              onClick={handleWhatsAppOrder}
-              className="group relative w-full bg-[#23D366] hover:bg-[#1fb855] text-white rounded-none py-4 px-6 flex items-center justify-center gap-3 transition-all duration-300 overflow-hidden"
-            >
-              {/* Animated background effect */}
-              <div className="absolute inset-0 flex">
-                <div className="w-1/3 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 animate-shimmer" />
+                <div className="p-6">
+                  {availability ? (
+                    <div className="grid grid-cols-2 gap-4">
+                      {storeOrder.map(renderStoreAvailability)}
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
+                    </div>
+                  )}
+                </div>
               </div>
 
-              {/* Pulsing icon */}
-              <div className="relative">
-                <div className="absolute inset-0 bg-white/20 rounded-full animate-ping opacity-75" />
+              {/* WhatsApp Order Button */}
+              <button
+                onClick={handleWhatsAppOrder}
+                className="group relative w-full bg-[#23D366] hover:bg-[#1fb855] text-white rounded-lg py-4 px-6 flex items-center justify-center gap-3 transition-all duration-300 overflow-hidden shadow-lg shadow-[#23D366]/20"
+              >
                 <WhatsappIcon 
                   size={28} 
-                  className="sm:w-8 sm:h-8 relative z-10" 
+                  className="relative z-10" 
                   round={false}
-                  bgStyle={{ fill: "transparent" }}  // Make background transparent
-                  iconFillColor="white"              // Make icon white
+                  bgStyle={{ fill: "transparent" }}
+                  iconFillColor="white"
                 />
-              </div>
-
-              {/* Text with hover effect */}
-              <span className="text-lg sm:text-xl font-semibold relative z-10 flex items-center gap-2 transform group-hover:scale-105 transition-transform duration-200">
-                Commander via WhatsApp
-                
-                {/* Arrow animation */}
-                <span className="inline-block transform group-hover:translate-x-1 transition-transform duration-200">
-                  →
+                <span className="text-lg font-semibold relative z-10 flex items-center gap-2">
+                  Commander maintenant
+                  <span className="inline-block transform group-hover:translate-x-1 transition-transform duration-200">
+                    →
+                  </span>
                 </span>
-              </span>
-
-              {/* Corner accent */}
-              <div className="absolute top-0 right-0 w-8 h-8 bg-white/10 transform rotate-45 translate-x-1/2 -translate-y-1/2" />
-            </button>
-            <p className="text-center text-xs sm:text-sm text-gray-600 mt-3 flex items-center justify-center gap-2">
-              <Headphones 
-                size={16} 
-                className="text-[#23D366] bg-[#23D366]/10 p-1 rounded-none transition-colors duration-200 hover:bg-[#23D366] hover:text-white" 
-              />
-              Notre équipe est prête à vous aider
-              <MessageCircle 
-                size={16} 
-                className="text-[#23D366] bg-[#23D366]/10 p-1 rounded-none transition-colors duration-200 hover:bg-[#23D366] hover:text-white" 
-              />
-            </p>
-          </div>
-        </div>
+              </button>
+            </div>
       </div>
     </div>
       </div>
-    </>
+    </div>
   );
 
   // Return content directly if fullPage is true
   if (fullPage) {
-    return content
+    return content;
   }
 
   // Otherwise wrap in Dialog for modal view
@@ -962,6 +918,6 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
         </DialogContent>
       </Dialog>
     </AnimatePresence>
-  )
+  );
 }
 

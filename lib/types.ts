@@ -24,8 +24,12 @@ export interface Product {
   mainImage: string;
   gallery: string[];
   isActive: boolean;
+  isArticleRouge: boolean;
   createdAt: Date;
   updatedAt: Date;
+  price?: number;
+  articleRougePrice?: number | null;
+  store?: string | null;
 }
 
 export interface StoreAvailability {

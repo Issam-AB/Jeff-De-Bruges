@@ -15,7 +15,7 @@ import { PREDEFINED_CATEGORIES } from '@/lib/categories'
 import { Switch } from '@/components/ui/switch'
 import ImageUpload from './ImageUpload'
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Info, DollarSign } from 'lucide-react'
+import { Info, DollarSign, Flame } from 'lucide-react'
 
 interface EditProductFormProps {
   product: Product
@@ -68,6 +68,8 @@ const CATEGORY_STRUCTURE: CategoryStructure = {
   ]
 }
 
+const STORES = ['Casablanca', 'Rabat', 'Marrakech', 'Tanger'] as const
+
 export function EditProductForm({ product, onClose, onProductUpdated }: EditProductFormProps) {
   const defaultMainCategory = Object.keys(PREDEFINED_CATEGORIES)[0] as string
   
@@ -84,22 +86,34 @@ export function EditProductForm({ product, onClose, onProductUpdated }: EditProd
     setError('')
 
     try {
+      // Create the update data object
+      const updateData = {
+        ...formData,
+        initialPrice: Number(formData.initialPrice),
+        VenteflashPrice: Number(formData.VenteflashPrice),
+        isArticleRouge: Boolean(formData.isArticleRouge),
+        // Add these fields for Article Rouge
+        articleRougePrice: formData.isArticleRouge ? Number(formData.articleRougePrice) : null,
+        store: formData.isArticleRouge ? formData.store : null,
+      }
+
+      console.log('Sending update data:', updateData) // Debug log
+
       const response = await fetch(`/api/admin/products/${product.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          initialPrice: Number(formData.initialPrice),
-          VenteflashPrice: Number(formData.VenteflashPrice)
-        })
+        body: JSON.stringify(updateData)
       })
 
       if (!response.ok) {
-        throw new Error('Failed to update product')
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Failed to update product')
       }
 
       onProductUpdated()
+      onClose()
     } catch (err) {
+      console.error('Update error:', err) // Debug log
       setError(err instanceof Error ? err.message : 'Failed to update product')
     } finally {
       setLoading(false)
@@ -163,12 +177,14 @@ export function EditProductForm({ product, onClose, onProductUpdated }: EditProd
                     required
                   />
                 </div>
-                <div className="flex items-center gap-2">
-                  <Switch
-                    checked={formData.isActive}
-                    onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
-                  />
-                  <label className="text-sm font-medium text-gray-700">Active</label>
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      checked={formData.isActive}
+                      onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+                    />
+                    <label className="text-sm font-medium text-gray-700">Active</label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -232,6 +248,7 @@ export function EditProductForm({ product, onClose, onProductUpdated }: EditProd
                 <DollarSign className="w-5 h-5 text-blue-500" />
                 <h3 className="font-medium text-lg text-gray-900">Pricing</h3>
               </div>
+              
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1.5 text-gray-700">Initial Price (DH)</label>
@@ -253,6 +270,69 @@ export function EditProductForm({ product, onClose, onProductUpdated }: EditProd
                     required
                   />
                 </div>
+              </div>
+            </div>
+
+            {/* Article Rouge Section */}
+            <div className="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-xl border border-red-200">
+              <div className="flex items-center gap-2 mb-4">
+                <Flame className="w-5 h-5 text-red-500" />
+                <h3 className="font-medium text-lg text-gray-900">Article Rouge</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={formData.isArticleRouge}
+                    onCheckedChange={(checked) => setFormData({ ...formData, isArticleRouge: checked })}
+                    className="data-[state=checked]:bg-red-600"
+                  />
+                  <label className="text-sm font-medium text-gray-700">
+                    Marquer comme Article Rouge
+                  </label>
+                </div>
+
+                {formData.isArticleRouge && (
+                  <div className="grid gap-4 pt-4 border-t border-red-200">
+                    <div>
+                      <label className="block text-sm font-medium mb-1.5 text-red-700">
+                        Prix Article Rouge (DH)
+                      </label>
+                      <Input
+                        type="number"
+                        value={formData.articleRougePrice || ''}
+                        onChange={(e) => setFormData({ 
+                          ...formData, 
+                          articleRougePrice: parseFloat(e.target.value)
+                        })}
+                        className="bg-white border-red-200 focus:border-red-400 focus:ring-red-400"
+                        required={formData.isArticleRouge}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-1.5 text-red-700">
+                        Magasin
+                      </label>
+                      <Select
+                        value={formData.store || ''}
+                        onValueChange={(value) => setFormData({ ...formData, store: value })}
+                        required={formData.isArticleRouge}
+                      >
+                        <SelectTrigger className="bg-white border-red-200 focus:border-red-400 focus:ring-red-400">
+                          <SelectValue placeholder="Sélectionner un magasin" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {STORES.map((store) => (
+                            <SelectItem key={store} value={store}>
+                              {store}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

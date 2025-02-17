@@ -1,9 +1,12 @@
 import { Product } from '@/lib/types'
 import prisma from '@/lib/prisma'
 
-export async function getProducts() {
+export async function getProducts(): Promise<Product[]> {
   try {
     const products = await prisma.product.findMany({
+      where: {
+        isActive: true,
+      },
       select: {
         id: true,
         ref: true,
@@ -24,19 +27,26 @@ export async function getProducts() {
         updatedAt: true
       }
     })
-
+    
+    // Debug logging
+    console.log('Raw products from DB:', products)
+    console.log('Article Rouge products:', products.filter(p => p.isArticleRouge))
+    
     // Transform the data to match the Product type
     const transformedProducts: Product[] = products.map(product => ({
       ...product,
       isArticleRouge: product.isArticleRouge ?? false,
       articleRougePrice: product.articleRougePrice ?? null,
-      store: product.store ?? null
+      store: product.store ?? null,
+      // If it's an Article Rouge, use articleRougePrice as VenteflashPrice
+      VenteflashPrice: product.isArticleRouge && product.articleRougePrice 
+        ? product.articleRougePrice 
+        : product.VenteflashPrice
     }))
 
-    return { products: transformedProducts }
+    return transformedProducts
   } catch (error) {
     console.error('Error fetching products:', error)
-    throw new Error('Failed to fetch products')
+    return []
   }
-}
-
+} 

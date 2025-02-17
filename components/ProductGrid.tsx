@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import ProductCard from './ProductCard'
-import { Product, MainCategory, SubCategoryType } from '@/lib/types'
-import { motion, AnimatePresence } from 'framer-motion'
+import { Product } from '@/lib/types'
+import { motion } from 'framer-motion'
 import ProductCardSkeleton from './ProductCardSkeleton'
 import EmptyState from './EmptyState'
 import { Category } from '@/lib/categories'
+import ArticleRougeSection from './ArticleRougeSection'
+import QuickView from './QuickView'
 
 interface ProductGridProps {
   products: Product[]
@@ -16,25 +18,20 @@ interface ProductGridProps {
 
 export default function ProductGrid({ products: initialProducts, category }: ProductGridProps) {
   const [products, setProducts] = useState<Product[]>(initialProducts)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const { ref, inView } = useInView()
 
   useEffect(() => {
-    console.log('Effect triggered with category:', category)
-    console.log('Initial products count:', initialProducts.length)
-    
     if (initialProducts.length === 0) {
-      console.log('No initial products available')
       return
     }
     
     if (!category || category.slug.toLowerCase() === 'tous') {
-      console.log('Setting all products')
       setProducts(initialProducts)
     } else {
-      console.log('Filtering products for category:', category.name)
       const filteredProducts = initialProducts.filter(product => 
         product.mainCategory?.toLowerCase() === category.name.toLowerCase() ||
         product.subCategory?.toLowerCase() === category.name.toLowerCase()
@@ -94,45 +91,57 @@ export default function ProductGrid({ products: initialProducts, category }: Pro
     loadMoreProducts()
   }, [inView, hasMore, isLoading, category, products.length])
 
+  // Debug logging
+  useEffect(() => {
+    console.log('ProductGrid received products:', initialProducts)
+    console.log('Article Rouge check:', initialProducts.map(p => ({
+      ref: p.ref,
+      isArticleRouge: p.isArticleRouge,
+      isActive: p.isActive
+    })))
+  }, [initialProducts])
+
+  // Find Article Rouge products first
+  const articleRougeProducts = initialProducts.filter(p => p.isArticleRouge && p.isActive)
+  const regularProducts = initialProducts.filter(p => !p.isArticleRouge)
+
+  // If no products at all, show empty state
   if (products.length === 0) {
     return <EmptyState category={category} />
   }
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={category?.slug || 'all'}
+    <div>
+      {/* Article Rouge Section - Always at the top */}
+      {articleRougeProducts.length > 0 && (
+        <div className="mb-12">
+          <ArticleRougeSection products={articleRougeProducts} />
+        </div>
+      )}
+
+      {/* Regular Products Grid */}
+      <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.3 }}
-        className="w-full mt-24"
+        transition={{ delay: 0.2 }}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-          {products.map((product) => (
-            <motion.div
-              key={product.id}
-              layout
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="w-full"
-            >
-              <ProductCard product={product} />
-            </motion.div>
-          ))}
-          
-          {/* Loading skeletons for infinite scroll */}
-          {isLoading && (
-            <>
-              {[...Array(4)].map((_, i) => (
-                <ProductCardSkeleton key={`skeleton-${i}`} />
-              ))}
-            </>
-          )}
-        </div>
+        {regularProducts.map((product) => (
+          <ProductCard 
+            key={product.id} 
+            product={product}
+            onQuickView={() => setSelectedProduct(product)}
+          />
+        ))}
       </motion.div>
-    </AnimatePresence>
+
+      {selectedProduct && (
+        <QuickView 
+          product={selectedProduct} 
+          onClose={() => setSelectedProduct(null)} 
+        />
+      )}
+    </div>
   )
 }
 
