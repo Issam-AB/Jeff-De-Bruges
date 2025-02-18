@@ -8,28 +8,36 @@ datasource db {
 }
 
 model Product {
-  id              String   @id @default(cuid())
-  ref             String   @unique
+  id              String    @id @default(cuid())
+  ref             String    @unique
   name            String
-  slug            String   @unique
+  slug            String    @unique
+  mainImage       String
+  gallery         String[]
+  initialPrice    Float
+  VenteflashPrice Float?
+  articleRougePrice Float?
   dimensions      String
   mainCategory    String
   subCategory     String
-  initialPrice    Float
-  VenteflashPrice Float
-  articleRougePrice Float?
-  mainImage       String
-  gallery         String[]
-  isActive        Boolean  @default(true)
-  isArticleRouge  Boolean  @default(false)
   store           String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  isActive        Boolean   @default(true)
+  isArticleRouge  Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  Gallery         Gallery[]
 
   @@index([mainCategory, subCategory])
   @@index([isActive])
   @@index([isArticleRouge])
   @@index([store])
+}
+
+model Gallery {
+  id        String   @id @default(cuid())
+  url       String
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
 }
 
 model Category {

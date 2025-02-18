@@ -1,12 +1,13 @@
 'use client'
 
-import { Product } from '@/lib/types'
+import { Product } from '@/types'
 import { motion } from 'framer-motion'
 import { Flame, MapPin, Timer, Tag, Ruler, ChevronLeft, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import { useRef, useMemo, useState } from 'react'
-import { WhatsappIcon } from 'react-share'
-import { track } from '@vercel/analytics'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { getArticleRougeProducts } from '@/lib/articleRougeApi'
 
 interface ArticleRougeSectionProps {
   products: Product[]
@@ -22,9 +23,20 @@ const STORE_COLORS: Record<string, { bg: string; border: string; text: string }>
   'Agadir': { bg: 'bg-pink-500', border: 'border-pink-600', text: 'text-pink-50' },
 }
 
+function generateSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+}
+
 export default function ArticleRougeSection({ products }: ArticleRougeSectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [selectedStore, setSelectedStore] = useState<string | null>(null)
+  const router = useRouter()
   
   // Update the stores useMemo to ensure non-null values
   const { stores } = useMemo(() => {
@@ -54,31 +66,13 @@ export default function ArticleRougeSection({ products }: ArticleRougeSectionPro
     })
   }
 
-  if (!products.length) return null
-
-  const handleWhatsAppClick = (product: Product) => {
-    // Track the WhatsApp button click
-    track('whatsapp_article_rouge_click', {
-      productId: product.id,
-      productName: product.name,
-      productPrice: product.articleRougePrice || product.VenteflashPrice,
-      store: product.store || 'Non spécifié'
-    })
-
-    // Format price with thousand separator
-    const formattedPrice = product.articleRougePrice?.toLocaleString('fr-FR') || 
-                          product.VenteflashPrice.toLocaleString('fr-FR')
-
-    // Create message with fallback for store
-    const message = encodeURIComponent(
-      `Bonjour, je suis intéressé par l'Article Rouge: ${product.name} (${product.ref}) à ${formattedPrice} DH${
-        product.store ? ` disponible au magasin de ${product.store}` : ''
-      }.`
-    )
-    
-    const apiUrl = `https://api.whatsapp.com/send?phone=212666013108&text=${message}`
-    window.open(apiUrl, '_blank')
+  // Replace handleProductClick with getProductUrl
+  const getProductUrl = (product: Product) => {
+    const productSlug = generateSlug(product.name)
+    return `/articlesrouges/${productSlug}`
   }
+
+  if (!products.length) return null
 
   return (
     <motion.div 
@@ -157,128 +151,110 @@ export default function ArticleRougeSection({ products }: ArticleRougeSectionPro
 
         {/* Products Scroll Container */}
         <div className="relative">
-        <div 
-          ref={scrollRef}
+          <div 
+            ref={scrollRef}
             className="flex gap-2 md:gap-4 overflow-x-auto pb-4 scrollbar-hide scroll-smooth"
-        >
+          >
             {filteredProducts.map((product) => (
-            <motion.div 
+              <motion.div 
                 key={product.id}
-              className="flex-none w-[300px] md:w-[320px]"
+                className="flex-none w-[300px] md:w-[320px]"
                 layout
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-            >
-              <div 
-                className="relative bg-white overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.2)] transition-shadow duration-300 cursor-pointer h-full flex flex-col"
-                onClick={() => handleWhatsAppClick(product)}
               >
-                {/* Main Image Container */}
-                <div className="relative aspect-square">
-                  <Image
-                    src={product.mainImage}
-                    alt={product.name}
-                    fill
-                    className="object-cover"
-                  />
-                  
-                  {/* Store Badge with solid colors */}
-                  {product.store && (
-                    <div className="absolute top-3 left-3 z-10">
-                      <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full shadow-lg border
-                          ${STORE_COLORS[product.store]?.bg}
-                          ${STORE_COLORS[product.store]?.border}
-                          ${STORE_COLORS[product.store]?.text}
-                        `}
-                      >
-                        <MapPin className="w-3.5 h-3.5" />
-                        <span className="text-xs font-bold">{product.store}</span>
-                      </motion.div>
-                    </div>
-                  )}
+                <Link 
+                  href={getProductUrl(product)}
+                  className="relative bg-white overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.2)] transition-shadow duration-300 cursor-pointer h-full flex flex-col block"
+                >
+                  {/* Main Image Container */}
+                  <div className="relative aspect-square">
+                    <Image
+                      src={product.mainImage}
+                      alt={product.name}
+                      fill
+                      className="object-cover"
+                    />
+                    
+                    {/* Store Badge with solid colors */}
+                    {product.store && (
+                      <div className="absolute top-3 left-3 z-10">
+                        <motion.div
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full shadow-lg border
+                            ${STORE_COLORS[product.store]?.bg}
+                            ${STORE_COLORS[product.store]?.border}
+                            ${STORE_COLORS[product.store]?.text}
+                          `}
+                        >
+                          <MapPin className="w-3.5 h-3.5" />
+                          <span className="text-xs font-bold">{product.store}</span>
+                        </motion.div>
+                      </div>
+                    )}
 
-                  {/* Last Piece Badge */}
-                  <motion.div 
-                    className="absolute top-3 right-3 z-10"
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    <div className="flex items-center gap-1.5 bg-red-600 backdrop-blur-sm px-2.5 py-1.5 rounded-full shadow-lg border border-red-400">
-                      <Timer className="w-3.5 h-3.5 text-white" />
-                      <span className="text-xs font-bold text-white">DERNIÈRE PIÈCE</span>
-                    </div>
-                  </motion.div>
+                    {/* Last Piece Badge */}
+                    <motion.div 
+                      className="absolute top-3 right-3 z-10"
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <div className="flex items-center gap-1.5 bg-red-600 backdrop-blur-sm px-2.5 py-1.5 rounded-full shadow-lg border border-red-400">
+                        <Timer className="w-3.5 h-3.5 text-white" />
+                        <span className="text-xs font-bold text-white">DERNIÈRE PIÈCE</span>
+                      </div>
+                    </motion.div>
 
-                  {/* WhatsApp Button */}
-                  <motion.div
-                    className="absolute bottom-3 left-3 z-20"
-                    whileHover={{ scale: 1.05 }}
-                    animate={{ y: [0, -3, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    <div className="flex items-center gap-2 bg-[#25D366] px-3 py-2 rounded-full shadow-lg">
-                      <WhatsappIcon 
-                        size={20} 
-                        round={false}
-                        bgStyle={{ fill: "transparent" }}
-                        iconFillColor="white"
-                      />
-                      <span className="text-xs font-bold text-white">Commander</span>
-                    </div>
-                  </motion.div>
-
-                  {/* Price Tag - Updated with permanent skew */}
-                  <div className="absolute -bottom-3 -right-3 z-20">
-                    <div className="bg-yellow-400 px-4 py-2 rounded-lg shadow-lg transform -rotate-6">
-                      <div className="text-center">
-                        <span className="text-2xl font-black text-black">
-                          {(product.articleRougePrice || product.VenteflashPrice)?.toLocaleString('fr-FR')} DH
-                        </span>
-                        <div className="flex items-center gap-1 mt-0.5">
-                          <span className="text-xs text-black/60 line-through">
-                            {product.initialPrice.toLocaleString('fr-FR')} DH
+                    {/* Price Tag - Updated with permanent skew */}
+                    <div className="absolute -bottom-3 -right-3 z-20">
+                      <div className="bg-yellow-400 px-4 py-2 rounded-lg shadow-lg transform -rotate-6">
+                        <div className="text-center">
+                          <span className="text-2xl font-black text-black">
+                            {(product.articleRougePrice || product.VenteflashPrice)?.toLocaleString('fr-FR')} DH
                           </span>
-                          <span className="text-xs font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">
-                            -{Math.round((1 - (product.articleRougePrice || 0) / product.initialPrice) * 100)}%
-                          </span>
+                          <div className="flex items-center gap-1 mt-0.5">
+                            <span className="text-xs text-black/60 line-through">
+                              {product.initialPrice.toLocaleString('fr-FR')} DH
+                            </span>
+                            <span className="text-xs font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">
+                              -{Math.round((1 - (product.articleRougePrice || 0) / product.initialPrice) * 100)}%
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Product Info - Updated labels with gradients */}
-                <div className="p-5 flex flex-col flex-grow">
-                  <h3 className="font-bold text-lg mb-4 line-clamp-2 text-gray-900 flex-grow uppercase">
-                    {product.name}
-                  </h3>
-                  
-                  <div className="flex items-center gap-3 mt-auto">
-                    {/* Category label - more subtle gradient */}
-                    <span className="flex-1 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs whitespace-nowrap bg-gradient-to-r from-gray-100 to-gray-50 text-gray-600 border border-gray-200">
-                      <Tag className="w-3 h-3 text-gray-500" />
-                      {product.subCategory}
-                    </span>
+                  {/* Product Info - Updated labels with gradients */}
+                  <div className="p-5 flex flex-col flex-grow">
+                    <h3 className="font-bold text-lg mb-4 line-clamp-2 text-gray-900 flex-grow uppercase">
+                      {product.name}
+                    </h3>
                     
-                    {/* Dimensions label - more prominent gradient */}
-                    <motion.span 
-                      className="flex-1 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md border border-blue-600"
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ type: "spring", stiffness: 400 }}
-                    >
-                      <Ruler className="w-3 h-3" />
-                      {product.dimensions}
-                    </motion.span>
+                    <div className="flex items-center gap-3 mt-auto">
+                      {/* Category label - more subtle gradient */}
+                      <span className="flex-1 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs whitespace-nowrap bg-gradient-to-r from-gray-100 to-gray-50 text-gray-600 border border-gray-200">
+                        <Tag className="w-3 h-3 text-gray-500" />
+                        {product.subCategory}
+                      </span>
+                      
+                      {/* Dimensions label - more prominent gradient */}
+                      <motion.span 
+                        className="flex-1 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md border border-blue-600"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
+                        <Ruler className="w-3 h-3" />
+                        {product.dimensions}
+                      </motion.span>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-            </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
 
           {/* Scroll Buttons */}
           <button
@@ -313,4 +289,14 @@ const animations = {
       backgroundPosition: '100% 50%',
     },
   },
+}
+
+export async function getServerSideProps() {
+  const products = await getArticleRougeProducts()
+  
+  return {
+    props: {
+      products
+    }
+  }
 } 

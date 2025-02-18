@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
-import { Product } from '@/lib/types'
+import { Product } from '@/types'
 import { WhatsappIcon } from 'react-share'
 import { fetchStoreAvailability } from '@/lib/api'
 import { 
@@ -1333,4 +1333,3 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
     </AnimatePresence>
   );
 }
-

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import ProductCard from './ProductCard'
-import { Product } from '@/lib/types'
+import { Product } from '@/types'
 import { motion, AnimatePresence } from 'framer-motion'
 import EmptyState from './EmptyState'
 import { Category } from '@/lib/categories'
@@ -20,13 +20,21 @@ export default function ProductGrid({ products: initialProducts, category }: Pro
   // Find Article Rouge products
   const articleRougeProducts = initialProducts.filter(p => p.isArticleRouge && p.isActive)
   
-  // Filter regular products:
+  // Filter and sort regular products:
   // 1. Must be active
-  // 2. Must NOT have letters in ref (regardless of Article Rouge status)
-  const regularProducts = initialProducts.filter(p => {
-    const hasLettersInRef = /[a-zA-Z]/.test(p.ref)
-    return p.isActive && !hasLettersInRef
-  })
+  // 2. Must NOT have "r-" prefix in ref
+  // 3. Sort by createdAt date (most recent first)
+  const regularProducts = initialProducts
+    .filter(p => {
+      const hasRPrefix = p.ref.toLowerCase().startsWith('r-')
+      return p.isActive && !hasRPrefix
+    })
+    .sort((a, b) => {
+      // Convert strings to Date objects if they're not already
+      const dateA = new Date(a.createdAt)
+      const dateB = new Date(b.createdAt)
+      return dateB.getTime() - dateA.getTime() // Most recent first
+    })
 
   if (initialProducts.length === 0) {
     return <EmptyState category={category} />

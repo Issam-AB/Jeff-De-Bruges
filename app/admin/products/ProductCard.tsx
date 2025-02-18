@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Product } from '@prisma/client';
+import { Product } from '@/types';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Edit, Trash2, Package } from 'lucide-react';
@@ -122,7 +122,7 @@ export function ProductCard({
           <ProductForm
             initialData={{
               ...product,
-              topDealsPrice: product.VenteflashPrice
+              topDealsPrice: product.VenteflashPrice ?? product.initialPrice
             }}
             onSubmit={async (data) => {
               try {

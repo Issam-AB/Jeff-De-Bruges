@@ -1,5 +1,6 @@
 import { getProducts } from '@/lib/products'
 import ProductGrid from '@/components/ProductGrid'
+import { Product } from '@/types'
 
 export default async function Home() {
   const products = await getProducts()

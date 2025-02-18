@@ -1,24 +1,35 @@
-import { notFound } from 'next/navigation'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 import ProductGrid from '@/components/ProductGrid'
-import PageLayout from '@/components/PageLayout'
-import { getCategoryBySlug, PREDEFINED_CATEGORIES, Category } from '@/lib/categories'
+import { notFound } from 'next/navigation'
+import { Product } from '@/types'
 
-function normalizeString(str: string): string {
-  return str
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
+interface PageProps {
+  params: {
+    category: string
+  }
 }
 
 async function getProducts(category: string) {
   try {
+    let products;
     // For 'tous' category, return all products - make case insensitive
     if (category.toLowerCase() === 'tous' || category.toUpperCase() === 'TOUS') {
-      return await prisma.product.findMany({
+      products = await prisma.product.findMany({
         where: {
+          isActive: true
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      })
+    } else {
+      // For other categories
+      products = await prisma.product.findMany({
+        where: {
+          mainCategory: {
+            equals: category,
+            mode: 'insensitive'
+          },
           isActive: true
         },
         orderBy: {
@@ -27,74 +38,34 @@ async function getProducts(category: string) {
       })
     }
 
-    // Find the category in our predefined list
-    const categoryConfig = PREDEFINED_CATEGORIES.find(c => 
-      normalizeString(c.slug) === normalizeString(category)
-    ) as Category | undefined
+    // Transform the data to match the Product type
+    return products.map(product => ({
+      ...product,
+      isArticleRouge: product.isArticleRouge ?? false,
+      articleRougePrice: product.articleRougePrice ?? null,
+      store: product.store ?? null,
+      // If VenteflashPrice is null, use initialPrice
+      VenteflashPrice: product.VenteflashPrice ?? product.initialPrice
+    })) as Product[]
 
-    if (!categoryConfig) return []
-
-    // Get all possible subcategories
-    let subcategories: string[] = []
-    
-    // Add the main category name
-    subcategories.push(categoryConfig.name)
-    
-    // Add child category names if they exist
-    if ('children' in categoryConfig && Array.isArray(categoryConfig.children)) {
-      subcategories = [...subcategories, ...categoryConfig.children.map(child => child.name)]
-    }
-
-    // For specific categories
-    return await prisma.product.findMany({
-      where: {
-        isActive: true,
-        OR: [
-          {
-            mainCategory: {
-              in: subcategories,
-              mode: 'insensitive'
-            }
-          },
-          {
-            subCategory: {
-              in: subcategories,
-              mode: 'insensitive'
-            }
-          }
-        ]
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    })
   } catch (error) {
     console.error('Error fetching products:', error)
     return []
   }
 }
 
-export default async function CategoryPage({
-  params
-}: {
-  params: { category: string }
-}) {
-  // Decode and normalize the category slug
-  const decodedCategory = decodeURIComponent(params.category)
-  const normalizedSlug = normalizeString(decodedCategory)
-  
-  // Find the category in our predefined list
-  const category = await getCategoryBySlug(normalizedSlug)
-  if (!category) return notFound()
+export default async function CategoryPage({ params }: PageProps) {
+  const products = await getProducts(params.category)
 
-  const products = await getProducts(normalizedSlug)
+  if (!products.length) {
+    notFound()
+  }
 
   return (
-    <PageLayout>
-      <ProductGrid 
-        products={products} 
-        category={category}
-      />
-    </PageLayout>
+    <main className="flex-1">
+      <div className="container mx-auto px-4 py-8">
+        <ProductGrid products={products} />
+      </div>
+    </main>
   )
 } 

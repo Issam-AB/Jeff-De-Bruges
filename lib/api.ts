@@ -1,4 +1,4 @@
-import { Product } from '@/lib/types'
+import { Product } from '@/types'
 
 export interface StoreAvailability {
   'Stock Casa': number;
@@ -39,6 +39,7 @@ interface FetchProductsParams {
 
 export async function fetchProducts({ category, page = 1 }: FetchProductsParams) {
   try {
+    // Use the correct API endpoint for products from Prisma
     const url = category 
       ? `/api/products/category/${encodeURIComponent(category)}?page=${page}`
       : `/api/products?page=${page}`;
@@ -50,6 +51,43 @@ export async function fetchProducts({ category, page = 1 }: FetchProductsParams)
   } catch (error) {
     console.error('Error fetching products:', error);
     return { products: [], hasMore: false };
+  }
+}
+
+export async function getProductBySlug(slug: string): Promise<Product | null> {
+  try {
+    const origin = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+    const response = await fetch(`${origin}/api/products/articlesrouges`);
+    
+    if (!response.ok) throw new Error('Failed to fetch articles rouges');
+    
+    const { products }: { products: Product[] } = await response.json();
+    
+    if (!products || products.length === 0) {
+      console.log('No articles rouges found')
+      return null
+    }
+
+    // Find the product that matches the slug
+    const product = products.find((product: Product) => {
+      const productSlug = product.name
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-zà-ÿ0-9-]/g, '')
+      
+      return productSlug === slug
+    })
+
+    if (!product) {
+      console.log('No product found matching slug:', slug)
+      return null
+    }
+
+    return product
+  } catch (error) {
+    console.error('Error fetching product by slug:', error)
+    return null
   }
 }
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Product } from '@prisma/client'
+import { Product } from '@/types'
 import { ProductCard } from './ProductCard'
 import { AddProductForm } from './AddProductForm'
 import { Input } from '@/components/ui/input'
@@ -107,9 +107,11 @@ export default function ProductsPage() {
           b.name.localeCompare(a.name)
       }
       if (sortBy === 'price') {
+        const priceA = a.VenteflashPrice ?? a.initialPrice
+        const priceB = b.VenteflashPrice ?? b.initialPrice
         return sortOrder === 'asc' ? 
-          a.VenteflashPrice - b.VenteflashPrice : 
-          b.VenteflashPrice - a.VenteflashPrice
+          priceA - priceB : 
+          priceB - priceA
       }
       // date sorting
       return sortOrder === 'asc' ? 

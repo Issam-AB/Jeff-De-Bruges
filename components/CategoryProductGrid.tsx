@@ -1,4 +1,4 @@
-import { Product } from '@/lib/types'
+import { Product } from '@/types'
 import ProductCard from './ProductCard'
 import ArticleRougeSection from './ArticleRougeSection'
 
@@ -7,8 +7,17 @@ interface CategoryProductGridProps {
 }
 
 export default function CategoryProductGrid({ products }: CategoryProductGridProps) {
-  // Find Article Rouge product for this category
+  // Find Article Rouge product for this category and transform data
   const articleRougeProduct = products.find(p => p.isArticleRouge && p.isActive)
+  
+  // Transform the article rouge product if it exists
+  const transformedArticleRougeProduct = articleRougeProduct ? {
+    ...articleRougeProduct,
+    isArticleRouge: articleRougeProduct.isArticleRouge ?? false,
+    articleRougePrice: articleRougeProduct.articleRougePrice ?? null,
+    store: articleRougeProduct.store ?? null,
+    VenteflashPrice: articleRougeProduct.VenteflashPrice
+  } : null
   
   // Filter out Article Rouge product from main grid
   const regularProducts = products.filter(p => !p.isArticleRouge)
@@ -16,8 +25,8 @@ export default function CategoryProductGrid({ products }: CategoryProductGridPro
   return (
     <div>
       {/* Article Rouge Section */}
-      {articleRougeProduct && (
-        <ArticleRougeSection products={[articleRougeProduct]} />
+      {transformedArticleRougeProduct && (
+        <ArticleRougeSection products={[transformedArticleRougeProduct]} />
       )}
 
       {/* Regular Products Grid */}

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Product } from '@prisma/client'
+import { Product } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { 
@@ -16,6 +16,7 @@ import { Switch } from '@/components/ui/switch'
 import ImageUpload from './ImageUpload'
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Info, DollarSign, Flame } from 'lucide-react'
+import { Label } from '@/components/ui/label'
 
 interface EditProductFormProps {
   product: Product
@@ -75,7 +76,11 @@ export function EditProductForm({ product, onClose, onProductUpdated }: EditProd
   
   const [formData, setFormData] = useState({
     ...product,
-    mainCategory: (product.mainCategory || defaultMainCategory) as string
+    mainCategory: (product.mainCategory || defaultMainCategory) as string,
+    VenteflashPrice: product.VenteflashPrice,
+    articleRougePrice: product.articleRougePrice ?? null,
+    store: product.store ?? null,
+    isArticleRouge: product.isArticleRouge ?? false,
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -265,7 +270,10 @@ export function EditProductForm({ product, onClose, onProductUpdated }: EditProd
                   <Input
                     type="number"
                     value={formData.VenteflashPrice}
-                    onChange={(e) => setFormData({ ...formData, VenteflashPrice: parseFloat(e.target.value) })}
+                    onChange={(e) => setFormData({ 
+                      ...formData, 
+                      VenteflashPrice: parseFloat(e.target.value) || product.initialPrice 
+                    })}
                     className="bg-white"
                     required
                   />
