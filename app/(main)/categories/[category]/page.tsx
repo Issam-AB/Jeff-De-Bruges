@@ -11,9 +11,12 @@ interface PageProps {
 
 async function getProducts(category: string) {
   try {
+    // Decode the URL-encoded category name
+    const decodedCategory = decodeURIComponent(category);
+    
     let products;
     // For 'tous' category, return all products - make case insensitive
-    if (category.toLowerCase() === 'tous' || category.toUpperCase() === 'TOUS') {
+    if (decodedCategory.toLowerCase() === 'tous' || decodedCategory.toUpperCase() === 'TOUS') {
       products = await prisma.product.findMany({
         where: {
           isActive: true
@@ -27,13 +30,14 @@ async function getProducts(category: string) {
       products = await prisma.product.findMany({
         where: {
           mainCategory: {
-            equals: category,
+            equals: decodedCategory,
             mode: 'insensitive'
           },
           isActive: true
         },
         orderBy: {
           createdAt: 'desc'
+    
         }
       })
     }
