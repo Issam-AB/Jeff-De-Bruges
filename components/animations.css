@@ -1,0 +1,197 @@
+@keyframes promoFlash {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+@keyframes gridFlicker {
+  0%, 100% { opacity: 0.07; }
+  50% { opacity: 0.05; }
+}
+
+@keyframes flash {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* Neon flicker effect */
+@keyframes neonFlicker {
+  0%, 100% { opacity: 1; }
+  41% { opacity: 1; }
+  42% { opacity: 0.8; }
+  43% { opacity: 1; }
+  45% { opacity: 0.3; }
+  46% { opacity: 1; }
+}
+
+/* Glow pulse effect */
+@keyframes glowPulse {
+  0%, 100% { 
+    filter: drop-shadow(0 0 5px #e40524) 
+            drop-shadow(0 0 15px #e40524) 
+            drop-shadow(0 0 20px #e40524);
+  }
+  50% { 
+    filter: drop-shadow(0 0 10px #e40524) 
+            drop-shadow(0 0 25px #e40524) 
+            drop-shadow(0 0 35px #e40524);
+  }
+}
+
+/* Electric surge effect */
+@keyframes electricSurge {
+  0% { transform: translateX(-100%) skewX(-45deg); opacity: 0; }
+  20% { transform: translateX(0) skewX(-45deg); opacity: 0.8; }
+  40%, 100% { transform: translateX(100%) skewX(-45deg); opacity: 0; }
+}
+
+/* Grid power-up effect */
+@keyframes gridPowerUp {
+  0% { opacity: 0; transform: scaleY(0); }
+  100% { opacity: 0.07; transform: scaleY(1); }
+}
+
+.animate-promo-flash {
+  animation: promoFlash 8s infinite;
+}
+
+.animate-promo-flash-delayed {
+  animation: promoFlash 8s infinite;
+  animation-delay: 4s;
+}
+
+.animate-grid-flicker {
+  animation: gridFlicker 4s infinite;
+}
+
+.animate-flash-1 {
+  animation: flash 10s infinite;
+}
+
+.animate-flash-2 {
+  animation: flash 10s infinite;
+  animation-delay: 5s;
+}
+
+.animate-neon-flicker {
+  animation: neonFlicker 5s infinite;
+}
+
+.animate-glow-pulse {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+.animate-electric-surge {
+  animation: electricSurge 4s infinite;
+}
+
+.animate-grid-power {
+  animation: gridPowerUp 1s ease-out forwards;
+}
+
+/* Particle container */
+.particle-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Base particle styles */
+.particle {
+  position: absolute;
+  background: #e40524;
+  border-radius: 50%;
+  width: var(--size);
+  height: var(--size);
+  opacity: 0;
+  animation: float 10s infinite linear;
+  animation-delay: var(--delay);
+  left: var(--start-pos);
+  top: -10px;
+  filter: blur(1px);
+}
+
+/* Particle animation */
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+}
+
+/* Generate multiple particle variations */
+.particle-1 { --speed: 15s; }
+.particle-2 { --speed: 12s; transform: scale(0.8); }
+.particle-3 { --speed: 18s; transform: scale(1.2); }
+.particle-4 { --speed: 14s; transform: scale(0.9); }
+.particle-5 { --speed: 16s; transform: scale(1.1); }
+.particle-6 { --speed: 13s; transform: scale(0.7); }
+.particle-7 { --speed: 17s; transform: scale(1.3); }
+.particle-8 { --speed: 15s; transform: scale(0.85); }
+.particle-9 { --speed: 14s; transform: scale(1.15); }
+.particle-10 { --speed: 16s; transform: scale(0.95); }
+.particle-11 { --speed: 13s; transform: scale(1.05); }
+.particle-12 { --speed: 15s; transform: scale(0.75); }
+.particle-13 { --speed: 17s; transform: scale(1.25); }
+.particle-14 { --speed: 14s; transform: scale(0.9); }
+.particle-15 { --speed: 16s; transform: scale(1.1); }
+
+/* Each particle gets a slightly different animation */
+.particle:nth-child(odd) {
+  animation: float var(--speed) infinite ease-in-out;
+}
+
+.particle:nth-child(even) {
+  animation: floatReverse var(--speed) infinite ease-in-out;
+}
+
+@keyframes floatReverse {
+  0% {
+    transform: translateY(100vh) translateX(-100px) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(0) translateX(100px) rotate(-360deg);
+    opacity: 0;
+  }
+}
+
+.floating-element {
+  width: var(--size, 4px);
+  height: var(--size, 4px);
+  background: currentColor;
+  border-radius: 50%;
+  left: var(--start-pos, 50%);
+  animation: float calc(3s + var(--delay, 0s)) ease-in-out infinite;
+  opacity: 0.1;
+}
+
+/* Add shimmer effect for loading states */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.2) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+} 

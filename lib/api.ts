@@ -1,0 +1,95 @@
+import { Product } from '@/types'
+
+export interface StoreAvailability {
+  'Stock Casa': number;
+  'Stock Rabat': number;
+  'Stock Marrakech': number;
+  'Stock Tanger': number;
+  'Stock Bouskoura': number;
+}
+
+export async function fetchStoreAvailability(productRef: string): Promise<StoreAvailability> {
+  const response = await fetch(`https://phpstack-937973-4763176.cloudwaysapps.com/data1.php?type=search&query=${encodeURIComponent(productRef)}`);
+  
+  if (!response.ok) {
+    throw new Error('Failed to fetch store availability');
+  }
+
+  const data = await response.json();
+
+  if (data.error) {
+    throw new Error(data.error);
+  }
+
+  if (data.length === 0) {
+    throw new Error('No availability data found for this product');
+  }
+
+  return {
+    'Stock Casa': parseInt(data[0]['Stock Casa']),
+    'Stock Rabat': parseInt(data[0]['Stock Rabat']),
+    'Stock Marrakech': parseInt(data[0]['Stock Marrakech']),
+    'Stock Tanger': parseInt(data[0]['Stock Tanger']),
+    'Stock Bouskoura': parseInt(data[0]['Stock Bouskoura'] || '0'),
+  };
+}
+
+interface FetchProductsParams {
+  category?: string;
+  page?: number;
+}
+
+export async function fetchProducts({ category, page = 1 }: FetchProductsParams) {
+  try {
+    // Use the correct API endpoint for products from Prisma
+    const url = category 
+      ? `/api/products/category/${encodeURIComponent(category)}?page=${page}`
+      : `/api/products?page=${page}`;
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Failed to fetch products');
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return { products: [], hasMore: false };
+  }
+}
+
+export async function getProductBySlug(slug: string): Promise<Product | null> {
+  try {
+    const origin = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+    const response = await fetch(`${origin}/api/products/articlesrouges`);
+    
+    if (!response.ok) throw new Error('Failed to fetch articles rouges');
+    
+    const { products }: { products: Product[] } = await response.json();
+    
+    if (!products || products.length === 0) {
+      console.log('No articles rouges found')
+      return null
+    }
+
+    // Find the product that matches the slug
+    const product = products.find((product: Product) => {
+      const productSlug = product.name
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-zà-ÿ0-9-]/g, '')
+      
+      return productSlug === slug
+    })
+
+    if (!product) {
+      console.log('No product found matching slug:', slug)
+      return null
+    }
+
+    return product
+  } catch (error) {
+    console.error('Error fetching product by slug:', error)
+    return null
+  }
+}
+
