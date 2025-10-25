@@ -57,6 +57,7 @@ type SortOrderValue = 'asc' | 'desc'
 interface FilterState {
   search: string
   category: string
+  subCategory: string
   priceRange: { min: number; max: number }
   status: 'all' | 'active' | 'inactive'
   isArticleRouge: 'all' | 'true' | 'false'
@@ -83,6 +84,7 @@ export default function ProductsPage() {
   const [filters, setFilters] = useState<FilterState>({
     search: '',
     category: 'all',
+    subCategory: 'all',
     priceRange: { min: 0, max: 100000 },
     status: 'all',
     isArticleRouge: 'all'
@@ -124,7 +126,7 @@ export default function ProductsPage() {
       // Search filter
       if (filters.search) {
         const searchTerm = filters.search.toLowerCase()
-        const matchesSearch = 
+    const matchesSearch = 
           product.name.toLowerCase().includes(searchTerm) ||
           product.ref.toLowerCase().includes(searchTerm) ||
           product.mainCategory.toLowerCase().includes(searchTerm) ||
@@ -136,6 +138,13 @@ export default function ProductsPage() {
       if (filters.category !== 'all') {
         const categoryData = PREDEFINED_CATEGORIES.find(cat => cat.id === filters.category)
         if (categoryData && product.mainCategory !== categoryData.name) {
+          return false
+        }
+      }
+
+      // Subcategory filter
+      if (filters.subCategory !== 'all') {
+        if (product.subCategory !== filters.subCategory) {
           return false
         }
       }
@@ -251,6 +260,7 @@ export default function ProductsPage() {
     setFilters({
       search: '',
       category: 'all',
+      subCategory: 'all',
       priceRange: { min: 0, max: 100000 },
       status: 'all',
       isArticleRouge: 'all'
@@ -259,6 +269,7 @@ export default function ProductsPage() {
 
   const hasActiveFilters = filters.search || 
     filters.category !== 'all' || 
+    filters.subCategory !== 'all' || 
     filters.status !== 'all' || 
     filters.isArticleRouge !== 'all'
 
@@ -309,7 +320,7 @@ export default function ProductsPage() {
               Filters
               {hasActiveFilters && (
                 <Badge variant="secondary" className="ml-1 bg-gray-600 text-gray-200">
-                  {[filters.category !== 'all', filters.status !== 'all', filters.isArticleRouge !== 'all'].filter(Boolean).length}
+                  {[filters.category !== 'all', filters.subCategory !== 'all', filters.status !== 'all', filters.isArticleRouge !== 'all'].filter(Boolean).length}
                 </Badge>
               )}
               <ChevronDown className="w-4 h-4" />
@@ -338,18 +349,18 @@ export default function ProductsPage() {
           <div className="mt-6 pt-6 border-t border-gray-600">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Category</label>
+                <label className="block text-sm font-medium text-white mb-2">Category</label>
                 <Select
                   value={filters.category}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, category: value }))}
+                  onValueChange={(value) => setFilters(prev => ({ ...prev, category: value, subCategory: 'all' }))}
                 >
                   <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
                     <SelectValue placeholder="All categories" />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-700 border border-gray-600 shadow-lg">
-                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="all" className="text-white hover:bg-gray-600">All Categories</SelectItem>
                     {PREDEFINED_CATEGORIES.map(category => (
-                      <SelectItem key={category.id} value={category.id}>
+                      <SelectItem key={category.id} value={category.id} className="text-white hover:bg-gray-600">
                         {category.name}
                       </SelectItem>
                     ))}
@@ -358,7 +369,27 @@ export default function ProductsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Status</label>
+                <label className="block text-sm font-medium text-white mb-2">Subcategory</label>
+                <Select
+                  value={filters.subCategory}
+                  onValueChange={(value) => setFilters(prev => ({ ...prev, subCategory: value }))}
+                >
+                  <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                    <SelectValue placeholder="All subcategories" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700 border border-gray-600 shadow-lg">
+                    <SelectItem value="all" className="text-white hover:bg-gray-600">All Subcategories</SelectItem>
+                    {Array.from(new Set(products.map(p => p.subCategory).filter(Boolean))).sort().map(subCat => (
+                      <SelectItem key={subCat} value={subCat} className="text-white hover:bg-gray-600">
+                        {subCat}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">Status</label>
                 <Select
                   value={filters.status}
                   onValueChange={(value) => setFilters(prev => ({ ...prev, status: value as any }))}
@@ -367,15 +398,15 @@ export default function ProductsPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-700 border border-gray-600 shadow-lg">
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
+                    <SelectItem value="all" className="text-white hover:bg-gray-600">All Status</SelectItem>
+                    <SelectItem value="active" className="text-white hover:bg-gray-600">Active</SelectItem>
+                    <SelectItem value="inactive" className="text-white hover:bg-gray-600">Inactive</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Article Rouge</label>
+                <label className="block text-sm font-medium text-white mb-2">Article Rouge</label>
                 <Select
                   value={filters.isArticleRouge}
                   onValueChange={(value) => setFilters(prev => ({ ...prev, isArticleRouge: value as any }))}
@@ -384,9 +415,9 @@ export default function ProductsPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-700 border border-gray-600 shadow-lg">
-                    <SelectItem value="all">All Products</SelectItem>
-                    <SelectItem value="true">Article Rouge Only</SelectItem>
-                    <SelectItem value="false">Regular Products</SelectItem>
+                    <SelectItem value="all" className="text-white hover:bg-gray-600">All Products</SelectItem>
+                    <SelectItem value="true" className="text-white hover:bg-gray-600">Article Rouge Only</SelectItem>
+                    <SelectItem value="false" className="text-white hover:bg-gray-600">Regular Products</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -401,9 +432,9 @@ export default function ProductsPage() {
                   <X className="w-4 h-4 mr-2" />
                   Clear Filters
                 </Button>
-              </div>
             </div>
-          </div>
+            </div>
+        </div>
         )}
 
         {/* Sort Controls */}
@@ -421,7 +452,7 @@ export default function ProductsPage() {
                 <SelectItem value="category">Category</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+      </div>
           
           <Button
             onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
@@ -506,8 +537,8 @@ export default function ProductsPage() {
                 ? 'Try adjusting your filters or search terms'
                 : 'Get started by adding your first product'
               }
-            </p>
-          </div>
+          </p>
+        </div>
         </Card>
       )}
 
@@ -538,7 +569,7 @@ export default function ProductsPage() {
       </Dialog>
 
       {productToEdit && (
-        <Dialog open={!!productToEdit} onOpenChange={() => setProductToEdit(null)}>
+      <Dialog open={!!productToEdit} onOpenChange={() => setProductToEdit(null)}>
           <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
             <EditProductForm
               product={productToEdit}
@@ -549,8 +580,8 @@ export default function ProductsPage() {
                 showToastMessage('Product updated successfully!')
               }}
             />
-          </DialogContent>
-        </Dialog>
+        </DialogContent>
+      </Dialog>
       )}
 
       <AlertDialog open={!!productToDelete} onOpenChange={() => setProductToDelete(null)}>
@@ -566,8 +597,8 @@ export default function ProductsPage() {
             <AlertDialogAction
               onClick={async () => {
                 if (productToDelete) {
-                  try {
-                    const response = await fetch(`/api/admin/products/${productToDelete.id}`, {
+                try {
+                  const response = await fetch(`/api/admin/products/${productToDelete.id}`, {
                       method: 'DELETE'
                     })
                     if (response.ok) {
@@ -605,4 +636,4 @@ export default function ProductsPage() {
       />
     </div>
   )
-}
+} 
