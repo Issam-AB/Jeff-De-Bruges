@@ -237,7 +237,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
   const getStockStatus = (stock: number): StockStatus => {
     if (stock > 2) return { 
       color: 'green',
-      text: `${stock} en stock`,
+      text: 'En stock',
       icon: <Check size={15} />,
       bg: 'bg-green-50',
       border: 'border-green-100',
@@ -281,10 +281,10 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
         `}
       >
         <div className="flex items-start gap-3">
-            <div className={`
-              relative p-2.5 rounded-lg bg-gray-800 shadow-sm
-              ${stock > 0 ? 'ring-2 ring-gray-600' : ''}
-            `}>
+          <div className={`
+            relative p-2.5 rounded-lg bg-white shadow-sm
+            ${stock > 0 ? 'ring-2 ring-gray-100' : ''}
+          `}>
             <motion.div
               animate={stock > 0 ? {
                 scale: [1, 1.1, 1],
@@ -304,7 +304,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-2 mb-1">
-              <p className="text-sm font-semibold text-white">
+              <p className="text-sm font-semibold text-gray-900">
                 {store}
               </p>
               <motion.div 
@@ -398,15 +398,15 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
         <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-4 pointer-events-none">
           <button
             onClick={handlePrevClick}
-            className="p-2 bg-gray-800/90 shadow-lg hover:bg-gray-700 transition-all duration-200 group z-10 pointer-events-auto rounded-none"
+            className="p-2 bg-white/90 shadow-lg hover:bg-white transition-all duration-200 group z-10 pointer-events-auto rounded-none"
           >
-            <ChevronLeft className="w-6 h-6 text-white group-hover:text-gray-300" />
+            <ChevronLeft className="w-6 h-6 text-gray-800 group-hover:text-gray-600" />
           </button>
           <button
             onClick={handleNextClick}
-            className="p-2 bg-gray-800/90 shadow-lg hover:bg-gray-700 transition-all duration-200 group z-10 pointer-events-auto rounded-none"
+            className="p-2 bg-white/90 shadow-lg hover:bg-white transition-all duration-200 group z-10 pointer-events-auto rounded-none"
           >
-            <ChevronRight className="w-6 h-6 text-white group-hover:text-gray-300" />
+            <ChevronRight className="w-6 h-6 text-gray-800 group-hover:text-gray-600" />
           </button>
         </div>
       )}
@@ -470,7 +470,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
         </div>
 
         {/* Content section */}
-        <div className="bg-gray-900">
+        <div className="bg-white">
           <div className="p-4">
             {/* Product Info */}
             <div className="space-y-4">
@@ -520,8 +520,8 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
               <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg border border-gray-200 overflow-hidden">
                 <div className="px-5 py-4 border-b border-gray-200">
                   <div className="flex items-center gap-3">
-                    <ShoppingBag size={16} className="text-white" />
-                      <h3 className="text-base font-semibold text-white">
+                    <ShoppingBag size={16} className="text-gray-900" />
+                      <h3 className="text-base font-semibold text-gray-900">
                         Disponibilité en magasin
                       </h3>
                   </div>
@@ -533,7 +533,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                     </div>
                   ) : (
                     <div className="flex items-center justify-center py-8">
-                          <Loader2 className="h-6 w-6 animate-spin text-white" />
+                          <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
                     </div>
                   )}
                 </div>
@@ -615,14 +615,14 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
           {DesktopImageGallery}
         </div>
         {/* Scrollable right side */}
-        <div className="w-1/2 h-full overflow-y-auto bg-gray-900">
+        <div className="w-1/2 h-full overflow-y-auto bg-white">
           <div className="p-8">
             {/* Product Info */}
             <div className="space-y-6">
               {/* Product Name and Labels group */}
               <div className="pt-1">
                 <h1 
-                  className="text-4xl font-bold text-white uppercase leading-tight mb-4"
+                  className="text-4xl font-bold bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 bg-clip-text text-transparent uppercase leading-tight mb-4"
                   style={{ wordBreak: 'break-word' }}
                 >
                   {product.name}
@@ -692,7 +692,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                       <ShoppingBag size={16} className="text-white" />
                     </div>
                     <div>
-                      <h3 className="text-base font-semibold text-white">
+                      <h3 className="text-base font-semibold text-gray-900">
                         Disponibilité en magasin
                       </h3>
                       {availability && (
@@ -762,7 +762,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
         {/* Add padding at the bottom to prevent overlap with floating button */}
         <div className="pb-20">
           {/* Content Section for Mobile */}
-          <div className="flex-1 bg-gray-900">
+          <div className="flex-1 bg-white">
             <div className="p-4">
               {/* Product Info */}
               <div className="space-y-4">
@@ -812,7 +812,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                 <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg border border-gray-200 overflow-hidden">
                   <div className="px-5 py-4 border-b border-gray-200">
                     <div className="flex items-center gap-3">
-                      <ShoppingBag size={16} className="text-white" />
+                      <ShoppingBag size={16} className="text-gray-900" />
                         <h3 className="text-base font-semibold text-gray-900">
                           Disponibilité en magasin
                         </h3>
@@ -825,7 +825,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                       </div>
                     ) : (
                       <div className="flex items-center justify-center py-8">
-                            <Loader2 className="h-6 w-6 animate-spin text-white" />
+                            <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
                       </div>
                     )}
                   </div>
@@ -902,18 +902,18 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
       </div>
 
       {/* Desktop Layout */}
-      <div className="hidden lg:flex min-h-[calc(100vh-200px)] bg-gray-900 rounded-lg shadow-lg overflow-hidden">
+      <div className="hidden lg:flex min-h-[calc(100vh-200px)] bg-white rounded-lg shadow-lg overflow-hidden">
         <div className="w-1/2 bg-[#E8E8E6] relative">
           {DesktopImageGallery}
         </div>
-        <div className="w-1/2 bg-gray-900 overflow-y-auto">
+        <div className="w-1/2 bg-white overflow-y-auto">
           <div className="p-8">
             {/* Product Info */}
             <div className="space-y-6">
               {/* Product Name and Labels group */}
               <div className="pt-1">
                 <h1 
-                  className="text-4xl font-bold text-white uppercase leading-tight mb-4"
+                  className="text-4xl font-bold bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 bg-clip-text text-transparent uppercase leading-tight mb-4"
                   style={{ wordBreak: 'break-word' }}
                 >
                   {product.name}
@@ -983,7 +983,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                       <ShoppingBag size={16} className="text-white" />
                     </div>
                     <div>
-                      <h3 className="text-base font-semibold text-white">
+                      <h3 className="text-base font-semibold text-gray-900">
                         Disponibilité en magasin
                       </h3>
                       {availability && (

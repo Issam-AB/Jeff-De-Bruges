@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Upload, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
-import { put } from '@vercel/blob'
 
 interface ImageUploadProps {
   mainImage: string
@@ -23,11 +22,21 @@ export default function ImageUpload({ mainImage, gallery, onImagesUpdated }: Ima
 
     try {
       const file = e.target.files[0]
-      const blob = await put(file.name, file, {
-        access: 'public',
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
       })
 
-      onImagesUpdated(blob.url, gallery)
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Upload failed')
+      }
+
+      onImagesUpdated(result.url, gallery)
     } catch (err) {
       setError('Failed to upload image')
       console.error(err)
@@ -45,10 +54,21 @@ export default function ImageUpload({ mainImage, gallery, onImagesUpdated }: Ima
       const files = Array.from(e.target.files)
       const uploads = await Promise.all(
         files.map(async (file) => {
-          const blob = await put(file.name, file, {
-            access: 'public',
+          const formData = new FormData()
+          formData.append('file', file)
+
+          const response = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
           })
-          return blob.url
+
+          const result = await response.json()
+
+          if (!response.ok) {
+            throw new Error(result.error || 'Upload failed')
+          }
+
+          return result.url
         })
       )
 

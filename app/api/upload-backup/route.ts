@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
 import { v4 as uuidv4 } from 'uuid';
 
-export const runtime = 'edge';
+// Using Node.js runtime instead of edge for better environment variable support
+export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
   // Debug: Log environment variable status
@@ -98,4 +99,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-} 
+}

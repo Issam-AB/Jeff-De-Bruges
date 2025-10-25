@@ -15,7 +15,7 @@ import { PREDEFINED_CATEGORIES } from '@/lib/categories'
 import { Switch } from '@/components/ui/switch'
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Info, DollarSign, Flame, Star, Upload, X, Image as ImageIcon } from 'lucide-react'
-import { put } from '@vercel/blob'
+// Removed direct Vercel Blob import - using API route instead
 
 interface EditProductFormProps {
   product: Product
@@ -51,11 +51,24 @@ function ImageUpload({
   const handleUpload = async (file: File, isMain = false) => {
     setUploading(true);
     try {
-      const blob = await put(file.name, file, { access: 'public' });
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Upload failed');
+      }
+
       if (isMain) {
-        onImagesUpdated(blob.url, gallery);
+        onImagesUpdated(result.url, gallery);
       } else {
-        onImagesUpdated(mainImage, [...gallery, blob.url]);
+        onImagesUpdated(mainImage, [...gallery, result.url]);
       }
     } catch (error) {
       console.error('Upload failed:', error);
