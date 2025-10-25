@@ -1,30 +1,70 @@
 import { Product, StoreAvailability } from '@/types'
 
 export async function fetchStoreAvailability(productRef: string): Promise<StoreAvailability> {
-  const response = await fetch(`https://phpstack-937973-4763176.cloudwaysapps.com/data1.php?type=search&query=${encodeURIComponent(productRef)}`);
-  
-  if (!response.ok) {
-    throw new Error('Failed to fetch store availability');
+  try {
+    const response = await fetch(`https://phpstack-937973-4763176.cloudwaysapps.com/data1.php?type=search&query=${encodeURIComponent(productRef)}`);
+    
+    if (!response.ok) {
+      console.warn(`HTTP error fetching stock for ${productRef}: ${response.status}`);
+      // Return zero stock instead of throwing error
+      return {
+        'Stock Casa': 0,
+        'Stock Rabat': 0,
+        'Stock Marrakech': 0,
+        'Stock Tanger': 0,
+        'Stock Bouskoura': 0,
+        'Stock Frimoda': 0,
+      };
+    }
+
+    const data = await response.json();
+
+    if (data.error) {
+      console.warn(`API error for product ${productRef}:`, data.error);
+      // Return zero stock instead of throwing error
+      return {
+        'Stock Casa': 0,
+        'Stock Rabat': 0,
+        'Stock Marrakech': 0,
+        'Stock Tanger': 0,
+        'Stock Bouskoura': 0,
+        'Stock Frimoda': 0,
+      };
+    }
+
+    // If no data found, return zero stock for all stores instead of throwing error
+    if (data.length === 0) {
+      console.log(`No availability data found for product ${productRef}, returning zero stock`);
+      return {
+        'Stock Casa': 0,
+        'Stock Rabat': 0,
+        'Stock Marrakech': 0,
+        'Stock Tanger': 0,
+        'Stock Bouskoura': 0,
+        'Stock Frimoda': 0,
+      };
+    }
+
+    return {
+      'Stock Casa': parseInt(data[0]['Stock Casa'] || '0'),
+      'Stock Rabat': parseInt(data[0]['Stock Rabat'] || '0'),
+      'Stock Marrakech': parseInt(data[0]['Stock Marrakech'] || '0'),
+      'Stock Tanger': parseInt(data[0]['Stock Tanger'] || '0'),
+      'Stock Bouskoura': parseInt(data[0]['Stock Bouskoura'] || '0'),
+      'Stock Frimoda': parseInt(data[0]['Stock Frimoda'] || '0'),
+    };
+  } catch (error) {
+    console.error(`Error fetching stock for product ${productRef}:`, error);
+    // Return zero stock instead of throwing error
+    return {
+      'Stock Casa': 0,
+      'Stock Rabat': 0,
+      'Stock Marrakech': 0,
+      'Stock Tanger': 0,
+      'Stock Bouskoura': 0,
+      'Stock Frimoda': 0,
+    };
   }
-
-  const data = await response.json();
-
-  if (data.error) {
-    throw new Error(data.error);
-  }
-
-  if (data.length === 0) {
-    throw new Error('No availability data found for this product');
-  }
-
-  return {
-    'Stock Casa': parseInt(data[0]['Stock Casa'] || '0'),
-    'Stock Rabat': parseInt(data[0]['Stock Rabat'] || '0'),
-    'Stock Marrakech': parseInt(data[0]['Stock Marrakech'] || '0'),
-    'Stock Tanger': parseInt(data[0]['Stock Tanger'] || '0'),
-    'Stock Bouskoura': parseInt(data[0]['Stock Bouskoura'] || '0'),
-    'Stock Frimoda': parseInt(data[0]['Stock Frimoda'] || '0'),
-  };
 }
 
 interface FetchProductsParams {
