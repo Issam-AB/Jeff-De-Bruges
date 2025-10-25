@@ -45,7 +45,6 @@ const getCategoryColor = (category: string) => {
 export default function ProductCard({ product, className, onQuickView }: ProductCardProps) {
   const [availability, setAvailability] = useState<StoreAvailability | null>(null)
   const { baseColor, lighterColor } = getCategoryColor(product.mainCategory);
-  const discountPercentage = Math.round((1 - product.VenteflashPrice / product.initialPrice) * 100)
 
   // Use VenteflashPrice instead of price
   const price = product.VenteflashPrice;
@@ -83,25 +82,14 @@ export default function ProductCard({ product, className, onQuickView }: Product
     const totalStock = Object.values(availability)
       .reduce((sum, value) => sum + (typeof value === 'number' ? value : 0), 0)
 
-    if (totalStock > 5) {
+    if (totalStock > 0) {
       return {
         stockStatus: {
           icon: <Check className="h-4 w-4 text-emerald-50" />,
-          text: `${totalStock} en stock`,
+          text: "En stock",
           textColor: "text-white",
           bgColor: "bg-emerald-500",
           borderColor: "border-emerald-600"
-        },
-        totalStock
-      }
-    } else if (totalStock > 0) {
-      return {
-        stockStatus: {
-          icon: <AlertCircle className="h-4 w-4 text-amber-50" />,
-          text: `${totalStock} restant${totalStock > 1 ? 's' : ''}`,
-          textColor: "text-white",
-          bgColor: "bg-amber-500",
-          borderColor: "border-amber-600"
         },
         totalStock
       }
@@ -109,7 +97,7 @@ export default function ProductCard({ product, className, onQuickView }: Product
       return {
         stockStatus: {
           icon: <AlertCircle className="h-4 w-4 text-red-50" />,
-          text: "Rupture de stock",
+          text: "En rupture",
           textColor: "text-white",
           bgColor: "bg-red-500",
           borderColor: "border-red-600"
@@ -161,13 +149,6 @@ export default function ProductCard({ product, className, onQuickView }: Product
               </div>
             </div>
 
-            <div className="absolute top-3 right-3">
-              <span className="inline-block bg-red-600 -skew-x-12 px-3 py-1.5 text-base font-bold text-white shadow-sm">
-                <span className="inline-block skew-x-12">
-                  -{discountPercentage}%
-                </span>
-              </span>
-            </div>
           </div>
         </CardContent>
 
@@ -211,14 +192,9 @@ export default function ProductCard({ product, className, onQuickView }: Product
                         {price.toLocaleString('fr-FR').replace(',', ' ')} DH
                       </span>
                     </div>
-                    <div className="flex flex-col">
-                      <span className="text-sm text-white/70 line-through">
-                        {product.initialPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
-                      </span>
-                      <span className="text-xs text-white/80 font-medium">
-                        -{Math.round((1 - product.VenteflashPrice / product.initialPrice) * 100)}%
-                      </span>
-                    </div>
+                    <span className="text-sm text-white/70 line-through">
+                      {product.initialPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
+                    </span>
                   </div>
 
                   {/* Stock status */}
