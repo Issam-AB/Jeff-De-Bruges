@@ -5,9 +5,8 @@ import { Search, X, ArrowRight, Tag, Ruler } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { Product } from '@/lib/types'
+import { Product, StoreAvailability } from '@/types'
 import { fetchStoreAvailability } from '@/lib/api'
-import type { StoreAvailability } from '@/lib/api'
 
 interface SearchBarProps {
   onClose?: () => void;

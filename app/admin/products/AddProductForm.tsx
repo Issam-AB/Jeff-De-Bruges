@@ -192,7 +192,7 @@ export function AddProductForm({ onClose, onProductAdded }: AddProductFormProps)
     }
   };
 
-  const availableSubcategories = CATEGORY_STRUCTURE[formData.mainCategory] || [];
+  const availableSubcategories = CATEGORY_STRUCTURE[formData.mainCategory as keyof typeof CATEGORY_STRUCTURE] || [];
 
   return (
     <div className="max-h-[90vh] overflow-y-auto">

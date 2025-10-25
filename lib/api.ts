@@ -1,12 +1,4 @@
-import { Product } from '@/types'
-
-export interface StoreAvailability {
-  'Stock Casa': number;
-  'Stock Rabat': number;
-  'Stock Marrakech': number;
-  'Stock Tanger': number;
-  'Stock Bouskoura': number;
-}
+import { Product, StoreAvailability } from '@/types'
 
 export async function fetchStoreAvailability(productRef: string): Promise<StoreAvailability> {
   const response = await fetch(`https://phpstack-937973-4763176.cloudwaysapps.com/data1.php?type=search&query=${encodeURIComponent(productRef)}`);

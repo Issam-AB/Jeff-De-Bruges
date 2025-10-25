@@ -143,8 +143,9 @@ export function EditProductForm({ product, onClose, onProductUpdated }: EditProd
   const [formData, setFormData] = useState({
     ...product,
     mainCategory: (product.mainCategory || defaultMainCategory) as string,
-    VenteflashPrice: product.VenteflashPrice,
-    articleRougePrice: product.articleRougePrice ?? null,
+    initialPrice: product.initialPrice.toString(),
+    VenteflashPrice: product.VenteflashPrice.toString(),
+    articleRougePrice: product.articleRougePrice?.toString() ?? '',
     store: product.store ?? null,
     isArticleRouge: product.isArticleRouge ?? false,
     isTopProduct: product.isTopProduct ?? false,
@@ -196,7 +197,7 @@ export function EditProductForm({ product, onClose, onProductUpdated }: EditProd
     }
   }
 
-  const availableSubcategories = CATEGORY_STRUCTURE[formData.mainCategory] || []
+  const availableSubcategories = CATEGORY_STRUCTURE[formData.mainCategory as keyof typeof CATEGORY_STRUCTURE] || []
 
   return (
     <div className="max-h-[90vh] overflow-y-auto">
@@ -379,7 +380,7 @@ export function EditProductForm({ product, onClose, onProductUpdated }: EditProd
                         value={formData.articleRougePrice || ''}
                         onChange={(e) => setFormData({ 
                           ...formData, 
-                          articleRougePrice: parseFloat(e.target.value) 
+                          articleRougePrice: e.target.value 
                         })}
                         className="bg-gray-700 border-red-700 text-white placeholder-gray-400 focus:border-red-500 focus:ring-red-500"
                         required={formData.isArticleRouge}
