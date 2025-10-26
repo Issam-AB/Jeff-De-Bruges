@@ -166,7 +166,8 @@ export default function ArticleRougeSection({ products }: ArticleRougeSectionPro
               >
                 <Link 
                   href={getProductUrl(product)}
-                  className="relative bg-white overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.2)] transition-shadow duration-300 cursor-pointer h-full flex flex-col block"
+                  className="relative bg-white overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.2)] transition-shadow duration-300 cursor-pointer h-full flex flex-col block touch-manipulation"
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
                   {/* Main Image Container */}
                   <div className="relative aspect-square">
@@ -179,7 +180,7 @@ export default function ArticleRougeSection({ products }: ArticleRougeSectionPro
                     
                     {/* Store Badge with solid colors */}
                     {product.store && (
-                      <div className="absolute top-3 left-3 z-10">
+                      <div className="absolute top-3 left-3 z-10 pointer-events-none">
                         <motion.div
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
@@ -197,7 +198,7 @@ export default function ArticleRougeSection({ products }: ArticleRougeSectionPro
 
                     {/* Last Piece Badge */}
                     <motion.div 
-                      className="absolute top-3 right-3 z-10"
+                      className="absolute top-3 right-3 z-10 pointer-events-none"
                       animate={{ scale: [1, 1.1, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     >
@@ -208,7 +209,7 @@ export default function ArticleRougeSection({ products }: ArticleRougeSectionPro
                     </motion.div>
 
                     {/* Price Tag - Updated with permanent skew */}
-                    <div className="absolute -bottom-3 -right-3 z-20">
+                    <div className="absolute -bottom-3 -right-3 z-20 pointer-events-none">
                       <div className="bg-yellow-400 px-4 py-2 rounded-lg shadow-lg transform -rotate-6">
                         <div className="text-center">
                           <span className="text-2xl font-black text-black">

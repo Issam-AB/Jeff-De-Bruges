@@ -60,8 +60,10 @@ export default function ProductCard({ product, className, onQuickView }: Product
         "hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)]",
         "active:scale-[0.98]",
         "shadow-[0_4px_15px_rgba(0,0,0,0.2)]",
+        "touch-manipulation cursor-pointer",
         className
       )}
+      style={{ WebkitTapHighlightColor: 'transparent' }}
     >
 
         <div className="relative p-0">
@@ -78,7 +80,7 @@ export default function ProductCard({ product, className, onQuickView }: Product
             />
             
             {/* Watermark */}
-            <div className="absolute bottom-1 right-1 w-8 h-8 opacity-75 mix-blend-overlay">
+            <div className="absolute bottom-1 right-1 w-8 h-8 opacity-75 mix-blend-overlay pointer-events-none">
               <Image
                 src={WATERMARK_URL}
                 alt="Sketch Design"
@@ -89,7 +91,7 @@ export default function ProductCard({ product, className, onQuickView }: Product
             </div>
 
             {/* Top left - Heress logo */}
-            <div className="absolute left-2 top-2">
+            <div className="absolute left-2 top-2 pointer-events-none">
               <div className="px-2 py-1">
                 <Image
                   src="/Logo_heress.png"
@@ -103,7 +105,7 @@ export default function ProductCard({ product, className, onQuickView }: Product
             </div>
 
             {/* Top right - Discount badge */}
-            <div className="absolute right-2 top-2">
+            <div className="absolute right-2 top-2 pointer-events-none">
               <div className="bg-gradient-to-r from-orange-500 to-red-600 px-3 py-1.5 rounded-lg shadow-lg">
                 <span className="text-white text-sm font-bold">
                   -{Math.round(((product.initialPrice - product.VenteflashPrice) / product.initialPrice) * 100)}%
