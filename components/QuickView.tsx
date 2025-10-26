@@ -660,7 +660,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                     </span>
                   </div>
 
-                  {/* Discount and Offer badges */}
+                  {/* Discount badge */}
                   <div className="flex items-center gap-2">
                     <motion.div
                       animate={{ scale: [1, 1.05, 1] }}
@@ -669,14 +669,6 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                       <span className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg text-sm font-bold">
                         -{discountPercentage}%
                       </span>
-                    </motion.div>
-                    <motion.div 
-                      className="flex items-center px-3 py-1 bg-orange-100 text-orange-700 rounded-lg"
-                      animate={{ scale: [1, 1.05, 1] }}
-                      transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
-                    >
-                      <Clock size={14} className="mr-1.5" />
-                      <span className="text-sm font-medium">Offre limitée</span>
                     </motion.div>
                   </div>
                 </div>
@@ -951,7 +943,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                     </span>
                   </div>
 
-                  {/* Discount and Offer badges */}
+                  {/* Discount badge */}
                   <div className="flex items-center gap-2">
                     <motion.div
                       animate={{ scale: [1, 1.05, 1] }}
@@ -960,14 +952,6 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                       <span className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg text-sm font-bold">
                         -{discountPercentage}%
                       </span>
-                    </motion.div>
-                    <motion.div 
-                      className="flex items-center px-3 py-1 bg-orange-100 text-orange-700 rounded-lg"
-                      animate={{ scale: [1, 1.05, 1] }}
-                      transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
-                    >
-                      <Clock size={14} className="mr-1.5" />
-                      <span className="text-sm font-medium">Offre limitée</span>
                     </motion.div>
                   </div>
                 </div>

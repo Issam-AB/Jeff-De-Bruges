@@ -113,7 +113,7 @@ export default function Header() {
             >
               <div className="absolute inset-0 bg-[#e40524]/20 blur-2xl group-hover:bg-[#e40524]/30 transition-all duration-500" />
               <Image
-                src="/bf-logo.webp"
+                src="/Logo_bf.png"
                 alt="SKETCH BLACK FRIDAY"
                 width={160}
                 height={80}

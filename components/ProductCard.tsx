@@ -140,11 +140,35 @@ export default function ProductCard({ product, className, onQuickView }: Product
               />
             </div>
 
-            <div className="absolute left-2 top-2">
-              <div className="bg-gradient-to-r from-orange-500 to-red-600 px-3 py-1.5 rounded-sm shadow-lg">
-                <span className="text-white text-xs font-bold flex items-center gap-1.5">
-                  <span>⚡</span>
-                  <span>OFFRE LIMITÉE</span>
+            {/* Top left - Heress logo */}
+            <motion.div 
+              className="absolute left-2 top-2"
+              animate={{ 
+                scale: [1, 1.05, 1],
+                rotate: [0, 2, -2, 0]
+              }}
+              transition={{ 
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <div className="px-2 py-1">
+                <Image
+                  src="/Logo_heress.png"
+                  alt="Heress"
+                  width={100}
+                  height={40}
+                  className="object-contain"
+                />
+              </div>
+            </motion.div>
+
+            {/* Top right - Discount badge */}
+            <div className="absolute right-2 top-2">
+              <div className="bg-gradient-to-r from-red-600 to-red-500 px-3 py-1.5 rounded-lg shadow-lg">
+                <span className="text-white text-sm font-bold">
+                  -{Math.round(((product.initialPrice - product.VenteflashPrice) / product.initialPrice) * 100)}%
                 </span>
               </div>
             </div>
