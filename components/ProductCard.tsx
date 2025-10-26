@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Product } from '@/types'
 import { Tag, Ruler, Check } from 'lucide-react'
@@ -53,18 +52,22 @@ export default function ProductCard({ product, className, onQuickView }: Product
   }
 
   return (
-    <Link href={`/products/${product.slug}`} className="block touch-manipulation" prefetch={true}>
-      <Card className={cn(
-        "group relative overflow-hidden transition-all duration-200",
-        "bg-gray-900 border-gray-700",
+    <Link 
+      href={`/products/${product.slug}`} 
+      className={cn(
+        "block group relative overflow-hidden transition-all duration-200",
+        "bg-gray-900 border border-gray-700 rounded-lg",
         "hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)]",
         "active:scale-[0.98]",
         "shadow-[0_4px_15px_rgba(0,0,0,0.2)]",
+        "touch-manipulation cursor-pointer",
         className
-      )}>
-        <CardContent className="relative p-0">
+      )}
+      prefetch={true}
+    >
+        <div className="relative p-0">
           {/* Product Image */}
-          <div className="relative aspect-square">
+          <div className="relative aspect-square rounded-t-lg overflow-hidden">
             <Image
               src={product.mainImage}
               alt={product.name}
@@ -110,9 +113,9 @@ export default function ProductCard({ product, className, onQuickView }: Product
             </div>
 
           </div>
-        </CardContent>
+        </div>
 
-        <CardFooter className="flex-grow flex flex-col justify-between w-full py-3 px-2">
+        <div className="flex-grow flex flex-col justify-between w-full py-3 px-2">
           <div className="mb-2 w-full">
             <h3 className="font-semibold text-base mb-1 uppercase line-clamp-2 text-white">{product.name}</h3>
             <div className="flex flex-wrap gap-1">
@@ -168,8 +171,8 @@ export default function ProductCard({ product, className, onQuickView }: Product
               </div>
             </div>
           </div>
-        </CardFooter>
-      </Card>
+        </div>
+      </div>
     </Link>
   )
 }
