@@ -1,14 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Product, StoreAvailability } from '@/types'
-import { Tag, Ruler, Truck, Check, AlertCircle, Loader2 } from 'lucide-react'
-import { fetchStoreAvailability } from '@/lib/api'
+import { Product } from '@/types'
+import { Tag, Ruler, Check } from 'lucide-react'
 import Link from 'next/link'
-import { formatPrice } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 
 interface ProductCardProps {
@@ -43,69 +38,19 @@ const getCategoryColor = (category: string) => {
 };
 
 export default function ProductCard({ product, className, onQuickView }: ProductCardProps) {
-  const [availability, setAvailability] = useState<StoreAvailability | null>(null)
   const { baseColor, lighterColor } = getCategoryColor(product.mainCategory);
 
   // Use VenteflashPrice instead of price
   const price = product.VenteflashPrice;
 
-  useEffect(() => {
-    let mounted = true;
-    
-    const getAvailability = async () => {
-      try {
-        const data = await fetchStoreAvailability(product.ref)
-        if (mounted) {
-          setAvailability(data)
-        }
-      } catch (err) {
-        console.error(err)
-      }
-    }
-
-    getAvailability()
-    return () => { mounted = false }
-  }, [product.ref])
-
-  const { stockStatus, totalStock } = useMemo(() => {
-    if (!availability) return {
-      stockStatus: {
-        icon: <Loader2 className="h-4 w-4 text-gray-400 animate-spin" />,
-        text: "Vérification...",
-        textColor: "text-gray-400",
-        bgColor: "bg-gray-800",
-        borderColor: "border-gray-600"
-      },
-      totalStock: 0
-    }
-
-    const totalStock = Object.values(availability)
-      .reduce((sum, value) => sum + (typeof value === 'number' ? value : 0), 0)
-
-    if (totalStock > 0) {
-      return {
-        stockStatus: {
-          icon: <Check className="h-4 w-4 text-emerald-50" />,
-          text: "En stock",
-          textColor: "text-white",
-          bgColor: "bg-emerald-500",
-          borderColor: "border-emerald-600"
-        },
-        totalStock
-      }
-    } else {
-      return {
-        stockStatus: {
-          icon: <AlertCircle className="h-4 w-4 text-red-50" />,
-          text: "En rupture",
-          textColor: "text-white",
-          bgColor: "bg-red-500",
-          borderColor: "border-red-600"
-        },
-        totalStock
-      }
-    }
-  }, [availability])
+  // Simplified stock status - show as available by default for better UX
+  const stockStatus = {
+    icon: <Check className="h-4 w-4 text-emerald-50" />,
+    text: "Disponible",
+    textColor: "text-white",
+    bgColor: "bg-emerald-500",
+    borderColor: "border-emerald-600"
+  }
 
   return (
     <Link href={`/products/${product.slug}`}>
@@ -126,7 +71,8 @@ export default function ProductCard({ product, className, onQuickView }: Product
               fill
               sizes="(min-width: 1536px) 20vw, (min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
               className="object-cover"
-              priority={false}
+              loading="lazy"
+              quality={75}
             />
             
             {/* Watermark */}
@@ -141,18 +87,7 @@ export default function ProductCard({ product, className, onQuickView }: Product
             </div>
 
             {/* Top left - Heress logo */}
-            <motion.div 
-              className="absolute left-2 top-2"
-              animate={{ 
-                scale: [1, 1.05, 1],
-                rotate: [0, 2, -2, 0]
-              }}
-              transition={{ 
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
+            <div className="absolute left-2 top-2">
               <div className="px-2 py-1">
                 <Image
                   src="/Logo_heress.png"
@@ -160,9 +95,10 @@ export default function ProductCard({ product, className, onQuickView }: Product
                   width={100}
                   height={40}
                   className="object-contain"
+                  loading="lazy"
                 />
               </div>
-            </motion.div>
+            </div>
 
             {/* Top right - Discount badge */}
             <div className="absolute right-2 top-2">
