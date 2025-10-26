@@ -11,7 +11,7 @@ export default function MainLayout({
   return (
     <>
       <Header />
-      <div className="min-h-[100dvh] flex flex-col relative pt-[80px]">
+      <div className="min-h-[100dvh] flex flex-col relative pt-[80px]" style={{ paddingTop: '80px' }}>
         <PageLayout>
           <Suspense fallback={<LoadingScreen />}>
             {children}

@@ -83,7 +83,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed w-full top-0 z-[100]">
+      <header className="fixed w-full top-0 z-[100]" style={{ position: 'fixed', top: '0px', left: '0px', right: '0px' }}>
         {/* Animated background layers */}
         <div className="absolute inset-0 bg-gray-900/95 backdrop-blur-xl border-b border-gray-800" />
         <div className="absolute inset-0">

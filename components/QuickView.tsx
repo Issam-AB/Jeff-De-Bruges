@@ -192,7 +192,16 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
       category: product.mainCategory
     });
 
-    const message = encodeURIComponent(`Bonjour, je suis intéressé par l'achat de ${product.name} (${product.id}) pour ${product.VenteflashPrice.toLocaleString('fr-FR').replace(',', ' ')} DH.`)
+    const message = encodeURIComponent(
+      `Bonjour, je suis intéressé par ce produit :
+
+📦 *${product.name}*
+🏷️ Catégorie : ${product.mainCategory} - ${product.subCategory}
+📏 Dimensions : ${product.dimensions}
+💰 Prix : ${product.VenteflashPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
+
+Réf: ${product.ref}`
+    )
     const apiUrl = `https://api.whatsapp.com/send?phone=212666013108&text=${message}`
     window.open(apiUrl, '_blank')
   }
@@ -528,7 +537,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
   const content = fullPage ? (
     <div className="fixed top-[64px] inset-x-0 bottom-0 w-screen h-[calc(100vh-64px)]">
       {/* Mobile Layout */}
-      <div className="lg:hidden w-full h-full overflow-y-auto pb-20">
+      <div className="lg:hidden w-full h-full overflow-y-auto pb-32" style={{ paddingBottom: '8rem' }}>
         {/* Image section */}
         <div className="w-full h-[40vh] relative bg-[#E8E8E6]">
           {MobileImageGallery}
@@ -663,7 +672,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
         </div>
 
         {/* Fixed WhatsApp button - Adjust z-index and positioning */}
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[100]">
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[100]" style={{ position: 'fixed', bottom: '0px', left: '0px', right: '0px' }}>
           <button
             onClick={handleWhatsAppOrder}
             className="w-full bg-[#23D366] hover:bg-[#1fb855] text-white py-4 px-4 flex items-center justify-center gap-2 transition-all duration-300 shadow-lg"

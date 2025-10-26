@@ -123,19 +123,51 @@ body {
   }
 }
 
-/* Fix double-tap issue on mobile by disabling hover on touch devices */
-@media (hover: none) {
-  a:hover, button:hover, div[role="button"]:hover {
-    /* Disable all hover effects on touch devices */
+/* CRITICAL: Complete mobile double-tap fix - WITHOUT breaking styles */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Disable hover INTERACTIONS on touch devices (keep visual styles) */
+@media (hover: none) and (pointer: coarse) {
+  /* Force instant click on links and buttons */
+  a, button, [role="button"], [onclick] {
+    pointer-events: auto !important;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
   }
 }
 
-/* Ensure links and buttons respond immediately to touch */
-a, button, [role="button"] {
+/* Global mobile optimizations */
+html {
+  touch-action: manipulation;
+  -ms-touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  touch-action: manipulation;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Make ALL clickable elements instantly responsive */
+a, button, [role="button"], [onclick], input[type="submit"], input[type="button"] {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-drag: none;
   -webkit-user-select: none;
   user-select: none;
+}
+
+/* Ensure links work on first tap - don't break existing styles */
+a {
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Force immediate response on buttons - don't reset button styles */
+button {
   touch-action: manipulation;
 }
 

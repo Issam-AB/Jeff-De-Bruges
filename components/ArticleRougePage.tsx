@@ -2,13 +2,13 @@
 
 import { Product } from '@/lib/types'
 import Image from 'next/image'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Tag, Ruler, Timer, MapPin, ChevronLeft, ChevronRight, Flame, Clock } from 'lucide-react'
 import { WhatsappIcon } from 'react-share'
 import { track } from '@vercel/analytics'
 import useEmblaCarousel from 'embla-carousel-react'
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 
 interface ArticleRougePageProps {
   product: Product
@@ -17,7 +17,6 @@ interface ArticleRougePageProps {
 export default function ArticleRougePage({ product }: ArticleRougePageProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const images = [product.mainImage, ...product.gallery].filter(Boolean)
-  const router = useRouter()
   
   const [mainViewRef, mainEmbla] = useEmblaCarousel({ 
     loop: true,
@@ -46,19 +45,27 @@ export default function ArticleRougePage({ product }: ArticleRougePageProps) {
     })
 
     const message = encodeURIComponent(
-      `Bonjour, je suis intéressé par l'achat de ${product.name} (${product.id}) pour ${(product.articleRougePrice || product.VenteflashPrice).toLocaleString('fr-FR').replace(',', ' ')} DH.`
+      `Bonjour, je suis intéressé par ce produit DERNIÈRE PIÈCE :
+
+🔥 *${product.name}*
+🏷️ Catégorie : ${product.mainCategory} - ${product.subCategory}
+📏 Dimensions : ${product.dimensions}
+💰 Prix : ${(product.articleRougePrice || product.VenteflashPrice).toLocaleString('fr-FR').replace(',', ' ')} DH
+📍 Magasin : ${product.store || 'À confirmer'}
+
+Réf: ${product.ref}`
     )
     window.open(`https://api.whatsapp.com/send?phone=212666013108&text=${message}`, '_blank')
   }
 
-  const handleCategoryClick = () => {
+  const getCategoryUrl = () => {
     const categorySlug = product.mainCategory
       .toLowerCase()
       .trim()
       .replace(/\s+/g, '-')
       .replace(/[^a-zà-ÿ0-9-]/g, '')
     
-    router.push(`/categories/${categorySlug}`)
+    return `/categories/${categorySlug}`
   }
 
   const discountPercentage = Math.round(
@@ -159,10 +166,13 @@ export default function ArticleRougePage({ product }: ArticleRougePageProps) {
                 {product.name}
               </h1>
               <div className="flex flex-wrap gap-2">
-                <div className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-red-50 to-red-100 text-red-700 rounded-lg border border-red-200">
+                <Link 
+                  href={getCategoryUrl()}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-red-50 to-red-100 text-red-700 rounded-lg border border-red-200 hover:from-red-100 hover:to-red-200 transition-colors cursor-pointer"
+                >
                   <Tag size={16} />
                   <span className="font-medium">{product.subCategory}</span>
-                </div>
+                </Link>
                 <div className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-gray-50 to-gray-100 text-gray-700 rounded-lg border border-gray-200">
                   <Ruler size={16} />
                   <span className="font-medium">{product.dimensions}</span>

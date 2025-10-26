@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Search, X, ArrowRight, Tag, Ruler } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import Image from 'next/image'
 import { Product, StoreAvailability } from '@/types'
 import { fetchStoreAvailability } from '@/lib/api'
@@ -19,7 +19,6 @@ export default function SearchBar({ onClose, className, onClick }: SearchBarProp
   const [results, setResults] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
-  const router = useRouter()
   const searchRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const [availabilities, setAvailabilities] = useState<{ [key: string]: StoreAvailability | null }>({})
@@ -100,8 +99,7 @@ export default function SearchBar({ onClose, className, onClick }: SearchBarProp
     }
   }, [results])
 
-  const handleProductClick = (product: Product) => {
-    router.push(`/products/${product.slug}`)
+  const handleProductClick = () => {
     setIsOpen(false)
     setQuery('')
   }
@@ -188,9 +186,10 @@ export default function SearchBar({ onClose, className, onClick }: SearchBarProp
                         ) : results.length > 0 ? (
                           <div className="divide-y divide-white/10">
                             {results.map((product) => (
-                              <div
+                              <Link
                                 key={product.id}
-                                onClick={() => handleProductClick(product)}
+                                href={`/products/${product.slug}`}
+                                onClick={handleProductClick}
                                 className="flex items-start gap-4 p-4 hover:bg-white/5 cursor-pointer group"
                               >
                                 <div className="relative w-20 h-20 bg-black/20 rounded-lg overflow-hidden shrink-0">
@@ -264,7 +263,7 @@ export default function SearchBar({ onClose, className, onClick }: SearchBarProp
                                 </div>
 
                                 <ArrowRight className="w-5 h-5 text-white/40 group-hover:text-white/60 shrink-0 transition-all group-hover:translate-x-1" />
-                              </div>
+                              </Link>
                             ))}
                           </div>
                         ) : query.trim() ? (

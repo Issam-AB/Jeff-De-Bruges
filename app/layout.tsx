@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/react'
+import './globals.css'
+import './mobile-fix'
 import { Inter } from 'next/font/google'
-import "./globals.css"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -59,6 +60,89 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            'use strict';
+            console.log('🚀 Mobile tap fix loading...');
+            
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            if (!isTouchDevice) {
+              console.log('❌ Not a touch device, skipping');
+              return;
+            }
+            
+            console.log('✅ Touch device detected, applying fixes');
+            
+            // Add CSS to disable ONLY hover interactions on touch devices (not all styles)
+            const style = document.createElement('style');
+            style.textContent = \`
+              @media (hover: none) and (pointer: coarse) {
+                /* Don't trigger hover states on touch */
+                *:hover {
+                  /* Keep existing styles, just prevent hover-specific changes */
+                }
+              }
+            \`;
+            document.head.appendChild(style);
+            
+            // Track touch for instant navigation
+            let touchStartX = 0, touchStartY = 0, touchStartTime = 0, touchMoved = false;
+            
+            document.addEventListener('touchstart', function(e) {
+              touchStartX = e.touches[0].clientX;
+              touchStartY = e.touches[0].clientY;
+              touchStartTime = Date.now();
+              touchMoved = false;
+            }, { passive: true });
+            
+            document.addEventListener('touchmove', function(e) {
+              const moveX = Math.abs(e.touches[0].clientX - touchStartX);
+              const moveY = Math.abs(e.touches[0].clientY - touchStartY);
+              if (moveX > 10 || moveY > 10) {
+                touchMoved = true;
+              }
+            }, { passive: true });
+            
+            document.addEventListener('touchend', function(e) {
+              const touchDuration = Date.now() - touchStartTime;
+              
+              // Only if it's a quick tap (not a swipe or long press)
+              if (!touchMoved && touchDuration < 500) {
+                const touchX = e.changedTouches[0].clientX;
+                const touchY = e.changedTouches[0].clientY;
+                const target = document.elementFromPoint(touchX, touchY);
+                
+                if (target) {
+                  const clickable = target.closest('a, button, [role="button"], [onclick]');
+                  
+                  if (clickable) {
+                    console.log('📱 Instant tap on:', clickable.tagName, clickable.textContent?.substring(0, 30));
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    
+                    // Force immediate navigation
+                    if (clickable.tagName === 'A') {
+                      const href = clickable.getAttribute('href');
+                      if (href && !href.startsWith('#')) {
+                        console.log('🔗 Navigating to:', href);
+                        window.location.href = href;
+                        return;
+                      }
+                    }
+                    
+                    // Click buttons
+                    setTimeout(() => clickable.click(), 0);
+                  }
+                }
+              }
+            }, { capture: true, passive: false });
+            
+            console.log('✅ Mobile instant tap ACTIVE');
+          })();
+        ` }} />
+      </head>
       <body className={`${inter.className} min-h-screen bg-gray-900`}>
         {/* Animated background layers */}
         <div className="fixed inset-0 bg-gray-900" />

@@ -5,7 +5,6 @@ import { motion } from 'framer-motion'
 import { Flame, MapPin, Timer, Tag, Ruler, ChevronLeft, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import { useRef, useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { getArticleRougeProducts } from '@/lib/articleRougeApi'
 
@@ -36,7 +35,6 @@ function generateSlug(name: string): string {
 export default function ArticleRougeSection({ products }: ArticleRougeSectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [selectedStore, setSelectedStore] = useState<string | null>(null)
-  const router = useRouter()
   
   // Update the stores useMemo to ensure non-null values
   const { stores } = useMemo(() => {
@@ -166,7 +164,7 @@ export default function ArticleRougeSection({ products }: ArticleRougeSectionPro
               >
                 <Link 
                   href={getProductUrl(product)}
-                  className="relative bg-white overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.2)] transition-shadow duration-300 cursor-pointer h-full flex flex-col block touch-manipulation"
+                  className="relative bg-white overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-shadow duration-300 cursor-pointer h-full flex flex-col block touch-manipulation"
                   style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
                   {/* Main Image Container */}

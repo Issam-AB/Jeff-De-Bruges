@@ -57,7 +57,6 @@ export default function ProductCard({ product, className, onQuickView }: Product
       className={cn(
         "block group relative overflow-hidden transition-all duration-200",
         "bg-gray-900 border border-gray-700 rounded-lg",
-        "hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)]",
         "active:scale-[0.98]",
         "shadow-[0_4px_15px_rgba(0,0,0,0.2)]",
         "touch-manipulation cursor-pointer",
