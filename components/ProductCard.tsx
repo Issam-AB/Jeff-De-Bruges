@@ -1,8 +1,10 @@
+'use client'
+
 import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
 import { Product } from '@/types'
 import { Tag, Ruler, Check } from 'lucide-react'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 interface ProductCardProps {
@@ -37,6 +39,7 @@ const getCategoryColor = (category: string) => {
 };
 
 export default function ProductCard({ product, className, onQuickView }: ProductCardProps) {
+  const router = useRouter();
   const { baseColor, lighterColor } = getCategoryColor(product.mainCategory);
 
   // Use VenteflashPrice instead of price
@@ -51,9 +54,13 @@ export default function ProductCard({ product, className, onQuickView }: Product
     borderColor: "border-emerald-600"
   };
 
+  const handleClick = () => {
+    router.push(`/products/${product.slug}`);
+  };
+
   return (
-    <Link 
-      href={`/products/${product.slug}`} 
+    <div 
+      onClick={handleClick}
       className={cn(
         "block group relative overflow-hidden transition-all duration-200",
         "bg-gray-900 border border-gray-700 rounded-lg",
@@ -63,7 +70,6 @@ export default function ProductCard({ product, className, onQuickView }: Product
         "touch-manipulation cursor-pointer",
         className
       )}
-      prefetch={true}
     >
         <div className="relative p-0">
           {/* Product Image */}
@@ -172,7 +178,7 @@ export default function ProductCard({ product, className, onQuickView }: Product
             </div>
           </div>
         </div>
-    </Link>
+    </div>
   )
 }
  
