@@ -25,9 +25,10 @@ export default function Header() {
   // Update getActiveCategory to use the Category type
   const getActiveCategory = useCallback((): Category | null => {
     if (pathname?.startsWith('/products/')) return null;
+    if (pathname?.startsWith('/articlesrouges/')) return null;
     
     if (pathname === '/categories/tous' || pathname === '/') return 'Tous';
-    const match = pathname.match(/\/categories\/([^/]+)/);
+    const match = pathname?.match(/\/categories\/([^/]+)/);
     if (match) {
       const categorySlug = decodeURIComponent(match[1]);
       return categories.find(cat => 
@@ -42,23 +43,21 @@ export default function Header() {
   }, [pathname, getActiveCategory])
 
   const handleCategoryClick = (category: Category) => {
-    if (category === activeCategory) return;
-
     setActiveCategory(category)
     setIsMobileMenuOpen(false)
+  }
 
-    const categorySlug = category
+  const getCategorySlug = (category: Category) => {
+    return category
       .toLowerCase()
       .trim()
       .replace(/\s+/g, '-')
       .replace(/[^a-zà-ÿ0-9-]/g, '')
-
-    router.push(`/categories/${categorySlug}`, { scroll: false })
   }
 
-  // Logo click handler - now goes to "Tous" category
+  // Logo click handler - closes mobile menu
   const handleLogoClick = () => {
-    handleCategoryClick('Tous')
+    setIsMobileMenuOpen(false)
   }
 
   // Update the click outside handler
@@ -131,9 +130,10 @@ export default function Header() {
                   whileHover={{ scale: 1.03 }}
                   transition={{ type: "spring", stiffness: 500, damping: 15 }}
                 >
-                  <button
+                  <Link
+                    href={`/categories/${getCategorySlug(category)}`}
                     onClick={() => handleCategoryClick(category)}
-                    className="relative h-[40px] px-6 group"
+                    className="relative h-[40px] px-6 group block"
                   >
                     {/* Sharp skewed background with multiple layers */}
                     <div className={`
@@ -191,7 +191,7 @@ export default function Header() {
                       }
                       transition-all duration-300
                     `} />
-                  </button>
+                  </Link>
                 </motion.div>
               ))}
             </nav>
@@ -370,9 +370,10 @@ export default function Header() {
                       whileHover={{ scale: 1.02 }}
                       transition={{ type: "spring", stiffness: 500, damping: 15 }}
                     >
-                      <button
+                      <Link
+                        href={`/categories/${getCategorySlug(category)}`}
                         onClick={() => handleCategoryClick(category)}
-                        className="w-full relative h-[50px] group"
+                        className="w-full relative h-[50px] group block"
                       >
                         {/* Sharp skewed background */}
                         <div className={`
@@ -429,7 +430,7 @@ export default function Header() {
                           }
                           transition-all duration-300
                         `} />
-                      </button>
+                      </Link>
                     </motion.div>
                   ))}
                 </div>

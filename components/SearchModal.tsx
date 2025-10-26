@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Product } from "@/lib/types"
 import { Search, Tag, Ruler, Timer, ArrowRight, X } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useState, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -77,8 +78,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     return () => clearTimeout(debounce)
   }, [query])
 
-  const handleProductClick = (product: Product) => {
-    router.push(`/products/${product.slug}`)
+  const handleProductClick = () => {
     onClose()
   }
 
@@ -144,10 +144,11 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                     ) : results.length > 0 ? (
                       <div>
                         {results.map((product, index) => (
-                          <div
+                          <Link
                             key={`${product.id}-${product.isArticleRouge ? 'rouge' : 'regular'}-${index}`}
-                            onClick={() => handleProductClick(product)}
-                            className="group hover:bg-[#e40524]/10 transition-colors cursor-pointer"
+                            href={`/products/${product.slug}`}
+                            onClick={handleProductClick}
+                            className="group hover:bg-[#e40524]/10 transition-colors cursor-pointer block"
                           >
                             <div className="flex items-start gap-4 p-4 border-b border-white/10 last:border-0">
                               {/* Product Image */}
@@ -199,7 +200,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </Link>
                         ))}
                       </div>
                     ) : (

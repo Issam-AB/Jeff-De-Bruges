@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Product } from '@/types'
@@ -212,16 +213,16 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
     mainEmbla?.scrollNext();
   };
 
-  const handleCategoryClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
+  const getCategoryUrl = () => {
     const categorySlug = product.mainCategory
       .toLowerCase()
       .trim()
       .replace(/\s+/g, '-')
       .replace(/[^a-zà-ÿ0-9-]/g, '')
-    
-    router.push(`/categories/${categorySlug}`)
+    return `/categories/${categorySlug}`
+  }
+
+  const handleCategoryClick = () => {
     if (onClose) onClose()
   }
 
@@ -549,13 +550,14 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
 
                 {/* Category and Dimensions */}
                 <div className="flex flex-wrap gap-1.5">
-                  <div 
+                  <Link 
+                    href={getCategoryUrl()}
                     onClick={handleCategoryClick}
                     className="flex items-center gap-1 px-2 py-1 bg-gray-800 text-gray-300 rounded-full cursor-pointer hover:bg-gray-700 transition-colors duration-200 border border-gray-700"
                   >
                     <Tag size={12} />
                     <span className="text-xs font-medium">{product.subCategory}</span>
-                  </div>
+                  </Link>
                   <div className="flex items-center gap-1 px-2 py-1 bg-gray-800 text-gray-300 rounded-full border border-gray-700">
                     <Ruler size={12} />
                     <span className="text-xs font-medium">{product.dimensions}</span>
@@ -711,13 +713,14 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
 
                 {/* Category and Dimensions */}
                 <div className="flex flex-wrap gap-2">
-                  <div 
+                  <Link 
+                    href={getCategoryUrl()}
                     onClick={handleCategoryClick}
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 text-gray-300 rounded-full cursor-pointer hover:bg-gray-700 transition-colors duration-200 border border-gray-700"
                   >
                     <Tag size={14} />
                     <span className="text-sm font-medium">{product.subCategory}</span>
-                  </div>
+                  </Link>
                   <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 text-gray-300 rounded-full border border-gray-700">
                     <Ruler size={14} />
                     <span className="text-sm font-medium">{product.dimensions}</span>
@@ -852,13 +855,14 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
 
                   {/* Category and Dimensions */}
                   <div className="flex flex-wrap gap-1.5">
-                    <div 
+                    <Link 
+                      href={getCategoryUrl()}
                       onClick={handleCategoryClick}
                       className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded-full cursor-pointer hover:bg-blue-100 transition-colors duration-200"
                     >
                       <Tag size={12} />
                       <span className="text-xs font-medium">{product.subCategory}</span>
-                    </div>
+                    </Link>
                     <div className="flex items-center gap-1 px-2 py-1 bg-gray-50 text-gray-700 rounded-full">
                       <Ruler size={12} />
                       <span className="text-xs font-medium">{product.dimensions}</span>
@@ -996,13 +1000,14 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
 
                 {/* Category and Dimensions */}
                 <div className="flex flex-wrap gap-2">
-                  <div 
+                  <Link 
+                    href={getCategoryUrl()}
                     onClick={handleCategoryClick}
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full cursor-pointer hover:bg-blue-100 transition-colors duration-200"
                   >
                     <Tag size={14} />
                     <span className="text-sm font-medium">{product.subCategory}</span>
-                  </div>
+                  </Link>
                   <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 text-gray-700 rounded-full">
                     <Ruler size={14} />
                     <span className="text-sm font-medium">{product.dimensions}</span>
