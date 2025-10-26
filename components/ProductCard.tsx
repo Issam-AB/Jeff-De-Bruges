@@ -53,12 +53,12 @@ export default function ProductCard({ product, className, onQuickView }: Product
   }
 
   return (
-    <Link href={`/products/${product.slug}`}>
+    <Link href={`/products/${product.slug}`} className="block touch-manipulation" prefetch={true}>
       <Card className={cn(
-        "group relative overflow-hidden transition-all duration-300",
+        "group relative overflow-hidden transition-all duration-200",
         "bg-gray-900 border-gray-700",
         "hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)]",
-        "active:shadow-[0_4px_15px_rgba(0,0,0,0.2)]",
+        "active:scale-[0.98]",
         "shadow-[0_4px_15px_rgba(0,0,0,0.2)]",
         className
       )}>

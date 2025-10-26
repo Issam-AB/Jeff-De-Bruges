@@ -59,23 +59,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className={`${inter.className} min-h-screen`}>
-        {/* Animated background layers - same as header */}
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-xl" />
+      <body className={`${inter.className} min-h-screen bg-gray-900`}>
+        {/* Animated background layers */}
+        <div className="fixed inset-0 bg-gray-900" />
         <div className="fixed inset-0">
           {/* Animated grid background */}
-          <div className="absolute inset-0 opacity-20"
+          <div className="absolute inset-0 opacity-10"
             style={{
               backgroundImage: `
-                linear-gradient(to right, #e40524 1px, transparent 1px),
-                linear-gradient(to bottom, #e40524 1px, transparent 1px)
+                linear-gradient(to right, rgb(249, 115, 22) 1px, transparent 1px),
+                linear-gradient(to bottom, rgb(249, 115, 22) 1px, transparent 1px)
               `,
               backgroundSize: '40px 40px',
             }}
           />
           {/* Glowing orbs */}
-          <div className="absolute top-0 left-1/4 w-24 h-24 bg-[#e40524] rounded-full blur-[80px] animate-pulse" />
-          <div className="absolute top-0 right-1/4 w-24 h-24 bg-[#e40524] rounded-full blur-[80px] animate-pulse delay-700" />
+          <div className="absolute top-0 left-1/4 w-24 h-24 bg-orange-500 rounded-full blur-[80px] animate-pulse opacity-20" />
+          <div className="absolute top-0 right-1/4 w-24 h-24 bg-red-500 rounded-full blur-[80px] animate-pulse delay-700 opacity-20" />
         </div>
         
         {/* Content */}
