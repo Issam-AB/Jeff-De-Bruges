@@ -1,9 +1,10 @@
 'use client'
 
+import { useState } from 'react'
 import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
 import { Product } from '@/types'
-import { Tag, Ruler, Check } from 'lucide-react'
+import { Tag, Ruler, Check, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
@@ -40,6 +41,7 @@ const getCategoryColor = (category: string) => {
 
 export default function ProductCard({ product, className, onQuickView }: ProductCardProps) {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const { baseColor, lighterColor } = getCategoryColor(product.mainCategory);
 
   // Use VenteflashPrice instead of price
@@ -54,24 +56,41 @@ export default function ProductCard({ product, className, onQuickView }: Product
     borderColor: "border-emerald-600"
   };
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    setIsLoading(true); // Show loading immediately!
     router.push(`/products/${product.slug}`);
   };
 
   return (
     <div 
       onClick={handleClick}
+      onTouchEnd={handleClick}
+      role="button"
+      tabIndex={0}
       className={cn(
         "block group relative overflow-hidden transition-all duration-200",
         "bg-gray-900 border border-gray-700 rounded-lg",
         "hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)]",
         "active:scale-[0.98]",
         "shadow-[0_4px_15px_rgba(0,0,0,0.2)]",
-        "touch-manipulation cursor-pointer",
+        "touch-manipulation cursor-pointer select-none",
+        "-webkit-tap-highlight-color: transparent",
         className
       )}
+      style={{ WebkitTapHighlightColor: 'transparent' }}
     >
-        <div className="relative p-0">
+        {/* Loading Overlay - Shows immediately on tap! */}
+        {isLoading && (
+          <div className="absolute inset-0 z-50 bg-gray-900/90 backdrop-blur-sm flex items-center justify-center rounded-lg">
+            <div className="flex flex-col items-center gap-3">
+              <Loader2 className="w-12 h-12 text-orange-500 animate-spin" />
+              <p className="text-white font-semibold text-sm">Chargement...</p>
+            </div>
+          </div>
+        )}
+
+        <div className="relative p-0 pointer-events-none">
           {/* Product Image */}
           <div className="relative aspect-square rounded-t-lg overflow-hidden">
             <Image
@@ -79,7 +98,7 @@ export default function ProductCard({ product, className, onQuickView }: Product
               alt={product.name}
               fill
               sizes="(min-width: 1536px) 20vw, (min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-              className="object-cover"
+              className="object-cover pointer-events-none"
               loading="lazy"
               quality={75}
             />
@@ -121,7 +140,7 @@ export default function ProductCard({ product, className, onQuickView }: Product
           </div>
         </div>
 
-        <div className="flex-grow flex flex-col justify-between w-full py-3 px-2">
+        <div className="flex-grow flex flex-col justify-between w-full py-3 px-2 pointer-events-none">
           <div className="mb-2 w-full">
             <h3 className="font-semibold text-base mb-1 uppercase line-clamp-2 text-white">{product.name}</h3>
             <div className="flex flex-wrap gap-1">
