@@ -8,7 +8,7 @@ export default function LoadingScreen() {
     <motion.div
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-black flex items-center justify-center"
+      className="fixed inset-0 z-50 bg-gray-900 flex items-center justify-center"
     >
       <div className="relative flex flex-col items-center">
         <motion.div
@@ -17,7 +17,7 @@ export default function LoadingScreen() {
           transition={{ duration: 0.5 }}
         >
           <Image
-            src="/bf-logo.webp"
+            src="/Logo_bf.png"
             alt="SKETCH BLACK FRIDAY"
             width={200}
             height={100}
@@ -34,7 +34,7 @@ export default function LoadingScreen() {
           transition={{ delay: 0.5 }}
         >
           <motion.div
-            className="h-full bg-[#e40524]"
+            className="h-full bg-gradient-to-r from-orange-500 to-red-600"
             initial={{ x: '-100%' }}
             animate={{ x: '100%' }}
             transition={{
