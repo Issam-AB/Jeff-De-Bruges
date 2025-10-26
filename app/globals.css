@@ -123,4 +123,20 @@ body {
   }
 }
 
+/* Fix double-tap issue on mobile by disabling hover on touch devices */
+@media (hover: none) {
+  a:hover, button:hover, div[role="button"]:hover {
+    /* Disable all hover effects on touch devices */
+  }
+}
+
+/* Ensure links and buttons respond immediately to touch */
+a, button, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
 /* Add any other global styles here */
