@@ -54,7 +54,7 @@ export default function ProductGrid({ products: initialProducts, category }: Pro
   }
 
   return (
-    <div>
+    <div className="mt-6">
       {/* Article Rouge Section */}
       {articleRougeProducts.length > 0 && (
         <div className="mb-6 md:mb-12">

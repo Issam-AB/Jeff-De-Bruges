@@ -42,6 +42,7 @@ interface QuickViewProps {
 
 
 const WATERMARK_URL = 'https://zruplcd5sfldkzdm.public.blob.vercel-storage.com/SketchDesign.svg'
+const SKETCH_LOGO_URL = '/slogo.svg'
 
 const cityIcons: { [key: string]: JSX.Element } = {
   Casa: <MapPin size={14} />,
@@ -232,35 +233,39 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
     border: string;
     iconBg: string;
     badge: string;
+    glow: string;
   }
 
   const getStockStatus = (stock: number): StockStatus => {
     if (stock > 2) return { 
       color: 'green',
       text: 'En stock',
-      icon: <Check size={15} />,
-      bg: 'bg-green-50',
-      border: 'border-green-100',
-      iconBg: 'bg-green-100',
-      badge: 'bg-green-100 text-green-700'
+      icon: <Check size={16} />,
+      bg: 'bg-gradient-to-br from-green-500/10 to-green-600/5',
+      border: 'border-green-500/30',
+      iconBg: 'bg-green-500',
+      badge: 'bg-green-500/20 text-green-400 border-green-500/30',
+      glow: 'shadow-green-500/20'
     }
     if (stock === 0) return { 
       color: 'gray',
       text: 'Épuisé',
-      icon: <X size={15} />,
-      bg: 'bg-gray-50',
-      border: 'border-gray-200',
-      iconBg: 'bg-gray-100',
-      badge: 'bg-gray-100 text-gray-600'
+      icon: <X size={16} />,
+      bg: 'bg-gradient-to-br from-gray-700/30 to-gray-800/20',
+      border: 'border-gray-600/30',
+      iconBg: 'bg-gray-600',
+      badge: 'bg-gray-600/20 text-gray-400 border-gray-600/30',
+      glow: 'shadow-gray-600/10'
     }
     return { 
       color: 'amber',
       text: `${stock} restant${stock > 1 ? 's' : ''}`,
-      icon: <Timer size={15} />,
-      bg: 'bg-amber-50',
-      border: 'border-amber-100',
-      iconBg: 'bg-amber-100',
-      badge: 'bg-amber-100 text-amber-700'
+      icon: <Timer size={16} />,
+      bg: 'bg-gradient-to-br from-amber-500/10 to-amber-600/5',
+      border: 'border-amber-500/30',
+      iconBg: 'bg-amber-500',
+      badge: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+      glow: 'shadow-amber-500/20'
     }
   }
 
@@ -276,43 +281,54 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: storeOrder.indexOf(store) * 0.1 }}
         className={`
-          relative group ${status.bg} rounded-xl p-4 border ${status.border}
-          hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300
+          relative group ${status.bg} rounded-lg p-4 border ${status.border}
+          hover:shadow-xl ${status.glow} hover:-translate-y-1 transition-all duration-300
+          backdrop-blur-sm
         `}
       >
-        <div className="flex items-start gap-3">
+        {/* Animated gradient overlay on hover */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
+        
+        <div className="relative flex items-center gap-3">
+          {/* Sketch Logo Icon with animated background */}
           <div className={`
-            relative p-2.5 rounded-lg bg-white shadow-sm
-            ${stock > 0 ? 'ring-2 ring-gray-100' : ''}
+            relative p-3 rounded-lg ${status.iconBg} shadow-lg
+            ${stock > 0 ? 'ring-2 ring-white/10' : ''}
           `}>
             <motion.div
               animate={stock > 0 ? {
                 scale: [1, 1.1, 1],
               } : {}}
               transition={{ duration: 2, repeat: Infinity }}
+              className="relative w-5 h-5"
             >
-              {cityIcons[store]}
+              <Image
+                src={SKETCH_LOGO_URL}
+                alt="S"
+                fill
+                className="object-contain brightness-0 invert"
+              />
             </motion.div>
             {stock > 0 && (
               <motion.div
-                className="absolute -right-1 -top-1 w-2.5 h-2.5 rounded-full bg-green-500 ring-2 ring-white"
-                animate={{ scale: [1, 1.2, 1] }}
+                className="absolute -right-1 -top-1 w-3 h-3 rounded-full bg-white ring-2 ring-green-500"
+                animate={{ scale: [1, 1.3, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
               />
             )}
           </div>
 
+          {/* Store info */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between gap-2 mb-1">
-              <p className="text-sm font-semibold text-gray-900">
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <p className="text-sm font-bold text-white">
                 {store}
               </p>
               <motion.div 
-                className={`px-2 py-1 rounded-md text-xs font-medium ${status.badge}`}
+                className={`px-2.5 py-1 rounded-md text-xs font-bold border ${status.badge}`}
                 initial={false}
                 animate={stock > 0 ? { 
                   y: [0, -2, 0],
-                  scale: [1, 1.02, 1]
                 } : {}}
                 transition={{ duration: 2, repeat: Infinity }}
               >
@@ -320,11 +336,13 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
               </motion.div>
             </div>
 
-            <div className={`flex items-center gap-1.5 text-${status.color}-600`}>
-              <div className={`p-1 rounded-md ${status.iconBg}`}>
-                {status.icon}
+            <div className="flex items-center gap-2">
+              <div className={`p-1 rounded ${status.iconBg}/20`}>
+                <div className={`${stock > 2 ? 'text-green-400' : stock === 0 ? 'text-gray-400' : 'text-amber-400'}`}>
+                  {status.icon}
+                </div>
               </div>
-              <p className="text-xs">
+              <p className="text-xs text-gray-400 font-medium">
                 {stock > 2 
                   ? 'Disponible maintenant'
                   : stock === 0
@@ -336,12 +354,14 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
           </div>
         </div>
 
+        {/* Hover glow effect */}
         <motion.div 
           initial={false}
           animate={stock > 0 ? { opacity: 1 } : { opacity: 0 }}
           className={`
-            absolute inset-0 border-2 border-${status.color}-200/50 rounded-xl
+            absolute inset-0 rounded-lg
             opacity-0 group-hover:opacity-100 transition-all duration-300
+            shadow-lg ${status.glow}
           `}
         />
       </motion.div>
@@ -380,6 +400,28 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                 sizes="80px"
               />
             </div>
+
+            {/* Heress Logo - Top Left */}
+            <motion.div 
+              className="absolute left-4 top-4 z-20"
+              animate={{ 
+                scale: [1, 1.05, 1],
+                rotate: [0, 2, -2, 0]
+              }}
+              transition={{ 
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <Image
+                src="/Logo_heress.png"
+                alt="Heress"
+                width={120}
+                height={48}
+                className="object-contain"
+              />
+            </motion.div>
 
             {/* Image Counter */}
             {images.length > 1 && (
@@ -446,6 +488,28 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
               />
             </div>
 
+            {/* Heress Logo - Top Left */}
+            <motion.div 
+              className="absolute left-2 top-8 z-20"
+              animate={{ 
+                scale: [1, 1.05, 1],
+                rotate: [0, 2, -2, 0]
+              }}
+              transition={{ 
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <Image
+                src="/Logo_heress.png"
+                alt="Heress"
+                width={80}
+                height={32}
+                className="object-contain"
+              />
+            </motion.div>
+
             {/* Image Counter */}
             {images.length > 1 && (
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-none">
@@ -470,14 +534,14 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
         </div>
 
         {/* Content section */}
-        <div className="bg-white">
+        <div className="bg-gray-900">
           <div className="p-4">
             {/* Product Info */}
             <div className="space-y-4">
               {/* Product Name and Labels group */}
               <div className="pt-1">
                 <h1 
-                  className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 bg-clip-text text-transparent uppercase leading-tight sm:leading-tight lg:leading-tight mb-3"
+                  className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white uppercase leading-tight sm:leading-tight lg:leading-tight mb-3"
                   style={{ wordBreak: 'break-word' }}
                 >
                   {product.name}
@@ -487,12 +551,12 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                 <div className="flex flex-wrap gap-1.5">
                   <div 
                     onClick={handleCategoryClick}
-                    className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded-full cursor-pointer hover:bg-blue-100 transition-colors duration-200"
+                    className="flex items-center gap-1 px-2 py-1 bg-gray-800 text-gray-300 rounded-full cursor-pointer hover:bg-gray-700 transition-colors duration-200 border border-gray-700"
                   >
                     <Tag size={12} />
                     <span className="text-xs font-medium">{product.subCategory}</span>
                   </div>
-                  <div className="flex items-center gap-1 px-2 py-1 bg-gray-50 text-gray-700 rounded-full">
+                  <div className="flex items-center gap-1 px-2 py-1 bg-gray-800 text-gray-300 rounded-full border border-gray-700">
                     <Ruler size={12} />
                     <span className="text-xs font-medium">{product.dimensions}</span>
                   </div>
@@ -500,28 +564,45 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
               </div>
 
               {/* Price Section */}
-              <div className="bg-gray-50/80 rounded-xl p-4">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-baseline gap-2">
-                    <div className="relative">
-                      <div className="absolute -inset-1.5 sm:-inset-2 -left-0 bg-gradient-to-r from-yellow-400 to-amber-300 -skew-x-12 rounded-lg shadow-lg" />
-                      <span className="relative text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 px-2 sm:px-3 py-0.5 sm:py-1">
-                        {product.VenteflashPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
+              <div className="relative overflow-hidden rounded-lg">
+                {/* Gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-600" />
+                
+                {/* Content */}
+                <div className="relative p-4">
+                  <div className="flex items-center justify-between">
+                    {/* Price section */}
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <span className="text-2xl sm:text-3xl font-bold text-white">
+                          {product.VenteflashPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
+                        </span>
+                      </div>
+                      <span className="text-sm text-white/70 line-through">
+                        {product.initialPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
                       </span>
                     </div>
-                    <span className="text-sm sm:text-base text-gray-400 line-through ml-2">
-                      {product.initialPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
-                    </span>
+                    
+                    {/* Discount Badge */}
+                    <motion.div
+                      animate={{ scale: [1, 1.05, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                      className="bg-gradient-to-r from-orange-500 to-red-600 px-3 py-2 rounded-lg shadow-lg"
+                    >
+                      <span className="text-white text-base font-bold">
+                        -{discountPercentage}%
+                      </span>
+                    </motion.div>
                   </div>
                 </div>
               </div>
 
               {/* Store Availability */}
-              <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="px-5 py-4 border-b border-gray-200">
+              <div className="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+                <div className="px-5 py-4 border-b border-gray-700">
                   <div className="flex items-center gap-3">
-                    <ShoppingBag size={16} className="text-gray-900" />
-                      <h3 className="text-base font-semibold text-gray-900">
+                    <ShoppingBag size={16} className="text-white" />
+                      <h3 className="text-base font-semibold text-white">
                         Disponibilité en magasin
                       </h3>
                   </div>
@@ -533,7 +614,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                     </div>
                   ) : (
                     <div className="flex items-center justify-center py-8">
-                          <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
+                          <Loader2 className="h-6 w-6 animate-spin text-white" />
                     </div>
                   )}
                 </div>
@@ -542,27 +623,27 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
 
 
               {/* Social Proof */}
-              <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
-                <div className="flex items-center justify-between bg-white/50 rounded-lg p-2">
+              <div className="p-4 bg-gray-800 rounded-lg border border-gray-700">
+                <div className="flex items-center justify-between bg-gray-700/50 rounded-lg p-2">
                   <div className="flex items-center gap-2">
                     <motion.div
                       animate={{ opacity: [1, 0.5, 1] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
-                      className="p-1 bg-blue-100 rounded-full"
+                      className="p-1 bg-orange-500/20 rounded-full"
                     >
-                      <Eye size={16} className="text-blue-600" />
+                      <Eye size={16} className="text-orange-400" />
                     </motion.div>
                     <div className="flex items-center gap-1">
                       {isClient && (
                         <motion.span 
-                          className="text-base font-bold text-blue-700"
+                          className="text-base font-bold text-orange-400"
                           animate={{ scale: [1, 1.1, 1] }}
                           transition={{ duration: 2, repeat: Infinity }}
                         >
                           {viewersCount}
                         </motion.span>
                       )}
-                      <span className="text-sm text-blue-600">personnes regardent</span>
+                      <span className="text-sm text-gray-300">personnes regardent</span>
                     </div>
                   </div>
                   <motion.div 
@@ -615,14 +696,14 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
           {DesktopImageGallery}
         </div>
         {/* Scrollable right side */}
-        <div className="w-1/2 h-full overflow-y-auto bg-white">
+        <div className="w-1/2 h-full overflow-y-auto bg-gray-900">
           <div className="p-8">
             {/* Product Info */}
             <div className="space-y-6">
               {/* Product Name and Labels group */}
               <div className="pt-1">
                 <h1 
-                  className="text-4xl font-bold bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 bg-clip-text text-transparent uppercase leading-tight mb-4"
+                  className="text-4xl font-bold text-white uppercase leading-tight mb-4"
                   style={{ wordBreak: 'break-word' }}
                 >
                   {product.name}
@@ -632,12 +713,12 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                 <div className="flex flex-wrap gap-2">
                   <div 
                     onClick={handleCategoryClick}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full cursor-pointer hover:bg-blue-100 transition-colors duration-200"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 text-gray-300 rounded-full cursor-pointer hover:bg-gray-700 transition-colors duration-200 border border-gray-700"
                   >
                     <Tag size={14} />
                     <span className="text-sm font-medium">{product.subCategory}</span>
                   </div>
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 text-gray-700 rounded-full">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 text-gray-300 rounded-full border border-gray-700">
                     <Ruler size={14} />
                     <span className="text-sm font-medium">{product.dimensions}</span>
                   </div>
@@ -645,28 +726,32 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
               </div>
 
               {/* Price Section */}
-              <div className="bg-gray-50/80 rounded-xl p-6">
-                <div className="flex items-center justify-between gap-4">
-                  {/* Price */}
-                  <div className="flex items-baseline gap-3">
-                    <div className="relative">
-                      <div className="absolute -inset-2 -left-0 bg-gradient-to-r from-yellow-400 to-amber-300 -skew-x-12 rounded-lg shadow-lg" />
-                      <span className="relative text-4xl font-bold text-gray-900 px-3 py-1">
-                        {product.VenteflashPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
+              <div className="relative overflow-hidden rounded-lg">
+                {/* Gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-600" />
+                
+                {/* Content */}
+                <div className="relative p-6">
+                  <div className="flex items-center justify-between">
+                    {/* Price section */}
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <span className="text-4xl font-bold text-white">
+                          {product.VenteflashPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
+                        </span>
+                      </div>
+                      <span className="text-lg text-white/70 line-through">
+                        {product.initialPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
                       </span>
                     </div>
-                    <span className="text-lg text-gray-400 line-through">
-                      {product.initialPrice.toLocaleString('fr-FR').replace(',', ' ')} DH
-                    </span>
-                  </div>
-
-                  {/* Discount badge */}
-                  <div className="flex items-center gap-2">
+                    
+                    {/* Discount Badge */}
                     <motion.div
                       animate={{ scale: [1, 1.05, 1] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
+                      className="bg-gradient-to-r from-orange-500 to-red-600 px-4 py-2 rounded-lg shadow-lg"
                     >
-                      <span className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg text-sm font-bold">
+                      <span className="text-white text-lg font-bold">
                         -{discountPercentage}%
                       </span>
                     </motion.div>
@@ -674,21 +759,19 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                 </div>
               </div>
 
-
-
               {/* Store Availability */}
-              <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+              <div className="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-700 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gray-900 rounded-lg">
+                    <div className="p-2 bg-orange-500 rounded-lg">
                       <ShoppingBag size={16} className="text-white" />
                     </div>
                     <div>
-                      <h3 className="text-base font-semibold text-gray-900">
+                      <h3 className="text-base font-semibold text-white">
                         Disponibilité en magasin
                       </h3>
                       {availability && (
-                        <p className="text-sm text-gray-500 mt-0.5">
+                        <p className="text-sm text-gray-400 mt-0.5">
                           {Object.values(availability).filter(stock => stock > 0).length} magasins disponibles
                         </p>
                       )}
@@ -698,8 +781,8 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                     <span className={`
                       px-3 py-1 rounded-full text-xs font-medium
                       ${Object.values(availability).some(stock => stock > 0)
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-amber-100 text-amber-700'
+                        ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                        : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
                       }
                     `}>
                       {Object.values(availability).some(stock => stock > 0) ? 'Stock disponible' : 'Stock limité'}
@@ -713,7 +796,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                     </div>
                   ) : (
                     <div className="flex items-center justify-center py-8">
-                      <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
+                      <Loader2 className="h-6 w-6 animate-spin text-white" />
                     </div>
                   )}
                 </div>
@@ -960,18 +1043,18 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
 
 
               {/* Store Availability */}
-              <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+              <div className="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-700 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gray-900 rounded-lg">
+                    <div className="p-2 bg-orange-500 rounded-lg">
                       <ShoppingBag size={16} className="text-white" />
                     </div>
                     <div>
-                      <h3 className="text-base font-semibold text-gray-900">
+                      <h3 className="text-base font-semibold text-white">
                         Disponibilité en magasin
                       </h3>
                       {availability && (
-                        <p className="text-sm text-gray-500 mt-0.5">
+                        <p className="text-sm text-gray-400 mt-0.5">
                           {Object.values(availability).filter(stock => stock > 0).length} magasins disponibles
                         </p>
                       )}
@@ -981,8 +1064,8 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                     <span className={`
                       px-3 py-1 rounded-full text-xs font-medium
                       ${Object.values(availability).some(stock => stock > 0)
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-amber-100 text-amber-700'
+                        ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                        : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
                       }
                     `}>
                       {Object.values(availability).some(stock => stock > 0) ? 'Stock disponible' : 'Stock limité'}
@@ -996,7 +1079,7 @@ export default function QuickView({ product, isOpen = false, onClose = () => {},
                     </div>
                   ) : (
                     <div className="flex items-center justify-center py-8">
-                      <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
+                      <Loader2 className="h-6 w-6 animate-spin text-white" />
                     </div>
                   )}
                 </div>

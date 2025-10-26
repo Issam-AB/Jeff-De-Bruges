@@ -166,7 +166,7 @@ export default function ProductCard({ product, className, onQuickView }: Product
 
             {/* Top right - Discount badge */}
             <div className="absolute right-2 top-2">
-              <div className="bg-gradient-to-r from-red-600 to-red-500 px-3 py-1.5 rounded-lg shadow-lg">
+              <div className="bg-gradient-to-r from-orange-500 to-red-600 px-3 py-1.5 rounded-lg shadow-lg">
                 <span className="text-white text-sm font-bold">
                   -{Math.round(((product.initialPrice - product.VenteflashPrice) / product.initialPrice) * 100)}%
                 </span>

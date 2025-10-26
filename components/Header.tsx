@@ -86,21 +86,21 @@ export default function Header() {
     <>
       <header className="fixed w-full top-0 z-[100]">
         {/* Animated background layers */}
-        <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" />
+        <div className="absolute inset-0 bg-gray-900/95 backdrop-blur-xl border-b border-gray-800" />
         <div className="absolute inset-0">
           {/* Animated grid background */}
-          <div className="absolute inset-0 opacity-20"
+          <div className="absolute inset-0 opacity-10"
             style={{
               backgroundImage: `
-                linear-gradient(to right, #e40524 1px, transparent 1px),
-                linear-gradient(to bottom, #e40524 1px, transparent 1px)
+                linear-gradient(to right, rgb(249, 115, 22) 1px, transparent 1px),
+                linear-gradient(to bottom, rgb(249, 115, 22) 1px, transparent 1px)
               `,
               backgroundSize: '40px 40px',
             }}
           />
           {/* Glowing orbs */}
-          <div className="absolute top-0 left-1/4 w-24 h-24 bg-[#e40524] rounded-full blur-[80px] animate-pulse" />
-          <div className="absolute top-0 right-1/4 w-24 h-24 bg-[#e40524] rounded-full blur-[80px] animate-pulse delay-700" />
+          <div className="absolute top-0 left-1/4 w-24 h-24 bg-orange-500 rounded-full blur-[80px] animate-pulse opacity-30" />
+          <div className="absolute top-0 right-1/4 w-24 h-24 bg-red-500 rounded-full blur-[80px] animate-pulse delay-700 opacity-30" />
         </div>
 
         <div className="relative w-full px-4">
@@ -111,7 +111,7 @@ export default function Header() {
               onClick={handleLogoClick}
               className="relative group"
             >
-              <div className="absolute inset-0 bg-[#e40524]/20 blur-2xl group-hover:bg-[#e40524]/30 transition-all duration-500" />
+              <div className="absolute inset-0 bg-orange-500/20 blur-2xl group-hover:bg-orange-500/30 transition-all duration-500" />
               <Image
                 src="/Logo_bf.png"
                 alt="SKETCH BLACK FRIDAY"
@@ -139,12 +139,12 @@ export default function Header() {
                     <div className={`
                       absolute inset-0 transform -skew-x-[30deg] transition-all duration-300
                       ${activeCategory === category
-                        ? 'bg-[#e40524] shadow-[0_0_30px_rgba(228,5,36,0.4)]'
-                        : 'bg-white/5'
+                        ? 'bg-gradient-to-r from-orange-500 to-red-600 shadow-[0_0_30px_rgba(249,115,22,0.4)]'
+                        : 'bg-gray-800/50'
                       }
                       before:absolute before:inset-0 before:transform 
                       before:translate-x-[6px] before:translate-y-[6px]
-                      before:bg-[#e40524]/20 before:blur-[8px]
+                      before:bg-orange-500/20 before:blur-[8px]
                       before:opacity-0 group-hover:before:opacity-100
                       before:transition-opacity before:duration-300
                     `} />
@@ -153,9 +153,9 @@ export default function Header() {
                     <div className={`
                       absolute inset-0 transform -skew-x-[30deg]
                       before:absolute before:inset-y-0 before:-left-[2px] before:w-[3px]
-                      before:bg-gradient-to-b before:from-transparent before:via-[#e40524] before:to-transparent
+                      before:bg-gradient-to-b before:from-transparent before:via-orange-500 before:to-transparent
                       after:absolute after:inset-y-0 after:-right-[2px] after:w-[3px]
-                      after:bg-gradient-to-b after:from-transparent after:via-[#e40524] after:to-transparent
+                      after:bg-gradient-to-b after:from-transparent after:via-orange-500 after:to-transparent
                       opacity-0 group-hover:opacity-100 transition-opacity duration-300
                     `} />
 
@@ -186,8 +186,8 @@ export default function Header() {
                     <div className={`
                       absolute -bottom-[3px] left-[6px] right-[6px] h-[2px] transform -skew-x-[30deg]
                       ${activeCategory === category
-                        ? 'bg-[#e40524] shadow-[0_0_10px_#e40524]'
-                        : 'bg-transparent group-hover:bg-[#e40524]/50'
+                        ? 'bg-orange-500 shadow-[0_0_10px_rgb(249,115,22)]'
+                        : 'bg-transparent group-hover:bg-orange-500/50'
                       }
                       transition-all duration-300
                     `} />
@@ -206,15 +206,15 @@ export default function Header() {
                 className="relative h-[40px] px-4 group"
               >
                 {/* Sharp skewed background */}
-                <div className="absolute inset-0 transform -skew-x-[30deg] bg-[#e40524]/10 
-                  group-hover:bg-[#e40524]/20 transition-all duration-300" />
+                <div className="absolute inset-0 transform -skew-x-[30deg] bg-gray-800/50 
+                  group-hover:bg-orange-500/20 transition-all duration-300" />
                 
                 {/* Sharp edges glow */}
                 <div className="absolute inset-0 transform -skew-x-[30deg]
                   before:absolute before:inset-y-0 before:-left-[2px] before:w-[3px]
-                  before:bg-gradient-to-b before:from-transparent before:via-[#e40524] before:to-transparent
+                  before:bg-gradient-to-b before:from-transparent before:via-orange-500 before:to-transparent
                   after:absolute after:inset-y-0 after:-right-[2px] after:w-[3px]
-                  after:bg-gradient-to-b after:from-transparent after:via-[#e40524] after:to-transparent
+                  after:bg-gradient-to-b after:from-transparent after:via-orange-500 after:to-transparent
                   opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                 {/* Content */}
@@ -234,11 +234,11 @@ export default function Header() {
                   className="relative h-[40px] px-4 group"
                 >
                   {/* Sharp skewed background */}
-                  <div className="absolute inset-0 transform -skew-x-[30deg] bg-[#e40524] 
-                    group-hover:bg-[#ff1f3d] transition-all duration-300
+                  <div className="absolute inset-0 transform -skew-x-[30deg] bg-gradient-to-r from-orange-500 to-red-600 
+                    group-hover:from-orange-600 group-hover:to-red-700 transition-all duration-300
                     before:absolute before:inset-0 
                     before:transform before:translate-x-[6px] before:translate-y-[6px]
-                    before:bg-[#e40524] before:blur-[8px]
+                    before:bg-orange-500 before:blur-[8px]
                     before:opacity-50 group-hover:before:opacity-100
                     before:transition-opacity before:duration-300" />
                   
@@ -281,20 +281,20 @@ export default function Header() {
               onClick={() => setIsSearchOpen(true)}
             >
               {/* Sharp skewed background */}
-              <div className="absolute inset-0 transform -skew-x-[30deg] bg-[#e40524]/10 
-                group-hover:bg-[#e40524]/20 transition-all duration-300
+              <div className="absolute inset-0 transform -skew-x-[30deg] bg-gray-800/50 
+                group-hover:bg-orange-500/20 transition-all duration-300
                 before:absolute before:inset-0 
                 before:transform before:translate-x-[6px] before:translate-y-[6px]
-                before:bg-[#e40524]/20 before:blur-[8px]
+                before:bg-orange-500/20 before:blur-[8px]
                 before:opacity-0 group-hover:before:opacity-100
                 before:transition-opacity before:duration-300" />
               
               {/* Sharp edges glow */}
               <div className="absolute inset-0 transform -skew-x-[30deg]
                 before:absolute before:inset-y-0 before:-left-[2px] before:w-[3px]
-                before:bg-gradient-to-b before:from-transparent before:via-[#e40524] before:to-transparent
+                before:bg-gradient-to-b before:from-transparent before:via-orange-500 before:to-transparent
                 after:absolute after:inset-y-0 after:-right-[2px] after:w-[3px]
-                after:bg-gradient-to-b after:from-transparent after:via-[#e40524] after:to-transparent
+                after:bg-gradient-to-b after:from-transparent after:via-orange-500 after:to-transparent
                 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
               {/* Content */}
@@ -307,7 +307,7 @@ export default function Header() {
 
         {/* Animated bottom border */}
         <div className="absolute bottom-0 left-0 right-0 h-[1px]">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#e40524] to-transparent animate-[shine_3s_ease-in-out_infinite]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-500 to-transparent animate-[shine_3s_ease-in-out_infinite]" />
         </div>
       </header>
 
@@ -345,21 +345,21 @@ export default function Header() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="fixed left-0 right-0 top-[80px] bg-black/90 z-[95] overflow-hidden"
+              className="fixed left-0 right-0 top-[80px] bg-gray-900/95 z-[95] overflow-hidden border-b border-gray-800"
             >
               {/* Background effects */}
               <div className="absolute inset-0">
-                <div className="absolute inset-0 opacity-20"
+                <div className="absolute inset-0 opacity-10"
                   style={{
                     backgroundImage: `
-                      linear-gradient(to right, #e40524 1px, transparent 1px),
-                      linear-gradient(to bottom, #e40524 1px, transparent 1px)
+                      linear-gradient(to right, rgb(249, 115, 22) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgb(249, 115, 22) 1px, transparent 1px)
                     `,
                     backgroundSize: '30px 30px',
                   }}
                 />
-                <div className="absolute top-0 left-1/4 w-48 h-48 bg-[#e40524] rounded-full blur-[100px] animate-pulse opacity-20" />
-                <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-[#e40524] rounded-full blur-[100px] animate-pulse opacity-20 delay-300" />
+                <div className="absolute top-0 left-1/4 w-48 h-48 bg-orange-500 rounded-full blur-[100px] animate-pulse opacity-20" />
+                <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-red-500 rounded-full blur-[100px] animate-pulse opacity-20 delay-300" />
               </div>
 
               <div className="w-full px-8 relative">
@@ -378,12 +378,12 @@ export default function Header() {
                         <div className={`
                           absolute inset-0 transform -skew-x-[30deg] transition-all duration-300
                           ${activeCategory === category
-                            ? 'bg-[#e40524] shadow-[0_0_30px_rgba(228,5,36,0.4)]'
-                            : 'bg-white/5'
+                            ? 'bg-gradient-to-r from-orange-500 to-red-600 shadow-[0_0_30px_rgba(249,115,22,0.4)]'
+                            : 'bg-gray-800/50'
                           }
                           before:absolute before:inset-0 before:transform 
                           before:translate-x-[6px] before:translate-y-[6px]
-                          before:bg-[#e40524]/20 before:blur-[8px]
+                          before:bg-orange-500/20 before:blur-[8px]
                           before:opacity-0 group-hover:before:opacity-100
                           before:transition-opacity before:duration-300
                         `} />
@@ -392,9 +392,9 @@ export default function Header() {
                         <div className={`
                           absolute inset-0 transform -skew-x-[30deg]
                           before:absolute before:inset-y-0 before:-left-[2px] before:w-[3px]
-                          before:bg-gradient-to-b before:from-transparent before:via-[#e40524] before:to-transparent
+                          before:bg-gradient-to-b before:from-transparent before:via-orange-500 before:to-transparent
                           after:absolute after:inset-y-0 after:-right-[2px] after:w-[3px]
-                          after:bg-gradient-to-b after:from-transparent after:via-[#e40524] after:to-transparent
+                          after:bg-gradient-to-b after:from-transparent after:via-orange-500 after:to-transparent
                           opacity-0 group-hover:opacity-100 transition-opacity duration-300
                         `} />
 
@@ -424,8 +424,8 @@ export default function Header() {
                         <div className={`
                           absolute -bottom-[3px] left-[6px] right-[6px] h-[2px] transform -skew-x-[30deg]
                           ${activeCategory === category
-                            ? 'bg-[#e40524] shadow-[0_0_10px_#e40524]'
-                            : 'bg-transparent group-hover:bg-[#e40524]/50'
+                            ? 'bg-orange-500 shadow-[0_0_10px_rgb(249,115,22)]'
+                            : 'bg-transparent group-hover:bg-orange-500/50'
                           }
                           transition-all duration-300
                         `} />
@@ -437,7 +437,7 @@ export default function Header() {
 
               {/* Bottom gradient border */}
               <div className="absolute bottom-0 left-0 right-0 h-[1px]">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#e40524] to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-500 to-transparent" />
               </div>
             </motion.nav>
           </>
