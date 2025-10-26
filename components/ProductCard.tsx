@@ -49,7 +49,7 @@ export default function ProductCard({ product, className, onQuickView }: Product
     textColor: "text-white",
     bgColor: "bg-emerald-500",
     borderColor: "border-emerald-600"
-  }
+  };
 
   return (
     <Link 
