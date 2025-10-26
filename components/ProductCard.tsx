@@ -56,8 +56,7 @@ export default function ProductCard({ product, className, onQuickView }: Product
     borderColor: "border-emerald-600"
   };
 
-  const handleClick = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
+  const handleClick = () => {
     setIsLoading(true); // Show loading immediately!
     router.push(`/products/${product.slug}`);
   };
@@ -65,7 +64,6 @@ export default function ProductCard({ product, className, onQuickView }: Product
   return (
     <div 
       onClick={handleClick}
-      onTouchEnd={handleClick}
       role="button"
       tabIndex={0}
       className={cn(
