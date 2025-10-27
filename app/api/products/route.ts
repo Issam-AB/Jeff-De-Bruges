@@ -11,15 +11,22 @@ export async function POST(request: Request) {
     const data = await request.json()
     console.log('Creating product with data:', data)
     
-    // Generate slug from name if not provided
-    const slug = data.slug || data.name
+    // Generate unique slug from name + ref to handle products with same name but different dimensions
+    const slugBase = data.name
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '') // Remove accents
       .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric with hyphens
       .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
       .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
-      .substring(0, 100) // Limit length
+    
+    const refSlug = data.ref
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+    
+    // Combine name + ref for unique slug (e.g., "brooklyn-mm-110-30-049")
+    const slug = data.slug || `${slugBase}-${refSlug}`.substring(0, 100)
     
     const product = await prisma.product.create({
       data: {

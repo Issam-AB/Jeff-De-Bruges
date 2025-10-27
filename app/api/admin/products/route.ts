@@ -1,15 +1,23 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// Function to generate slug
-function generateSlug(name: string): string {
-  return name
+// Function to generate unique slug from name and ref
+function generateSlug(name: string, ref: string): string {
+  const slugBase = name
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .trim()
+  
+  const refSlug = ref
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+  
+  // Combine name + ref for unique slug
+  return `${slugBase}-${refSlug}`.substring(0, 100)
 }
 
 export async function GET(request: Request) {
@@ -36,8 +44,8 @@ export async function POST(request: Request) {
   try {
     const data = await request.json()
 
-    // Generate slug from name
-    const slug = generateSlug(data.name)
+    // Generate unique slug from name and ref
+    const slug = generateSlug(data.name, data.ref)
 
     // Create product using same structure as edit
     const product = await prisma.product.create({
@@ -70,8 +78,9 @@ export async function PUT(request: Request) {
   try {
     const data = await request.json()
     
-    if (!data.slug) {
-      data.slug = generateSlug(data.name)
+    // Regenerate slug if name or ref changed
+    if (!data.slug || (data.name && data.ref)) {
+      data.slug = generateSlug(data.name, data.ref)
     }
 
     const product = await prisma.product.update({

@@ -93,7 +93,8 @@ export default function ProductsPage() {
   const fetchProducts = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/admin/products')
+      // Always fetch all products (active and inactive) to enable filtering
+      const response = await fetch('/api/admin/products?showInactive=true')
       
       if (!response.ok) {
         throw new Error('Failed to fetch products')
@@ -280,10 +281,28 @@ export default function ProductsPage() {
         <div>
           <h1 className="text-3xl font-bold text-white">Products</h1>
           <p className="text-gray-400 mt-1">
-            Manage your product catalog ({filteredAndSortedProducts.length} products)
+            Manage your product catalog ({filteredAndSortedProducts.length} of {products.length} products)
+            {products.filter(p => !p.isActive).length > 0 && (
+              <Badge variant="secondary" className="ml-2 bg-yellow-600 text-white">
+                {products.filter(p => !p.isActive).length} Inactive
+              </Badge>
+            )}
           </p>
         </div>
         <div className="flex items-center gap-3">
+          {products.filter(p => !p.isActive).length > 0 && (
+            <Button
+              onClick={() => setFilters(prev => ({ ...prev, status: 'inactive' }))}
+              variant={filters.status === 'inactive' ? 'default' : 'outline'}
+              size="sm"
+              className={filters.status === 'inactive' 
+                ? "bg-yellow-600 hover:bg-yellow-700 text-white"
+                : "border-yellow-600 text-yellow-400 hover:bg-yellow-900/20"
+              }
+            >
+              View Inactive ({products.filter(p => !p.isActive).length})
+            </Button>
+          )}
           <Button
             onClick={() => fetchProducts()}
             variant="outline"
@@ -389,7 +408,14 @@ export default function ProductsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white mb-2">Status</label>
+                <label className="block text-sm font-medium text-white mb-2">
+                  Status
+                  {filters.status === 'inactive' && (
+                    <Badge variant="destructive" className="ml-2">
+                      {products.filter(p => !p.isActive).length} Inactive
+                    </Badge>
+                  )}
+                </label>
                 <Select
                   value={filters.status}
                   onValueChange={(value) => setFilters(prev => ({ ...prev, status: value as any }))}
@@ -398,9 +424,15 @@ export default function ProductsPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-700 border border-gray-600 shadow-lg">
-                    <SelectItem value="all" className="text-white hover:bg-gray-600">All Status</SelectItem>
-                    <SelectItem value="active" className="text-white hover:bg-gray-600">Active</SelectItem>
-                    <SelectItem value="inactive" className="text-white hover:bg-gray-600">Inactive</SelectItem>
+                    <SelectItem value="all" className="text-white hover:bg-gray-600">
+                      All Status ({products.length})
+                    </SelectItem>
+                    <SelectItem value="active" className="text-white hover:bg-gray-600">
+                      Active ({products.filter(p => p.isActive).length})
+                    </SelectItem>
+                    <SelectItem value="inactive" className="text-white hover:bg-gray-600">
+                      Inactive ({products.filter(p => !p.isActive).length})
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
