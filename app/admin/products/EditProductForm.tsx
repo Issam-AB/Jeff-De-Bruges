@@ -23,16 +23,13 @@ interface EditProductFormProps {
   onProductUpdated: () => void
 }
 
-const CATEGORY_STRUCTURE = {
-  'SALONS': ['Salon en L', 'Salon en U'],
-  'CANAPES': ['Canapé 2 Places', 'Canapé 3 Places', 'Fauteuils'],
-  'CHAMBRE': ['Lits', 'Matelas', 'Table de Chevet'],
-  'TABLES': ['Tables Basses', 'Tables à Manger', 'Tables d\'Appoint'],
-  'CHAISES': ['Chaises de Salle à Manger', 'Chaises de Bureau'],
-  'RANGEMENT': ['Armoires', 'Bibliothèques', 'Commodes', 'Buffets'],
-  'DECO': ['Tapis', 'Miroirs', 'Tableaux', 'Vases'],
-  'JARDIN': ['Ensemble D\'extérieur', 'Tables de Jardin', 'Chaises de Jardin']
-};
+// Build category structure from PREDEFINED_CATEGORIES
+const CATEGORY_STRUCTURE = PREDEFINED_CATEGORIES
+  .filter(cat => cat.name !== 'TOUS' && cat.children && cat.children.length > 0)
+  .reduce((acc, cat) => {
+    acc[cat.name] = cat.children?.map(child => child.name) || [];
+    return acc;
+  }, {} as Record<string, string[]>);
 
 const STORES = ['Casablanca', 'Rabat', 'Marrakech', 'Tanger', 'Bouskoura'] as const;
 

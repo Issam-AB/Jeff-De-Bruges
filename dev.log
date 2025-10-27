@@ -1,0 +1,122 @@
+
+> my-app@0.1.0 dev
+> next dev -H 0.0.0.0
+
+  ▲ Next.js 14.2.16
+  - Local:        http://localhost:3000
+  - Network:      http://0.0.0.0:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1234ms
+ ✓ Compiled /middleware in 194ms (72 modules)
+ ○ Compiling /admin/products ...
+Browserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+ ✓ Compiled /admin/products in 1042ms (831 modules)
+ ⚠ The "images.domains" configuration is deprecated. Please use "images.remotePatterns" configuration instead.
+ GET /admin/products 200 in 1326ms
+ ✓ Compiled /_not-found in 650ms (820 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 446ms
+ ✓ Compiled /favicon.ico in 61ms (452 modules)
+ GET /favicon.ico 200 in 95ms
+ GET /admin/products 200 in 96ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 15ms
+ ✓ Compiled /api/admin/products in 162ms (478 modules)
+ GET /favicon.ico 200 in 214ms
+ GET /api/admin/products 200 in 1193ms
+ GET /api/admin/products 200 in 231ms
+ ✓ Compiled /api/upload in 137ms (227 modules)
+BLOB_READ_WRITE_TOKEN exists: true
+BLOB_READ_WRITE_TOKEN length: 62
+Attempting to upload file: 1761556452143-869e919a-58be-4b8c-a186-80dc87035ef6.jpeg Size: 304032 Type: image/jpeg
+Upload successful: https://3n8iskmjvecbgkyk.public.blob.vercel-storage.com/1761556452143-869e919a-58be-4b8c-a186-80dc87035ef6.jpeg
+ POST /api/upload 200 in 2323ms
+ ✓ Compiled /api/products in 81ms (480 modules)
+Creating product with data: {
+  name: 'FREEDOM',
+  ref: '110.30.008',
+  dimensions: '400x260x140cm',
+  mainCategory: 'SALONS',
+  subCategory: 'Salon en L',
+  initialPrice: 36500,
+  VenteflashPrice: 17490,
+  mainImage: 'https://3n8iskmjvecbgkyk.public.blob.vercel-storage.com/1761556452143-869e919a-58be-4b8c-a186-80dc87035ef6.jpeg',
+  gallery: [],
+  isActive: true,
+  isArticleRouge: false,
+  articleRougePrice: null,
+  store: null,
+  isTopProduct: false
+}
+Failed to create product: PrismaClientKnownRequestError: 
+Invalid `prisma.product.create()` invocation:
+
+
+Unique constraint failed on the fields: (`ref`)
+    at qn.handleRequestError (/Users/macbookpro/Desktop/vf-main 2/node_modules/@prisma/client/runtime/library.js:121:7315)
+    at qn.handleAndLogRequestError (/Users/macbookpro/Desktop/vf-main 2/node_modules/@prisma/client/runtime/library.js:121:6640)
+    at qn.request (/Users/macbookpro/Desktop/vf-main 2/node_modules/@prisma/client/runtime/library.js:121:6347)
+    at async l (/Users/macbookpro/Desktop/vf-main 2/node_modules/@prisma/client/runtime/library.js:130:9616)
+    at async POST (webpack-internal:///(rsc)/./app/api/products/route.ts:27:25)
+    at async /Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:55831
+    at async eO.execute (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46527)
+    at async eO.handle (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57165)
+    at async doRender (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/base-server.js:1352:42)
+    at async cacheEntry.responseCache.get.routeKind (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/base-server.js:1574:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/base-server.js:1482:28)
+    at async DevServer.renderPageComponent (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/base-server.js:1908:24)
+    at async DevServer.renderToResponseImpl (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/base-server.js:1946:32)
+    at async DevServer.pipeImpl (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/base-server.js:817:17)
+    at async /Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/lib/router-server.js:173:21)
+    at async handleRequest (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/lib/router-server.js:350:24)
+    at async requestHandlerImpl (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/lib/router-server.js:374:13)
+    at async Server.requestListener (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'P2002',
+  clientVersion: '6.1.0',
+  meta: { modelName: 'Product', target: [ 'ref' ] }
+}
+Error details: {
+  name: 'PrismaClientKnownRequestError',
+  message: '\n' +
+    'Invalid `prisma.product.create()` invocation:\n' +
+    '\n' +
+    '\n' +
+    'Unique constraint failed on the fields: (`ref`)',
+  stack: 'PrismaClientKnownRequestError: \n' +
+    'Invalid `prisma.product.create()` invocation:\n' +
+    '\n' +
+    '\n' +
+    'Unique constraint failed on the fields: (`ref`)\n' +
+    '    at qn.handleRequestError (/Users/macbookpro/Desktop/vf-main 2/node_modules/@prisma/client/runtime/library.js:121:7315)\n' +
+    '    at qn.handleAndLogRequestError (/Users/macbookpro/Desktop/vf-main 2/node_modules/@prisma/client/runtime/library.js:121:6640)\n' +
+    '    at qn.request (/Users/macbookpro/Desktop/vf-main 2/node_modules/@prisma/client/runtime/library.js:121:6347)\n' +
+    '    at async l (/Users/macbookpro/Desktop/vf-main 2/node_modules/@prisma/client/runtime/library.js:130:9616)\n' +
+    '    at async POST (webpack-internal:///(rsc)/./app/api/products/route.ts:27:25)\n' +
+    '    at async /Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:55831\n' +
+    '    at async eO.execute (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46527)\n' +
+    '    at async eO.handle (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57165)\n' +
+    '    at async doRender (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/base-server.js:1352:42)\n' +
+    '    at async cacheEntry.responseCache.get.routeKind (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/base-server.js:1574:28)\n' +
+    '    at async DevServer.renderToResponseWithComponentsImpl (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/base-server.js:1482:28)\n' +
+    '    at async DevServer.renderPageComponent (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/base-server.js:1908:24)\n' +
+    '    at async DevServer.renderToResponseImpl (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/base-server.js:1946:32)\n' +
+    '    at async DevServer.pipeImpl (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/base-server.js:921:25)\n' +
+    '    at async NextNodeServer.handleCatchallRenderRequest (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/next-server.js:272:17)\n' +
+    '    at async DevServer.handleRequestImpl (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/base-server.js:817:17)\n' +
+    '    at async /Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/dev/next-dev-server.js:339:20\n' +
+    '    at async Span.traceAsyncFn (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/trace/trace.js:154:20)\n' +
+    '    at async DevServer.handleRequest (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/dev/next-dev-server.js:336:24)\n' +
+    '    at async invokeRender (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/lib/router-server.js:173:21)\n' +
+    '    at async handleRequest (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/lib/router-server.js:350:24)\n' +
+    '    at async requestHandlerImpl (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/lib/router-server.js:374:13)\n' +
+    '    at async Server.requestListener (/Users/macbookpro/Desktop/vf-main 2/node_modules/next/dist/server/lib/start-server.js:141:13)'
+}
+ POST /api/products 500 in 322ms
+[?25h
