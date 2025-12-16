@@ -13,7 +13,13 @@
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
-    "db:sync": "prisma generate && prisma db push"
+    "db:sync": "prisma generate && prisma db push",
+    "import": "ts-node scripts/import-products.ts",
+    "import:dry-run": "ts-node scripts/import-products.ts --dry-run",
+    "import:update": "ts-node scripts/import-products.ts --update",
+    "import:help": "ts-node scripts/import-products.ts --help",
+    "import:clear": "ts-node scripts/clear-products.ts",
+    "test:parser": "ts-node scripts/test-parser.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.0.1",
@@ -76,6 +82,7 @@
     "postcss": "^8.4.24",
     "prisma": "^6.0.1",
     "tailwindcss": "^3.3.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   },
   "resolutions": {

@@ -40,6 +40,23 @@ export type Product = {
   createdAt: Date
   updatedAt: Date
   Gallery?: Gallery[]
+  // Champs spécifiques aux produits de chocolat
+  description?: string | null
+  weight?: number | null
+  weightUnit?: string | null
+  quantity?: number | null
+  chocolateType?: string | null
+  ingredients?: string[]
+  allergens?: string[]
+  tags?: string[]
+  stock?: number | null
+  sku?: string | null
+  expirationDays?: number | null
+  isGiftBox?: boolean
+  isPremium?: boolean
+  brand?: string | null
+  material?: string | null
+  shape?: string | null
 }
 
 export type Gallery = {

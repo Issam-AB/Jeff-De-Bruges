@@ -1,36 +1,134 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍫 Jeff De Bruges - E-Commerce Platform
 
-## Getting Started
+Application e-commerce pour les chocolats et boîtes cadeaux Jeff De Bruges.
 
-First, run the development server:
+## ✨ Fonctionnalités
+
+- **170 produits** importés automatiquement
+- **8 catégories** : Coupes, Plateaux, Pots, Coffrets, Boîtes, Bols, Accessoires, Corbeilles
+- **Page produit détaillée** avec toutes les informations (poids, quantité, matériau, forme, etc.)
+- **Navigation par catégories** avec filtres par sous-catégories
+- **Import automatique** depuis noms de fichiers
+- **Commande WhatsApp** intégrée
+
+## 🚀 Démarrage Rapide
 
 ```bash
+# Installation
+npm install
+
+# Base de données
+npx prisma db push
+npx prisma generate
+
+# Développement
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📦 Import de Produits
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Import depuis photos
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Test (sans modifier la DB)
+npm run import:dry-run
 
-## Learn More
+# Import réel
+npm run import
 
-To learn more about Next.js, take a look at the following resources:
+# Nettoyer la DB
+npm run import:clear
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Format des fichiers
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+[Nom du produit] [Taille]_[Prix] MAD.jpeg
+```
 
-## Deploy on Vercel
+Exemple : `Coffret rond Collection Jeff GM_1500 MAD.jpeg`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Tailles :**
+- PM = Petit Modèle (20cm)
+- MM = Modèle Moyen (30cm)
+- GM = Grand Modèle (40cm)
+- TGM = Très Grand Modèle (50cm)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📊 Schéma Base de Données
+
+### Product
+- Informations de base : nom, ref, slug, prix, dimensions
+- Images : mainImage, gallery
+- Catégories : mainCategory, subCategory
+- Chocolats : weight, quantity, chocolateType, ingredients, allergens
+- Métadonnées : tags, brand, material, shape
+- Stock : stock, sku, expirationDays
+- Flags : isGiftBox, isPremium, isArticleRouge, isTopProduct
+
+### Category
+- Catégories avec sous-catégories
+
+### Gallery
+- Images multiples par produit
+
+## 🎨 Structure
+
+```
+app/
+├── (main)/
+│   ├── products/[slug]/     # Page produit détaillée
+│   └── categories/[category]/ # Navigation par catégorie
+components/
+├── ChocolateProductView.tsx  # Vue produit chocolat
+└── ProductCard.tsx           # Carte produit
+scripts/
+├── import-products.ts        # Script d'import
+├── lib/
+│   ├── parser.ts            # Parsing des noms de fichiers
+│   ├── db-utils.ts          # Opérations DB
+│   └── report-generator.ts # Génération de rapports
+└── types/
+    └── product-import.ts    # Types TypeScript
+```
+
+## 📱 Technologies
+
+- **Next.js 14** - Framework React
+- **Prisma** - ORM
+- **PostgreSQL** - Base de données (Supabase)
+- **TypeScript** - Langage
+- **Tailwind CSS** - Styling
+- **Framer Motion** - Animations
+
+## 🔧 Scripts
+
+```bash
+npm run dev              # Développement
+npm run build           # Build production
+npm run start           # Démarrer production
+npm run import          # Importer produits
+npm run import:dry-run  # Test import
+npm run import:clear    # Vider DB
+npm run db:studio       # Prisma Studio
+npm run db:push         # Push schema
+```
+
+## 📈 Statistiques
+
+- **170 produits** importés
+- **8 catégories** principales
+- **30+ collections/marques**
+- **Prix moyen** : ~1,450 MAD
+
+## 🎯 Prochaines Étapes
+
+- [ ] Ajouter filtres avancés (prix, taille, type)
+- [ ] Système de panier
+- [ ] Gestion des favoris
+- [ ] Système de recherche amélioré
+- [ ] Reviews et ratings
+- [ ] Multi-langue (FR/AR)
+
+## 📝 Licence
+
+Propriétaire - Jeff De Bruges

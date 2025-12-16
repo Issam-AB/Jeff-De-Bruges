@@ -25,6 +25,25 @@ model Product {
   isActive        Boolean   @default(true)
   isArticleRouge  Boolean   @default(false)
   isTopProduct    Boolean   @default(false)
+  
+  // Champs spécifiques aux produits de chocolat
+  description     String?   @db.Text
+  weight          Float?    // Poids en grammes
+  weightUnit      String?   @default("g") // Unité: g, kg
+  quantity        Int?      // Nombre de pièces de chocolat
+  chocolateType   String?   // Type: "noir", "lait", "blanc", "assortiment", "mixte"
+  ingredients     String[]  // Liste des ingrédients
+  allergens       String[]  // Liste des allergènes (ex: "lactose", "gluten", "noix")
+  tags            String[]  // Tags pour recherche (ex: "premium", "assortiment varié", "cadeau")
+  stock           Int?      @default(0) // Quantité en stock
+  sku             String?   @unique // Code SKU pour inventaire
+  expirationDays  Int?      // Durée de conservation en jours
+  isGiftBox       Boolean   @default(false) // Est-ce une boîte cadeau?
+  isPremium       Boolean   @default(false) // Produit premium?
+  brand           String?   // Marque/Collection (ex: "Collection Jeff", "Flora")
+  material        String?   // Matériau de la boîte (ex: "similicuir", "nacre", "tissu")
+  shape           String?   // Forme (ex: "rectangulaire", "carré", "rond", "cubique")
+  
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   Gallery         Gallery[]
@@ -34,6 +53,11 @@ model Product {
   @@index([isArticleRouge])
   @@index([isTopProduct])
   @@index([store])
+  @@index([chocolateType])
+  @@index([isGiftBox])
+  @@index([isPremium])
+  @@index([stock])
+  @@index([sku])
 }
 
 model Gallery {

@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
-import QuickView from '@/components/QuickView'
+import ChocolateProductView from '@/components/ChocolateProductView'
 import { notFound } from 'next/navigation'
 import { Product } from '@/types'
 
@@ -20,17 +20,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     })
 
     if (!product) {
-      return { title: 'Product Not Found - SKETCH BLACK FRIDAY' }
+      return { title: 'Produit Introuvable - Jeff De Bruges' }
     }
 
     return {
-      title: `${product.name} - SKETCH BLACK FRIDAY`,
-      description: `${product.name} - ${product.subCategory} - ${product.dimensions}`,
-      openGraph: { images: [product.mainImage] }
+      title: `${product.name} - Jeff De Bruges`,
+      description: product.description || `${product.name} - ${product.subCategory} - ${product.dimensions}`,
+      openGraph: { 
+        images: [product.mainImage],
+        title: product.name,
+        description: product.description || `Chocolat ${product.mainCategory}`,
+      }
     }
   } catch (error) {
     console.error('Error fetching product metadata:', error)
-    return { title: 'SKETCH BLACK FRIDAY' }
+    return { title: 'Jeff De Bruges - Chocolaterie' }
   }
 }
 
@@ -52,12 +56,26 @@ export default async function ProductPage({ params }: PageProps) {
     isArticleRouge: rawProduct.isArticleRouge ?? false,
     articleRougePrice: rawProduct.articleRougePrice ?? null,
     store: rawProduct.store ?? null,
-    // If VenteflashPrice is null, use initialPrice
-    VenteflashPrice: rawProduct.VenteflashPrice ?? rawProduct.initialPrice
+    VenteflashPrice: rawProduct.VenteflashPrice ?? rawProduct.initialPrice,
+    // Ensure new fields are included
+    description: rawProduct.description ?? null,
+    weight: rawProduct.weight ?? null,
+    weightUnit: rawProduct.weightUnit ?? null,
+    quantity: rawProduct.quantity ?? null,
+    chocolateType: rawProduct.chocolateType ?? null,
+    ingredients: rawProduct.ingredients ?? [],
+    allergens: rawProduct.allergens ?? [],
+    tags: rawProduct.tags ?? [],
+    stock: rawProduct.stock ?? 0,
+    sku: rawProduct.sku ?? null,
+    expirationDays: rawProduct.expirationDays ?? null,
+    isGiftBox: rawProduct.isGiftBox ?? false,
+    isPremium: rawProduct.isPremium ?? false,
+    brand: rawProduct.brand ?? null,
+    material: rawProduct.material ?? null,
+    shape: rawProduct.shape ?? null,
   }
 
-  return <QuickView product={product} fullPage={true} />
+  return <ChocolateProductView product={product} />
 }
-
-// Remove generateStaticParams to ensure dynamic routing
   

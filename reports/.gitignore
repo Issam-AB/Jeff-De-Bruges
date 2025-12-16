@@ -1,0 +1,8 @@
+# Ignore all report files
+*.csv
+*.txt
+*.json
+
+# Keep this directory
+!.gitignore
+

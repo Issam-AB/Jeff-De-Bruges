@@ -45,3 +45,16 @@ next-env.d.ts
 # Uploaded files
 public/uploads/*
 !public/uploads/.gitkeep
+
+# Product photos
+public/Photos avec prix/
+public/photos/
+
+# Documentation files (except README)
+*.md
+!README.md
+
+# Reports
+reports/*.csv
+reports/*.txt
+reports/*.json
