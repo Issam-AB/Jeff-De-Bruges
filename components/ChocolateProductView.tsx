@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Product } from '@/types'
 import { WhatsappIcon } from 'react-share'
+import { normalizeImagePath } from '@/lib/image-utils'
 import { 
   Package, 
   Tag, 
@@ -104,11 +105,12 @@ Merci !`
                   {images.map((img, idx) => (
                     <div key={idx} className="flex-[0_0_100%] min-w-0 relative aspect-square">
                       <Image
-                        src={img}
+                        src={normalizeImagePath(img)}
                         alt={`${product.name} - Image ${idx + 1}`}
                         fill
                         className="object-cover"
                         priority={idx === 0}
+                        unoptimized={true}
                       />
                     </div>
                   ))}
@@ -178,10 +180,11 @@ Merci !`
                     }`}
                   >
                     <Image
-                      src={img}
+                      src={normalizeImagePath(img)}
                       alt={`Miniature ${idx + 1}`}
                       fill
                       className="object-cover"
+                      unoptimized={true}
                     />
                   </button>
                 ))}

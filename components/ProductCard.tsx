@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Product } from '@/types'
 import { Tag, Ruler, Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { normalizeImagePath } from '@/lib/image-utils'
 
 interface ProductCardProps {
   product: Product
@@ -67,16 +68,27 @@ export default function ProductCard({ product, className, onQuickView }: Product
 
         <div className="relative p-0">
           {/* Product Image */}
-          <div className="relative aspect-square rounded-t-lg overflow-hidden">
-            <Image
-              src={product.mainImage}
-              alt={product.name}
-              fill
-              sizes="(min-width: 1536px) 20vw, (min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-              className="object-cover"
-              loading="lazy"
-              quality={75}
-            />
+          <div className="relative aspect-square rounded-t-lg overflow-hidden bg-gray-800">
+            {product.mainImage ? (
+              <Image
+                src={normalizeImagePath(product.mainImage)}
+                alt={product.name}
+                fill
+                sizes="(min-width: 1536px) 20vw, (min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                className="object-cover"
+                loading="lazy"
+                quality={75}
+                unoptimized={true}
+                onError={(e) => {
+                  console.error('Image load error:', product.mainImage);
+                  e.currentTarget.src = '/Logo_bf.png';
+                }}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-500">
+                <span>Image non disponible</span>
+              </div>
+            )}
             
             {/* Watermark */}
             <div className="absolute bottom-1 right-1 w-8 h-8 opacity-75 mix-blend-overlay pointer-events-none">

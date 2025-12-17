@@ -25,7 +25,24 @@ export async function getProducts(): Promise<Product[]> {
         store: true,
         isTopProduct: true,
         createdAt: true,
-        updatedAt: true
+        updatedAt: true,
+        // Champs chocolat
+        description: true,
+        weight: true,
+        weightUnit: true,
+        quantity: true,
+        chocolateType: true,
+        ingredients: true,
+        allergens: true,
+        tags: true,
+        stock: true,
+        sku: true,
+        expirationDays: true,
+        isGiftBox: true,
+        isPremium: true,
+        brand: true,
+        material: true,
+        shape: true,
       },
       orderBy: [
         { isTopProduct: 'desc' },
@@ -54,7 +71,24 @@ export async function getProducts(): Promise<Product[]> {
         articleRougePrice: product.articleRougePrice ?? null,
         store: product.store ?? null,
         isTopProduct: product.isTopProduct ?? false,
-        VenteflashPrice: finalVenteflashPrice
+        VenteflashPrice: finalVenteflashPrice,
+        // Champs chocolat avec valeurs par défaut
+        description: product.description ?? null,
+        weight: product.weight ?? null,
+        weightUnit: product.weightUnit ?? null,
+        quantity: product.quantity ?? null,
+        chocolateType: product.chocolateType ?? null,
+        ingredients: product.ingredients ?? [],
+        allergens: product.allergens ?? [],
+        tags: product.tags ?? [],
+        stock: product.stock ?? 0,
+        sku: product.sku ?? null,
+        expirationDays: product.expirationDays ?? null,
+        isGiftBox: product.isGiftBox ?? false,
+        isPremium: product.isPremium ?? false,
+        brand: product.brand ?? null,
+        material: product.material ?? null,
+        shape: product.shape ?? null,
       };
     }) as Product[];
 

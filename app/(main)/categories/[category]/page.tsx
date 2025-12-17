@@ -119,17 +119,15 @@ export default async function CategoryPage({ params }: PageProps) {
               </Link>
               {subCategories.map(subCat => {
                 const count = products.filter(p => p.subCategory === subCat).length
+                const subCatId = `subcat-${encodeURIComponent(subCat)}`
                 return (
-                  <button
+                  <a
                     key={subCat}
-                    onClick={() => {
-                      // Filter products by scrolling to section
-                      document.getElementById(`subcat-${subCat}`)?.scrollIntoView({ behavior: 'smooth' })
-                    }}
+                    href={`#${subCatId}`}
                     className="px-6 py-2 rounded-full bg-white text-gray-700 font-semibold hover:bg-amber-100 transition-colors border-2 border-gray-200 hover:border-amber-300"
                   >
                     {subCat} ({count})
-                  </button>
+                  </a>
                 )
               })}
             </div>
@@ -141,8 +139,9 @@ export default async function CategoryPage({ params }: PageProps) {
           <div className="space-y-12">
             {subCategories.map(subCat => {
               const subCatProducts = products.filter(p => p.subCategory === subCat)
+              const subCatId = `subcat-${encodeURIComponent(subCat)}`
               return (
-                <div key={subCat} id={`subcat-${subCat}`}>
+                <div key={subCat} id={subCatId}>
                   <h2 className="text-2xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-amber-200">
                     {subCat}
                     <span className="text-lg text-gray-500 ml-3">({subCatProducts.length})</span>

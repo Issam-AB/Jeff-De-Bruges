@@ -28,6 +28,8 @@ const nextConfig = {
         pathname: '/**',
       }
     ],
+    // Allow unoptimized images for local files with spaces
+    unoptimized: process.env.NODE_ENV === 'development',
   },
   webpack(config) {
     config.module.rules.push({

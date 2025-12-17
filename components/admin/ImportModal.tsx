@@ -174,7 +174,7 @@ export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'black-friday-prices-template.csv'
+    a.download = 'product-prices-template.csv'
     a.click()
     window.URL.revokeObjectURL(url)
   }
@@ -185,7 +185,7 @@ export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Upload className="w-5 h-5" />
-            Import Black Friday Prices
+            Import Product Prices
           </DialogTitle>
         </DialogHeader>
 
@@ -238,7 +238,7 @@ export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
                   </div>
                   <div>
                     <h3 className="text-lg font-medium">Upload CSV File</h3>
-                    <p className="text-gray-600">Select a CSV file with product references and Black Friday prices</p>
+                    <p className="text-gray-600">Select a CSV file with product references and prices</p>
                   </div>
                   
                   <div className="space-y-2">
@@ -303,13 +303,13 @@ export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
                   </div>
                   
                   <div>
-                    <Label htmlFor="bf_price">Black Friday Price</Label>
+                    <Label htmlFor="bf_price">Price</Label>
                     <Select
                       value={mapping.bf_price}
                       onValueChange={(value) => handleMappingChange('bf_price', value)}
                     >
                       <SelectTrigger className="bg-white border-gray-300">
-                        <SelectValue placeholder="Select column for Black Friday price" />
+                        <SelectValue placeholder="Select column for price" />
                       </SelectTrigger>
                       <SelectContent className="bg-white border border-gray-300 shadow-lg">
                         {csvHeaders.map(header => (
@@ -346,7 +346,7 @@ export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Product Reference</TableHead>
-                        <TableHead>Black Friday Price</TableHead>
+                        <TableHead>Price</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -388,7 +388,7 @@ export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
                   </div>
                   <div>
                     <h3 className="text-lg font-medium">Importing Data</h3>
-                    <p className="text-gray-600">Please wait while we update the Black Friday prices...</p>
+                    <p className="text-gray-600">Please wait while we update the product prices...</p>
                   </div>
                 </div>
               </Card>

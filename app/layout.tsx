@@ -6,15 +6,15 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: "SKETCH BLACK FRIDAY",
-  description: "Les meilleures offres de meubles au Maroc - Black Friday exclusif sur des meubles de qualité à prix imbattables",
-  keywords: "meubles maroc, black friday meubles, mobilier maroc, promotions meubles, meubles pas cher, sketch black friday",
-  authors: [{ name: 'Sketch design' }],
+  title: "Jeff de Bruges - Chocolats",
+  description: "Découvrez notre sélection de chocolats fins, pralinés, truffes et tablettes de qualité supérieure. Des boîtes cadeaux élégantes pour toutes les occasions.",
+  keywords: "chocolats, pralinés, truffes, tablettes chocolat, boîtes cadeaux chocolat, chocolats de noël, chocolats de pâques, jeff de bruges",
+  authors: [{ name: 'Jeff de Bruges' }],
   openGraph: {
-    title: 'SKETCH BLACK FRIDAY',
-    description: 'Les meilleures offres de meubles au Maroc - Black Friday exclusif sur des meubles de qualité à prix imbattables',
+    title: 'Jeff de Bruges - Chocolats',
+    description: 'Découvrez notre sélection de chocolats fins, pralinés, truffes et tablettes de qualité supérieure. Des boîtes cadeaux élégantes pour toutes les occasions.',
     url: 'https://venteflash.sketch-design.ma',
-    siteName: 'SKETCH BLACK FRIDAY',
+    siteName: 'Jeff de Bruges',
     locale: 'fr_FR',
     type: 'website',
     images: [
@@ -22,7 +22,7 @@ export const metadata = {
         url: 'https://venteflash.sketch-design.ma/bf-logo.webp',
         width: 800,
         height: 600,
-        alt: 'SKETCH BLACK FRIDAY Logo',
+        alt: 'Jeff de Bruges Logo',
       },
     ],
   },

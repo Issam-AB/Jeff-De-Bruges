@@ -35,7 +35,7 @@ export function Header() {
       <div className="relative w-[150px] h-[60px]">
         <Image
           src="/bf-logo.webp"
-          alt="SKETCH BLACK FRIDAY Logo"
+          alt="Jeff de Bruges Logo"
           fill
           style={{ objectFit: 'contain' }}
           priority

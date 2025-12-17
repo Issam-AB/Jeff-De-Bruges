@@ -350,7 +350,7 @@ export function EditProductForm({ product, onClose, onProductUpdated }: EditProd
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-300 mb-1.5">Black Friday Price (DH)</label>
+                  <label className="block text-xs font-medium text-gray-300 mb-1.5">Sale Price (DH)</label>
                   <Input
                     type="number"
                     value={formData.VenteflashPrice}

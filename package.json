@@ -19,6 +19,13 @@
     "import:update": "ts-node scripts/import-products.ts --update",
     "import:help": "ts-node scripts/import-products.ts --help",
     "import:clear": "ts-node scripts/clear-products.ts",
+    "import:find-missing": "ts-node scripts/find-missing-products.ts",
+    "import:analyze": "ts-node scripts/analyze-files.ts",
+    "import:missing": "ts-node scripts/import-missing.ts",
+    "import:check": "ts-node scripts/check-db-vs-files.ts",
+    "import:find-duplicates": "ts-node scripts/find-duplicates.ts",
+    "import:find-conflicts": "ts-node scripts/find-conflicts.ts",
+    "check-categories": "ts-node scripts/check-categories.ts",
     "test:parser": "ts-node scripts/test-parser.ts"
   },
   "dependencies": {

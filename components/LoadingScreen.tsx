@@ -18,7 +18,7 @@ export default function LoadingScreen() {
         >
           <Image
             src="/Logo_bf.png"
-            alt="SKETCH BLACK FRIDAY"
+            alt="Jeff de Bruges - Chocolats"
             width={200}
             height={100}
             priority

@@ -40,41 +40,38 @@ type CategoryStructure = {
 
 // Convert our predefined categories to the structure we need
 const CATEGORY_STRUCTURE: CategoryStructure = {
-  "SALONS": [
-    "Salon en L",
-    "Salon en U"
+  "CHOCOLATS": [
+    "Chocolats noirs",
+    "Chocolats au lait",
+    "Chocolats blancs"
   ],
-  "CANAPÉS": [
-    "Canapé 2 Places",
-    "Canapé 3 Places",
-    "Fauteuils"
+  "PRALINÉS": [
+    "Pralinés classiques",
+    "Pralinés spéciaux"
   ],
-  "CHAMBRE": [
-    "Lits",
-    "Matelas",
-    "Table de Chevet"
+  "TRUFFES": [
+    "Truffes classiques",
+    "Truffes aromatisées"
   ],
-  "TABLES": [
-    "Table Basse",
-    "Table de Salle à Manger",
-    "Table D'appoint"
+  "TABLETTES": [
+    "Tablettes noires",
+    "Tablettes au lait",
+    "Tablettes blanches"
   ],
-  "CHAISES": [
-    "Chaises"
+  "BOÎTES CADEAUX": [
+    "Petites boîtes",
+    "Grandes boîtes",
+    "Boîtes premium"
   ],
-  "JARDIN": [
-    "Ensemble D'extérieur",
-    "Salle à Manger + Chaises"
+  "CHOCOLATS DE NOËL": [
+    "Calendriers",
+    "Pères Noël",
+    "Assortiments"
   ],
-  "MEUBLES": [
-    "Consoles",
-    "Armoires",
-    "Bibliothèques",
-    "Buffets",
-    "Meubles TV"
-  ],
-  "DECO": [
-    "Mirroirs"
+  "CHOCOLATS DE PÂQUES": [
+    "Œufs",
+    "Lapins",
+    "Assortiments"
   ]
 }
 
@@ -113,15 +110,14 @@ export function CategoryManager({ onClose, onSave }: CategoryManagerProps) {
 
   function getIconForCategory(category: string): string {
     const categoryLower = category.toLowerCase()
-    if (categoryLower.includes('salon')) return 'Sofa'
-    if (categoryLower.includes('canapé')) return 'Armchair'
-    if (categoryLower.includes('chambre')) return 'Bed'
-    if (categoryLower.includes('table')) return 'Table2'
-    if (categoryLower.includes('chaise')) return 'Chair'
-    if (categoryLower.includes('jardin')) return 'Palmtree'
-    if (categoryLower.includes('meuble')) return 'Package'
-    if (categoryLower.includes('deco')) return 'Sparkles'
-    return 'Package'
+    if (categoryLower.includes('chocolat') && !categoryLower.includes('noël') && !categoryLower.includes('pâques')) return 'Candy'
+    if (categoryLower.includes('praliné') || categoryLower.includes('praline')) return 'Heart'
+    if (categoryLower.includes('truffe')) return 'Sparkles'
+    if (categoryLower.includes('tablette')) return 'Box'
+    if (categoryLower.includes('boîte') || categoryLower.includes('boite') || categoryLower.includes('cadeau')) return 'Gift'
+    if (categoryLower.includes('noël') || categoryLower.includes('noel')) return 'Star'
+    if (categoryLower.includes('pâques') || categoryLower.includes('paques')) return 'Package'
+    return 'Candy'
   }
 
   function getOrderForCategory(category: string): number {

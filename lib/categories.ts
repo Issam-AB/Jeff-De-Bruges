@@ -34,222 +34,205 @@ export const PREDEFINED_CATEGORIES: PredefinedCategory[] = [
     featured: true
   },
   {
-    id: 'salons',
-    name: 'SALONS',
-    slug: 'salons',
-    icon: 'Sofa',
+    id: 'chocolats',
+    name: 'CHOCOLATS',
+    slug: 'chocolats',
+    icon: 'Candy',
     order: 1,
     featured: true,
     children: [
       {
-        id: 'salon-en-l',
-        name: 'Salon en L',
-        slug: 'salon-en-l',
-        icon: 'Sofa',
+        id: 'chocolats-noirs',
+        name: 'Chocolats noirs',
+        slug: 'chocolats-noirs',
+        icon: 'Candy',
         order: 2
       },
       {
-        id: 'salon-en-u',
-        name: 'Salon en U',
-        slug: 'salon-en-u',
-        icon: 'Sofa',
+        id: 'chocolats-au-lait',
+        name: 'Chocolats au lait',
+        slug: 'chocolats-au-lait',
+        icon: 'Candy',
         order: 3
+      },
+      {
+        id: 'chocolats-blancs',
+        name: 'Chocolats blancs',
+        slug: 'chocolats-blancs',
+        icon: 'Candy',
+        order: 4
       }
     ]
   },
   {
-    id: 'canapes',
-    name: 'CANAPÉS',
-    slug: 'canapes',
-    icon: 'Armchair',
-    order: 4,
+    id: 'pralines',
+    name: 'PRALINÉS',
+    slug: 'pralines',
+    icon: 'Heart',
+    order: 5,
     featured: true,
     children: [
       {
-        id: 'canape-2-places',
-        name: 'Canapé 2 Places',
-        slug: 'canape-2-places',
-        icon: 'Armchair',
-        order: 5
-      },
-      {
-        id: 'canape-3-places',
-        name: 'Canapé 3 Places',
-        slug: 'canape-3-places',
-        icon: 'Armchair',
+        id: 'pralines-classiques',
+        name: 'Pralinés classiques',
+        slug: 'pralines-classiques',
+        icon: 'Heart',
         order: 6
       },
       {
-        id: 'fauteuils',
-        name: 'Fauteuils',
-        slug: 'fauteuils',
-        icon: 'Armchair',
+        id: 'pralines-speciales',
+        name: 'Pralinés spéciaux',
+        slug: 'pralines-speciales',
+        icon: 'Heart',
         order: 7
       }
     ]
   },
   {
-    id: 'chambre',
-    name: 'CHAMBRE',
-    slug: 'chambre',
-    icon: 'Bed',
+    id: 'truffes',
+    name: 'TRUFFES',
+    slug: 'truffes',
+    icon: 'Sparkles',
     order: 8,
     featured: true,
     children: [
       {
-        id: 'lits',
-        name: 'Lits',
-        slug: 'lits',
-        icon: 'Bed',
+        id: 'truffes-classiques',
+        name: 'Truffes classiques',
+        slug: 'truffes-classiques',
+        icon: 'Sparkles',
         order: 9
       },
       {
-        id: 'matelas',
-        name: 'Matelas',
-        slug: 'matelas',
-        icon: 'Package',
+        id: 'truffes-aromatisees',
+        name: 'Truffes aromatisées',
+        slug: 'truffes-aromatisees',
+        icon: 'Sparkles',
         order: 10
-      },
-      {
-        id: 'table-de-chevet',
-        name: 'Table de Chevet',
-        slug: 'table-de-chevet',
-        icon: 'Table2',
-        order: 11
       }
     ]
   },
   {
-    id: 'tables',
-    name: 'TABLES',
-    slug: 'tables',
-    icon: 'Table2',
-    order: 12,
+    id: 'tablettes',
+    name: 'TABLETTES',
+    slug: 'tablettes',
+    icon: 'Box',
+    order: 11,
     featured: true,
     children: [
       {
-        id: 'table-basse',
-        name: 'Table Basse',
-        slug: 'table-basse',
-        icon: 'Table2',
+        id: 'tablettes-noires',
+        name: 'Tablettes noires',
+        slug: 'tablettes-noires',
+        icon: 'Box',
+        order: 12
+      },
+      {
+        id: 'tablettes-au-lait',
+        name: 'Tablettes au lait',
+        slug: 'tablettes-au-lait',
+        icon: 'Box',
         order: 13
       },
       {
-        id: 'table-salle-manger',
-        name: 'Table de Salle à Manger',
-        slug: 'table-salle-manger',
-        icon: 'Table2',
+        id: 'tablettes-blanches',
+        name: 'Tablettes blanches',
+        slug: 'tablettes-blanches',
+        icon: 'Box',
         order: 14
-      },
-      {
-        id: 'table-appoint',
-        name: "Table D'appoint",
-        slug: 'table-appoint',
-        icon: 'Table2',
-        order: 15
       }
     ]
   },
   {
-    id: 'chaises',
-    name: 'CHAISES',
-    slug: 'chaises',
-    icon: 'Chair',
-    order: 16,
+    id: 'boites-cadeaux',
+    name: 'BOÎTES CADEAUX',
+    slug: 'boites-cadeaux',
+    icon: 'Gift',
+    order: 15,
     featured: true,
     children: [
       {
-        id: 'chaises-salle',
-        name: 'Chaises',
-        slug: 'chaises-salle',
-        icon: 'Chair',
+        id: 'petites-boites',
+        name: 'Petites boîtes',
+        slug: 'petites-boites',
+        icon: 'Gift',
+        order: 16
+      },
+      {
+        id: 'grandes-boites',
+        name: 'Grandes boîtes',
+        slug: 'grandes-boites',
+        icon: 'Gift',
         order: 17
+      },
+      {
+        id: 'boites-premium',
+        name: 'Boîtes premium',
+        slug: 'boites-premium',
+        icon: 'Gift',
+        order: 18
       }
     ]
   },
   {
-    id: 'jardin',
-    name: 'JARDIN',
-    slug: 'jardin',
-    icon: 'Palmtree',
-    order: 18,
+    id: 'chocolats-de-noel',
+    name: 'CHOCOLATS DE NOËL',
+    slug: 'chocolats-de-noel',
+    icon: 'Star',
+    order: 19,
     featured: true,
     children: [
       {
-        id: 'ensemble-exterieur',
-        name: "Ensemble D'extérieur",
-        slug: 'ensemble-exterieur',
-        icon: 'Palmtree',
-        order: 19
-      },
-      {
-        id: 'salle-manger-chaises',
-        name: 'Salle à Manger + Chaises',
-        slug: 'salle-manger-chaises',
-        icon: 'Palmtree',
+        id: 'calendriers',
+        name: 'Calendriers',
+        slug: 'calendriers',
+        icon: 'Star',
         order: 20
+      },
+      {
+        id: 'peres-noel',
+        name: 'Pères Noël',
+        slug: 'peres-noel',
+        icon: 'Star',
+        order: 21
+      },
+      {
+        id: 'assortiments-noel',
+        name: 'Assortiments',
+        slug: 'assortiments-noel',
+        icon: 'Star',
+        order: 22
       }
     ]
   },
   {
-    id: 'meubles',
-    name: 'MEUBLES',
-    slug: 'meubles',
+    id: 'chocolats-de-paques',
+    name: 'CHOCOLATS DE PÂQUES',
+    slug: 'chocolats-de-paques',
     icon: 'Package',
-    order: 21,
+    order: 23,
     featured: true,
     children: [
       {
-        id: 'consoles',
-        name: 'Consoles',
-        slug: 'consoles',
+        id: 'oeufs',
+        name: 'Œufs',
+        slug: 'oeufs',
         icon: 'Package',
-        order: 22
-      },
-      {
-        id: 'armoires',
-        name: 'Armoires',
-        slug: 'armoires',
-        icon: 'Door',
-        order: 23
-      },
-      {
-        id: 'bibliotheques',
-        name: 'Bibliothèques',
-        slug: 'bibliotheques',
-        icon: 'Library',
         order: 24
       },
       {
-        id: 'buffets',
-        name: 'Buffets',
-        slug: 'buffets',
+        id: 'lapins',
+        name: 'Lapins',
+        slug: 'lapins',
         icon: 'Package',
         order: 25
       },
       {
-        id: 'meubles-tv',
-        name: 'Meubles TV',
-        slug: 'meubles-tv',
-        icon: 'Tv',
+        id: 'assortiments-paques',
+        name: 'Assortiments',
+        slug: 'assortiments-paques',
+        icon: 'Package',
         order: 26
-      }
-    ]
-  },
-  {
-    id: 'deco',
-    name: 'DECO',
-    slug: 'deco',
-    icon: 'Sparkles',
-    order: 27,
-    featured: true,
-    children: [
-      {
-        id: 'mirroirs',
-        name: 'Mirroirs',
-        slug: 'mirroirs',
-        icon: 'Frame',
-        order: 28
       }
     ]
   }
@@ -320,19 +303,26 @@ function formatCategoryName(category: string): string {
 function getIconForCategory(category: string): string {
   const categoryLower = category.toLowerCase()
   if (categoryLower === 'tous') return 'LayoutGrid'
-  if (categoryLower.includes('salon')) return 'Sofa'
-  if (categoryLower.includes('chambre')) return 'Bed'
-  if (categoryLower.includes('table')) return 'Table2'
-  if (categoryLower.includes('armoire')) return 'Door'
-  return 'Package' // default icon
+  if (categoryLower.includes('chocolat')) return 'Candy'
+  if (categoryLower.includes('praliné') || categoryLower.includes('praline')) return 'Heart'
+  if (categoryLower.includes('truffe')) return 'Sparkles'
+  if (categoryLower.includes('tablette')) return 'Box'
+  if (categoryLower.includes('boîte') || categoryLower.includes('boite') || categoryLower.includes('cadeau')) return 'Gift'
+  if (categoryLower.includes('noël') || categoryLower.includes('noel')) return 'Star'
+  if (categoryLower.includes('pâques') || categoryLower.includes('paques')) return 'Package'
+  return 'Candy' // default icon
 }
 
 function getOrderForCategory(category: string): number {
   const categoryLower = category.toLowerCase()
   if (categoryLower === 'tous') return 0
-  if (categoryLower.includes('salon')) return 1
-  if (categoryLower.includes('chambre')) return 2
-  if (categoryLower.includes('table')) return 3
+  if (categoryLower.includes('chocolat') && !categoryLower.includes('noël') && !categoryLower.includes('pâques')) return 1
+  if (categoryLower.includes('praliné') || categoryLower.includes('praline')) return 5
+  if (categoryLower.includes('truffe')) return 8
+  if (categoryLower.includes('tablette')) return 11
+  if (categoryLower.includes('boîte') || categoryLower.includes('boite') || categoryLower.includes('cadeau')) return 15
+  if (categoryLower.includes('noël') || categoryLower.includes('noel')) return 19
+  if (categoryLower.includes('pâques') || categoryLower.includes('paques')) return 23
   return 99 // default order
 }
 

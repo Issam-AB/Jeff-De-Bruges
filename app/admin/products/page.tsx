@@ -209,7 +209,7 @@ export default function ProductsPage() {
       })
       
       if (!response.ok) {
-        throw new Error('Failed to update Black Friday prices')
+        throw new Error('Failed to update product prices')
       }
       
       const result = await response.json()
@@ -220,8 +220,8 @@ export default function ProductsPage() {
       
       fetchProducts()
     } catch (err) {
-      console.error('Error updating Black Friday prices:', err)
-      showToastMessage('Failed to update Black Friday prices', 'error')
+      console.error('Error updating product prices:', err)
+      showToastMessage('Failed to update product prices', 'error')
     } finally {
       setUpdatingPrices(false)
     }
@@ -241,7 +241,7 @@ export default function ProductsPage() {
       })
       
       if (!response.ok) {
-        throw new Error('Failed to import Black Friday prices')
+        throw new Error('Failed to import product prices')
       }
       
       const result = await response.json()
@@ -252,8 +252,8 @@ export default function ProductsPage() {
       
       fetchProducts()
     } catch (err) {
-      console.error('Error importing Black Friday prices:', err)
-      throw new Error('Failed to import Black Friday prices')
+      console.error('Error importing product prices:', err)
+      throw new Error('Failed to import product prices')
     }
   }
 

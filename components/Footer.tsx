@@ -4,12 +4,10 @@ export default function Footer() {
   return (
     <footer className="bg-gray-100 py-8">
       <div className="container mx-auto px-4 flex justify-center">
-        <Image
-          src="https://sketch-design.ma/wp-content/uploads/2023/02/logo-black.svg"
-          alt="Sketch Design"
-          width={140}
-          height={42}
-        />
+        <div className="text-center">
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">Jeff de Bruges</h3>
+          <p className="text-sm text-gray-600">Chocolats fins et artisanaux</p>
+        </div>
       </div>
     </footer>
   )

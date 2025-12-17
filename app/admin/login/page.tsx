@@ -15,7 +15,7 @@ export default function LoginPage() {
           <div className="relative w-[220px] h-[90px]">
             <Image
               src="/bf-logo.webp"
-              alt="SKETCH BLACK FRIDAY Logo"
+              alt="Jeff de Bruges Logo"
               fill
               style={{ objectFit: 'contain' }}
               priority
