@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 
 interface Category {
@@ -17,25 +16,37 @@ interface CategoryNavProps {
 
 export default function CategoryNav({ categories }: CategoryNavProps) {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const router = useRouter()
   const [activeCategory, setActiveCategory] = useState<string>('tous')
 
   useEffect(() => {
-    if (pathname === '/categories/tous' || pathname === '/') {
+    if (!pathname || !pathname.startsWith('/')) {
       setActiveCategory('tous')
-    } else {
-      const match = pathname?.match(/\/categories\/([^/]+)/)
-      if (match) {
-        const categorySlug = decodeURIComponent(match[1])
-        // Find matching category by slug
-        const matchingCategory = categories.find(c => c.slug === categorySlug)
-        if (matchingCategory) {
-          setActiveCategory(matchingCategory.slug)
-        } else {
-          setActiveCategory('tous')
-        }
-      }
+      return
     }
-  }, [pathname, categories])
+
+    if (pathname.startsWith('/products/') || pathname.startsWith('/articlesrouges/')) {
+      setActiveCategory('')
+      return
+    }
+
+    const selected = searchParams?.get('category') || 'tous'
+    setActiveCategory(selected)
+  }, [pathname, searchParams])
+
+  const handleCategoryClick = (slug: string) => {
+    setActiveCategory(slug)
+
+    const params = new URLSearchParams(window.location.search)
+    if (slug === 'tous') {
+      params.delete('category')
+    } else {
+      params.set('category', slug)
+    }
+    const query = params.toString()
+    router.push(query ? `/?${query}` : '/')
+  }
 
   return (
     <nav className="hidden md:flex items-center justify-center flex-1 space-x-6">
@@ -46,9 +57,9 @@ export default function CategoryNav({ categories }: CategoryNavProps) {
           whileHover={{ scale: 1.03 }}
           transition={{ type: "spring", stiffness: 500, damping: 15 }}
         >
-          <Link
-            href={`/categories/${category.slug}`}
-            onClick={() => setActiveCategory(category.slug)}
+          <button
+            type="button"
+            onClick={() => handleCategoryClick(category.slug)}
             className="relative h-[40px] px-6 group block"
           >
             {/* Sharp skewed background with multiple layers */}
@@ -112,7 +123,7 @@ export default function CategoryNav({ categories }: CategoryNavProps) {
               }
               transition-all duration-300
             `} />
-          </Link>
+          </button>
         </motion.div>
       ))}
     </nav>

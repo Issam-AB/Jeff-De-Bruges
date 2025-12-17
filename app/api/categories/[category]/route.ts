@@ -1,23 +1,58 @@
 import { NextResponse } from 'next/server'
-import { PREDEFINED_CATEGORIES } from '@/lib/categories'
+import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: Request,
   { params }: { params: { category: string } }
 ) {
   try {
-    const category = params.category
-    const subcategories = PREDEFINED_CATEGORIES[category as keyof typeof PREDEFINED_CATEGORIES] || []
-
-    if (!subcategories) {
+    const categorySlug = decodeURIComponent(params.category)
+    
+    // Normalize slug to match DB category names
+    const normalizeSlug = (name: string) => {
+      return name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .replace(/-+/g, '-')
+    }
+    
+    // Get all categories from DB
+    const allCategories = await prisma.category.findMany({
+      orderBy: { name: 'asc' }
+    })
+    
+    // Find matching category
+    const matchingCategory = allCategories.find(cat => 
+      normalizeSlug(cat.name) === categorySlug
+    )
+    
+    if (!matchingCategory) {
       return NextResponse.json(
         { error: 'Category not found' },
         { status: 404 }
       )
     }
 
+    // Get unique subcategories from products in this category
+    const products = await prisma.product.findMany({
+      where: {
+        mainCategory: matchingCategory.name,
+        isActive: true
+      },
+      select: {
+        subCategory: true
+      }
+    })
+    
+    const subcategories = Array.from(
+      new Set(products.map(p => p.subCategory).filter(Boolean))
+    ).sort()
+
     return NextResponse.json({
-      name: category,
+      name: matchingCategory.name,
       subcategories
     })
   } catch (error) {

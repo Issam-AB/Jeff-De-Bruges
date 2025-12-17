@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, Search, ChevronDown } from 'lucide-react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import SearchModal from './SearchModal'
 import CategoryNav from './CategoryNav'
 
@@ -21,21 +21,19 @@ interface HeaderClientProps {
 
 export default function HeaderClient({ categories }: HeaderClientProps) {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const router = useRouter()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [activeCategory, setActiveCategory] = useState<string>('tous')
 
   const getActiveCategory = useCallback((): string => {
-    if (pathname?.startsWith('/products/')) return '';
-    if (pathname?.startsWith('/articlesrouges/')) return '';
-    
-    if (pathname === '/categories/tous' || pathname === '/') return 'tous';
-    const match = pathname?.match(/\/categories\/([^/]+)/);
-    if (match) {
-      return decodeURIComponent(match[1]);
-    }
-    return 'tous';
-  }, [pathname]);
+    if (!pathname || !pathname.startsWith('/')) return 'tous'
+    if (pathname.startsWith('/products/') || pathname.startsWith('/articlesrouges/')) return ''
+
+    const selected = searchParams?.get('category') || 'tous'
+    return selected
+  }, [pathname, searchParams]);
 
   useEffect(() => {
     setActiveCategory(getActiveCategory())
@@ -44,10 +42,14 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
   const handleCategoryClick = (slug: string) => {
     setActiveCategory(slug)
     setIsMobileMenuOpen(false)
-  }
-
-  const getCategorySlug = (category: Category) => {
-    return category.slug
+    const params = new URLSearchParams(window.location.search)
+    if (slug === 'tous') {
+      params.delete('category')
+    } else {
+      params.set('category', slug)
+    }
+    const query = params.toString()
+    router.push(query ? `/?${query}` : '/')
   }
 
   const handleLogoClick = () => {
@@ -272,8 +274,8 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
                       whileHover={{ scale: 1.02 }}
                       transition={{ type: "spring", stiffness: 500, damping: 15 }}
                     >
-                      <Link
-                        href={`/categories/${category.slug}`}
+                      <button
+                        type="button"
                         onClick={() => handleCategoryClick(category.slug)}
                         className="w-full relative h-[50px] group block"
                       >
@@ -328,7 +330,7 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
                           }
                           transition-all duration-300
                         `} />
-                      </Link>
+                      </button>
                     </motion.div>
                   ))}
                 </div>
