@@ -50,6 +50,8 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Badge } from '@/components/ui/badge'
 
+export const dynamic = 'force-dynamic'
+
 type ViewModeValue = 'grid' | 'list'
 type SortByValue = 'date' | 'name' | 'price' | 'category'
 type SortOrderValue = 'asc' | 'desc'
@@ -64,6 +66,7 @@ interface FilterState {
 }
 
 export default function ProductsPage() {
+  const [mounted, setMounted] = useState(false)
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<ViewModeValue>('grid')
@@ -111,6 +114,7 @@ export default function ProductsPage() {
   }
 
   useEffect(() => {
+    setMounted(true)
     fetchProducts()
   }, [])
 
@@ -274,6 +278,11 @@ export default function ProductsPage() {
     filters.status !== 'all' || 
     filters.isArticleRouge !== 'all'
 
+  // Prevent rendering during build/prerender
+  if (typeof window === 'undefined') {
+    return <div className="space-y-6"><h1 className="text-3xl font-bold text-white">Products</h1></div>
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -348,18 +357,25 @@ export default function ProductsPage() {
 
           {/* View Controls */}
           <div className="flex items-center gap-3">
-            <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as ViewModeValue)}>
-              <TabsList className="bg-gray-700">
-                <TabsTrigger value="grid" className="flex items-center gap-2 data-[state=active]:bg-gray-600 data-[state=active]:text-white text-gray-300">
-                  <Grid size={16} />
-                  Grid
-                </TabsTrigger>
-                <TabsTrigger value="list" className="flex items-center gap-2 data-[state=active]:bg-gray-600 data-[state=active]:text-white text-gray-300">
-                  <List size={16} />
-                  List
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
+            {mounted ? (
+              <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as ViewModeValue)}>
+                <TabsList className="bg-gray-700">
+                  <TabsTrigger value="grid" className="flex items-center gap-2 data-[state=active]:bg-gray-600 data-[state=active]:text-white text-gray-300">
+                    <Grid size={16} />
+                    Grid
+                  </TabsTrigger>
+                  <TabsTrigger value="list" className="flex items-center gap-2 data-[state=active]:bg-gray-600 data-[state=active]:text-white text-gray-300">
+                    <List size={16} />
+                    List
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            ) : (
+              <div className="flex items-center gap-2">
+                <button className="px-3 py-1 bg-gray-700 text-gray-300 rounded">Grid</button>
+                <button className="px-3 py-1 bg-gray-700 text-gray-300 rounded">List</button>
+              </div>
+            )}
           </div>
         </div>
 

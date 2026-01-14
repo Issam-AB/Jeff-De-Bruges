@@ -18,7 +18,7 @@ const groups = groupFilesByProduct(files);
 const refMap = new Map<string, string[]>();
 const slugMap = new Map<string, string[]>();
 
-for (const [key, groupFiles] of groups.entries()) {
+for (const [key, groupFiles] of Array.from(groups.entries())) {
   const firstFile = groupFiles[0];
   const metadata = parseFilename(firstFile);
   const baseName = cleanProductName(firstFile);

@@ -24,7 +24,7 @@ let productsWithMultipleImages = 0;
 const singleImageProducts: string[] = [];
 const multiImageProducts: Array<{ name: string; count: number; files: string[] }> = [];
 
-for (const [key, groupFiles] of groups.entries()) {
+for (const [key, groupFiles] of Array.from(groups.entries())) {
   totalFilesInGroups += groupFiles.length;
   
   if (groupFiles.length > 1) {
@@ -53,7 +53,7 @@ console.log(`\nDifference: ${files.length - totalFilesInGroups} files not groupe
 if (files.length !== totalFilesInGroups) {
   console.log('\n⚠️  Some files are not grouped!');
   const groupedFiles = new Set<string>();
-  for (const groupFiles of groups.values()) {
+  for (const groupFiles of Array.from(groups.values())) {
     groupFiles.forEach(f => groupedFiles.add(f));
   }
   const ungrouped = files.filter(f => !groupedFiles.has(f));

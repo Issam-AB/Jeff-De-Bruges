@@ -161,7 +161,7 @@ function processFiles(
   // Group files by product
   const groups = groupFilesByProduct(files);
 
-  for (const [groupKey, groupFiles] of groups.entries()) {
+  for (const [groupKey, groupFiles] of Array.from(groups.entries())) {
     try {
       // Validate first file in group
       const firstFile = groupFiles[0];

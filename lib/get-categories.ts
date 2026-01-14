@@ -50,9 +50,12 @@ export async function getCategories() {
       where: { isActive: true }
     })
 
+    // Filter out encensoirs and corbeilles
+    const excludedSlugs = ['encensoirs', 'corbeilles']
+    
     return [
       { name: 'Tous', slug: 'tous', count: totalCount },
-      ...categoriesWithCounts.filter(cat => cat.count > 0)
+      ...categoriesWithCounts.filter(cat => cat.count > 0 && !excludedSlugs.includes(cat.slug))
     ]
   } catch (error) {
     console.error('Error fetching categories:', error)

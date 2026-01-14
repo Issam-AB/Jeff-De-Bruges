@@ -31,7 +31,7 @@ async function main() {
   const missing: Array<{ file: string; slug: string; name: string; ref?: string }> = [];
   const found: string[] = [];
 
-  for (const [key, groupFiles] of groups.entries()) {
+  for (const [key, groupFiles] of Array.from(groups.entries())) {
     const firstFile = groupFiles[0];
     const baseName = cleanProductName(firstFile);
     const sizeCode = extractSizeCode(firstFile);

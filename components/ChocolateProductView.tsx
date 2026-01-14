@@ -40,7 +40,9 @@ export default function ChocolateProductView({ product }: ChocolateProductViewPr
     if (!mainEmbla) return
     const onSelect = () => setCurrentImageIndex(mainEmbla.selectedScrollSnap())
     mainEmbla.on('select', onSelect)
-    return () => mainEmbla?.off('select', onSelect)
+    return () => {
+      mainEmbla?.off('select', onSelect)
+    }
   }, [mainEmbla])
 
   const handleWhatsAppOrder = () => {

@@ -60,7 +60,7 @@ async function main() {
   let processed = 0;
   let skipped = 0;
 
-  for (const [key, groupFiles] of groups.entries()) {
+  for (const [key, groupFiles] of Array.from(groups.entries())) {
     const firstFile = groupFiles[0];
     const validation = validateFilename(firstFile);
     
